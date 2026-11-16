@@ -1,0 +1,45 @@
+name: Deploy static site to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # 這個 repo 只是 noindex 鏡像，canonical 指向 Cloudflare 正式站。
+      # 每次推送都重新 marked，避免有人直接推原始檔後變成可索引副本。
+      - name: Mark pages as noindex mirror
+        run: |
+          find . -name '*.html' -type f -print0 | xargs -0 sed -i \
+            -e 's|<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">|<meta name="robots" content="noindex,nofollow">|g' \
+            -e 's|<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">|<meta name="robots" content="noindex,nofollow">|g'
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload static site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

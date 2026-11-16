@@ -1,0 +1,1844 @@
+/* ==========================================================================
+   LuckyForge Lab｜遊戲頁樣式（僅遊戲頁載入）
+   包含：共用試玩外殼、老虎機、捕魚機、百家樂、輪盤、21 點。
+   ========================================================================== */
+
+/* 1. 共用試玩外殼 --------------------------------------------------------- */
+.demo-section {
+  padding: 0 0 clamp(40px, 6vw, 64px);
+}
+
+.game-shell {
+  overflow: hidden;
+  border: 1px solid rgba(233, 185, 92, 0.24);
+  border-radius: var(--radius-l);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.035), transparent 20%),
+    #080d15;
+  box-shadow:
+    0 36px 100px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(255, 255, 255, 0.03) inset;
+}
+
+.demo-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--line-2);
+  background: rgba(255, 255, 255, 0.018);
+}
+
+.demo-bar__title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.demo-bar__title .live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--mint);
+  box-shadow: 0 0 0 4px rgba(94, 216, 170, 0.1);
+}
+
+.demo-bar__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted-2);
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.04em;
+}
+
+.demo-note {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 11px 20px;
+  border-top: 1px solid var(--line-2);
+  background: rgba(0, 0, 0, 0.16);
+  color: var(--muted-2);
+  font-size: 0.72rem;
+  line-height: 1.6;
+}
+
+.demo-note strong {
+  color: var(--gold);
+  font-weight: 700;
+}
+
+.game-hud {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 24px;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--line-2);
+  background: #0a1019;
+}
+
+.hud-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 26px;
+}
+
+.hud-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 80px;
+}
+
+.hud-stat span {
+  color: var(--muted-2);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.hud-stat output,
+.hud-stat strong {
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 1.02rem;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.3;
+}
+
+.hud-stat--win output {
+  color: var(--gold-2);
+}
+
+.hud-stat--fs output {
+  color: var(--mint);
+}
+
+.game-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 16px 20px;
+  border-top: 1px solid var(--line-2);
+  background: #090e17;
+}
+
+.controls-left,
+.controls-right {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.bet-stepper {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--line-2);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.025);
+  overflow: hidden;
+}
+
+.bet-stepper button {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 42px;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 1.1rem;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.bet-stepper button:hover:not(:disabled) {
+  background: rgba(233, 185, 92, 0.1);
+  color: var(--gold-2);
+}
+
+.bet-stepper button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.bet-stepper output {
+  min-width: 76px;
+  padding-inline: 4px;
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 0.86rem;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.bet-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted-2);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.spin-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 148px;
+  min-height: 48px;
+  padding: 12px 26px;
+  border: 0;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #f8e3ae, #e9b95c 55%, #c08a32);
+  color: #1a1102;
+  font-size: 0.94rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.55) inset,
+    0 12px 30px rgba(233, 185, 92, 0.22);
+  transition: transform 0.16s ease, box-shadow 0.16s ease, filter 0.16s ease;
+}
+
+.spin-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.6) inset,
+    0 16px 38px rgba(233, 185, 92, 0.3);
+}
+
+.spin-btn:disabled {
+  filter: saturate(0.4) brightness(0.72);
+  cursor: not-allowed;
+  transform: none;
+}
+
+.game-status {
+  min-height: 26px;
+  padding: 10px 20px 14px;
+  border-top: 1px solid var(--line-2);
+  background: #090e17;
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.55;
+}
+
+.game-status strong {
+  color: var(--gold-2);
+}
+
+.sr-status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* 2. 老虎機 --------------------------------------------------------------- */
+.slots-stage {
+  position: relative;
+  padding: clamp(8px, 2vw, 18px);
+  background:
+    radial-gradient(circle at 50% 12%, rgba(94, 216, 170, 0.12), transparent 55%),
+    linear-gradient(180deg, #0a1714, #070c11);
+}
+
+.slots-canvas-wrap {
+  position: relative;
+  max-width: 960px;
+  margin-inline: auto;
+  overflow: hidden;
+  border: 1px solid rgba(233, 185, 92, 0.2);
+  border-radius: 18px;
+  background: #06120f;
+  box-shadow:
+    0 0 0 5px rgba(0, 0, 0, 0.18),
+    0 0 60px rgba(0, 0, 0, 0.45) inset;
+}
+
+#slot-canvas {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 900 / 540;
+  touch-action: manipulation;
+}
+
+.canvas-fallback {
+  padding: 20px;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.bigwin {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background:
+    radial-gradient(circle at 50% 45%, rgba(233, 185, 92, 0.24), transparent 54%),
+    rgba(4, 8, 13, 0.78);
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+  text-align: center;
+  animation: bigwin-in 0.3s ease both;
+}
+
+@keyframes bigwin-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.bigwin__card {
+  position: relative;
+  width: min(100%, 420px);
+  padding: 30px 26px 26px;
+  border: 1px solid rgba(233, 185, 92, 0.5);
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(233, 185, 92, 0.18), transparent 60%),
+    linear-gradient(160deg, #1a1a17, #0a0e0d 68%);
+  box-shadow:
+    0 30px 80px rgba(0, 0, 0, 0.65),
+    0 0 50px rgba(233, 185, 92, 0.12);
+}
+
+.bigwin__tier {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 8vw, 4rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  background: linear-gradient(180deg, #fff4d4, #e9b95c 52%, #b47c24);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 22px rgba(233, 185, 92, 0.45));
+}
+
+.bigwin__amount {
+  display: block;
+  margin-top: 12px;
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: clamp(1.2rem, 4vw, 1.7rem);
+  font-variant-numeric: tabular-nums;
+}
+
+.bigwin__amount small {
+  color: var(--muted-2);
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+}
+
+.bigwin__card p {
+  margin: 6px 0 20px;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.freespin-banner {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 14px;
+  border: 1px solid rgba(94, 216, 170, 0.4);
+  border-radius: 999px;
+  background: rgba(7, 22, 19, 0.92);
+  color: var(--mint);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  transform: translateX(-50%);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.4);
+  white-space: nowrap;
+}
+
+.freespin-banner strong {
+  color: var(--gold-2);
+}
+
+.slot-payline-note {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  color: var(--muted-2);
+  font-size: 0.72rem;
+}
+
+.slot-legend {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.slot-legend i {
+  display: inline-block;
+  width: 14px;
+  height: 3px;
+  border-radius: 99px;
+  background: var(--gold);
+}
+
+/* 3. 捕魚機 --------------------------------------------------------------- */
+.fish-stage {
+  position: relative;
+  background: #04131d;
+}
+
+#fish-canvas {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  touch-action: none;
+  cursor: crosshair;
+}
+
+.fish-overlay {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  right: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  pointer-events: none;
+}
+
+.fish-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 11px;
+  border: 1px solid rgba(118, 186, 255, 0.28);
+  border-radius: 999px;
+  background: rgba(4, 16, 28, 0.78);
+  color: #bfe3ff;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.05em;
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+
+.fish-badge strong {
+  color: #fff;
+}
+
+.fish-badge--warm {
+  border-color: rgba(233, 185, 92, 0.38);
+  color: var(--gold-2);
+}
+
+.cannon-levels {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.cannon-levels button {
+  min-width: 52px;
+  padding: 7px 10px;
+  border: 1px solid var(--line-2);
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.035);
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  transition: border-color 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+}
+
+.cannon-levels button:hover {
+  border-color: rgba(233, 185, 92, 0.35);
+  color: var(--text);
+}
+
+.cannon-levels button[aria-pressed="true"] {
+  border-color: var(--gold);
+  background: rgba(233, 185, 92, 0.13);
+  color: var(--gold-2);
+}
+
+.auto-toggle[aria-pressed="true"] {
+  border-color: rgba(94, 216, 170, 0.5);
+  background: rgba(94, 216, 170, 0.1);
+  color: var(--mint);
+}
+
+/* 4. 百家樂 --------------------------------------------------------------- */
+.baccarat-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) minmax(280px, 0.8fr);
+  border-top: 1px solid var(--line-2);
+}
+
+.baccarat-main {
+  padding: clamp(14px, 2.5vw, 24px);
+  border-right: 1px solid var(--line-2);
+}
+
+.felt {
+  position: relative;
+  border: 1px solid rgba(233, 185, 92, 0.2);
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.06), transparent 45%),
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.014) 0 1px, transparent 1px 5px),
+    linear-gradient(160deg, #0d4a3a, #073326 70%);
+  box-shadow:
+    0 20px 50px rgba(0, 0, 0, 0.32) inset,
+    0 0 50px rgba(0, 0, 0, 0.24);
+}
+
+.baccarat-table {
+  min-height: 330px;
+  padding: clamp(16px, 3vw, 28px);
+}
+
+.baccarat-table__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+}
+
+.baccarat-table__head h2 {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+
+.baccarat-table__head span {
+  color: rgba(255, 255, 255, 0.5);
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.08em;
+}
+
+.baccarat-hands {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  padding: 18px 0;
+}
+
+.baccarat-hand {
+  min-width: 0;
+}
+
+.baccarat-hand__label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+  color: rgba(255, 255, 255, 0.66);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.baccarat-hand__points {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 32px;
+  padding-inline: 8px;
+  border: 1px solid rgba(233, 185, 92, 0.35);
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.2);
+  color: var(--gold-2);
+  font-family: var(--font-mono);
+  font-size: 0.86rem;
+  letter-spacing: 0;
+}
+
+.baccarat-hand__cards {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 104px;
+}
+
+.baccarat-hand__winner .baccarat-hand__points {
+  border-color: var(--gold);
+  background: var(--gold);
+  color: #1b1204;
+  box-shadow: 0 0 24px rgba(233, 185, 92, 0.34);
+}
+
+.baccarat-result {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 54px;
+  padding: 12px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.18);
+}
+
+.baccarat-result strong {
+  color: var(--text);
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.baccarat-result span {
+  color: rgba(255, 255, 255, 0.58);
+  font-size: 0.76rem;
+}
+
+.baccarat-bets {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.bet-spot {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-height: 64px;
+  padding: 9px 8px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.16);
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1.3;
+  text-align: center;
+  transition: border-color 0.15s ease, background-color 0.15s ease, transform 0.15s ease;
+}
+
+.bet-spot small {
+  color: rgba(255, 255, 255, 0.46);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 400;
+}
+
+.bet-spot:hover {
+  border-color: rgba(233, 185, 92, 0.6);
+  background: rgba(233, 185, 92, 0.08);
+}
+
+.bet-spot:active {
+  transform: scale(0.98);
+}
+
+.bet-spot[data-selected="true"] {
+  border-color: var(--gold);
+  background: rgba(233, 185, 92, 0.12);
+}
+
+.bet-spot__chip {
+  position: absolute;
+  top: -7px;
+  right: -5px;
+  display: grid;
+  place-items: center;
+  min-width: 26px;
+  height: 26px;
+  padding-inline: 5px;
+  border: 2px dashed rgba(255, 255, 255, 0.72);
+  border-radius: 50%;
+  background: #b3473f;
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 0.56rem;
+  font-weight: 700;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+}
+
+.bet-spot__chip:empty {
+  display: none;
+}
+
+.baccarat-side {
+  display: grid;
+  align-content: start;
+  gap: 14px;
+  padding: clamp(14px, 2.5vw, 24px);
+}
+
+.side-panel {
+  padding: 16px;
+  border: 1px solid var(--line-2);
+  border-radius: 13px;
+  background: rgba(255, 255, 255, 0.018);
+}
+
+.side-panel h2 {
+  margin: 0 0 10px;
+  color: var(--muted-2);
+  font-family: var(--font-sans);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.bead-road {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 4px;
+  min-height: 58px;
+}
+
+.bead {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  max-height: 30px;
+  border-radius: 50%;
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  font-weight: 700;
+}
+
+.bead--player {
+  background: #2d6fd6;
+  color: #fff;
+}
+
+.bead--banker {
+  background: #c94a42;
+  color: #fff;
+}
+
+.bead--tie {
+  background: #2f9b73;
+  color: #fff;
+}
+
+.bead--empty {
+  border: 1px dashed rgba(255, 255, 255, 0.08);
+  background: transparent;
+}
+
+.road-empty {
+  color: var(--muted-2);
+  font-size: 0.74rem;
+  line-height: 1.6;
+}
+
+.baccarat-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 12px;
+  margin: 0;
+}
+
+.baccarat-stats div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 6px;
+  font-size: 0.72rem;
+}
+
+.baccarat-stats dt {
+  color: var(--muted-2);
+}
+
+.baccarat-stats dd {
+  margin: 0;
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+}
+
+.fingerprint {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  padding: 7px 9px;
+  border: 1px solid var(--line-2);
+  border-radius: 7px;
+  background: rgba(0, 0, 0, 0.2);
+  color: var(--muted-2);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  line-height: 1.4;
+  word-break: break-all;
+}
+
+/* 5. 撲克牌 --------------------------------------------------------------- */
+.playing-card {
+  position: relative;
+  flex: none;
+  width: clamp(58px, 8vw, 86px);
+  aspect-ratio: 0.7;
+  perspective: 600px;
+}
+
+.playing-card__inner {
+  position: absolute;
+  inset: 0;
+  border-radius: 7px;
+  transform-style: preserve-3d;
+  animation: card-deal 0.42s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+@keyframes card-deal {
+  from {
+    opacity: 0;
+    transform: translate(26px, -34px) rotate(7deg) scale(0.82);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.playing-card__face {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 6px 7px;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  border-radius: 7px;
+  background: linear-gradient(145deg, #fffef9, #e9e4d8);
+  color: #151515;
+  box-shadow:
+    0 7px 16px rgba(0, 0, 0, 0.34),
+    0 0 0 1px rgba(255, 255, 255, 0.6) inset;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+.playing-card__face--back {
+  align-items: center;
+  justify-content: center;
+  border-color: rgba(255, 255, 255, 0.2);
+  background:
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.09) 0 2px, transparent 2px 6px),
+    repeating-linear-gradient(-45deg, rgba(233, 185, 92, 0.16) 0 2px, transparent 2px 6px),
+    #183a5c;
+}
+
+.playing-card__face--back::after {
+  content: "LF";
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid rgba(233, 185, 92, 0.5);
+  border-radius: 50%;
+  color: var(--gold-2);
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+}
+
+.playing-card--red .playing-card__face {
+  color: #b3242c;
+}
+
+.playing-card--back .playing-card__face--front {
+  transform: rotateY(180deg);
+}
+
+.playing-card--back .playing-card__face--back {
+  transform: rotateY(0);
+}
+
+.playing-card__corner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 0.95;
+}
+
+.playing-card__corner span:first-child {
+  font-family: var(--font-mono);
+  font-size: clamp(0.72rem, 1.6vw, 0.9rem);
+  font-weight: 700;
+}
+
+.playing-card__corner span:last-child {
+  font-size: clamp(0.62rem, 1.4vw, 0.78rem);
+}
+
+.playing-card__corner--bottom {
+  align-self: flex-end;
+  transform: rotate(180deg);
+}
+
+.playing-card__pip {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: clamp(1.35rem, 3.6vw, 2rem);
+  line-height: 1;
+  opacity: 0.92;
+}
+
+.playing-card--back .playing-card__pip {
+  display: none;
+}
+
+/* 6. 輪盤 ---------------------------------------------------------------- */
+.roulette-layout {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.82fr) minmax(0, 1.18fr);
+  border-top: 1px solid var(--line-2);
+}
+
+.roulette-wheel-panel {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+  padding: clamp(14px, 2.5vw, 24px);
+  border-right: 1px solid var(--line-2);
+  background:
+    radial-gradient(circle at 50% 30%, rgba(233, 185, 92, 0.09), transparent 55%),
+    rgba(0, 0, 0, 0.12);
+}
+
+.wheel-wrap {
+  position: relative;
+  width: min(100%, 470px);
+  margin-inline: auto;
+}
+
+#roulette-canvas {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+}
+
+.wheel-result {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 56px;
+  padding: 10px 16px;
+  border: 1px solid var(--line-2);
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+.wheel-result__number {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--muted-2);
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 1.05rem;
+  font-weight: 700;
+  transition: background-color 0.2s ease;
+}
+
+.wheel-result__number[data-color="red"] {
+  background: #b63b3b;
+}
+
+.wheel-result__number[data-color="black"] {
+  background: #1b222c;
+}
+
+.wheel-result__number[data-color="green"] {
+  background: #1f7a58;
+}
+
+.wheel-result p {
+  color: var(--muted);
+  font-size: 0.8rem;
+  line-height: 1.5;
+  text-align: left;
+}
+
+.wheel-result p strong {
+  display: block;
+  color: var(--text);
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.roulette-history {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.roulette-history__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.history-pill {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  font-weight: 700;
+}
+
+.history-pill[data-color="red"] {
+  background: #a93434;
+}
+
+.history-pill[data-color="black"] {
+  background: #1b222c;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.16) inset;
+}
+
+.history-pill[data-color="green"] {
+  background: #1f7a58;
+}
+
+.roulette-board-panel {
+  padding: clamp(14px, 2.5vw, 24px);
+}
+
+.roulette-board {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  gap: 6px;
+  max-width: 620px;
+  margin-inline: auto;
+}
+
+.number-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 5px;
+}
+
+.number-cell {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 48px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 6px;
+  background: #1c222a;
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 0.84rem;
+  font-weight: 700;
+  transition: transform 0.12s ease, filter 0.12s ease;
+}
+
+.number-cell[data-color="red"] {
+  background: #9e3333;
+}
+
+.number-cell[data-color="black"] {
+  background: #1a2028;
+}
+
+.number-cell:hover {
+  filter: brightness(1.2);
+}
+
+.number-cell:active {
+  transform: scale(0.96);
+}
+
+.number-cell--zero {
+  min-height: 100%;
+  background: #1f7a58;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  letter-spacing: 0.1em;
+}
+
+.number-cell__chips,
+.outside-cell__chips {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  display: grid;
+  place-items: center;
+  min-width: 18px;
+  height: 18px;
+  padding-inline: 3px;
+  border-radius: 50%;
+  background: var(--gold);
+  color: #1a1102;
+  font-family: var(--font-mono);
+  font-size: 0.52rem;
+  font-weight: 800;
+}
+
+.number-cell__chips:empty,
+.outside-cell__chips:empty {
+  display: none;
+}
+
+.outside-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 5px;
+  margin-top: 8px;
+}
+
+.outside-cell {
+  position: relative;
+  min-height: 48px;
+  padding: 6px 4px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 0.68rem;
+  font-weight: 700;
+  line-height: 1.3;
+  text-align: center;
+}
+
+.outside-cell:hover {
+  border-color: rgba(233, 185, 92, 0.55);
+  background: rgba(233, 185, 92, 0.08);
+}
+
+.outside-cell[data-color="red"] {
+  background: rgba(158, 51, 51, 0.55);
+}
+
+.outside-cell[data-color="black"] {
+  background: rgba(20, 26, 34, 0.85);
+}
+
+.outside-cell[data-color="green"] {
+  background: rgba(31, 122, 88, 0.5);
+}
+
+.number-cell[data-selected="true"],
+.outside-cell[data-selected="true"] {
+  box-shadow: inset 0 0 0 2px var(--gold-2);
+  filter: brightness(1.12);
+}
+
+.number-cell:focus-visible,
+.outside-cell:focus-visible,
+.chip-btn:focus-visible {
+  outline: 2px solid var(--gold-2);
+  outline-offset: 2px;
+}
+
+.number-cell:disabled,
+.outside-cell:disabled,
+.chip-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.68;
+}
+
+.roulette-totals {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line-2);
+  color: var(--muted);
+  font-size: 0.76rem;
+}
+
+.roulette-totals strong {
+  color: var(--gold-2);
+  font-family: var(--font-mono);
+  font-size: 0.92rem;
+}
+
+.chip-picker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 7px;
+  margin-top: 12px;
+}
+
+.chip-picker span {
+  margin-right: 2px;
+  color: var(--muted-2);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.chip-btn {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border: 2px dashed rgba(255, 255, 255, 0.45);
+  border-radius: 50%;
+  background: #1d2430;
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  font-weight: 700;
+  transition: transform 0.14s ease, box-shadow 0.14s ease;
+}
+
+.chip-btn[data-value="10"] {
+  background: #2d6fd6;
+}
+
+.chip-btn[data-value="25"] {
+  background: #3f5fae;
+}
+
+.chip-btn[data-value="50"] {
+  background: #2f8f68;
+}
+
+.chip-btn[data-value="100"] {
+  background: #9e3333;
+}
+
+.chip-btn[data-value="500"] {
+  background: #8a5a1f;
+}
+
+.chip-btn[aria-pressed="true"] {
+  box-shadow: 0 0 0 3px rgba(233, 185, 92, 0.55);
+  transform: translateY(-2px);
+}
+
+/* 7. 21 點 --------------------------------------------------------------- */
+.blackjack-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) minmax(280px, 0.8fr);
+  border-top: 1px solid var(--line-2);
+}
+
+.blackjack-main {
+  padding: clamp(14px, 2.5vw, 24px);
+  border-right: 1px solid var(--line-2);
+}
+
+.blackjack-side {
+  display: grid;
+  align-content: start;
+  gap: 14px;
+  padding: clamp(14px, 2.5vw, 24px);
+}
+
+.blackjack-table {
+  min-height: 390px;
+  padding: clamp(16px, 3vw, 30px);
+}
+
+.blackjack-table__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+}
+
+.blackjack-table__head h2 {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+
+.blackjack-table__head span {
+  color: rgba(255, 255, 255, 0.5);
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+}
+
+.blackjack-zone {
+  padding: 18px 0;
+}
+
+.blackjack-zone + .blackjack-zone {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.blackjack-zone__label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.blackjack-zone__label b {
+  display: inline-grid;
+  place-items: center;
+  min-width: 28px;
+  height: 25px;
+  padding-inline: 7px;
+  border: 1px solid rgba(233, 185, 92, 0.35);
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.2);
+  color: var(--gold-2);
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  letter-spacing: 0;
+}
+
+.blackjack-cards {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  min-height: 104px;
+}
+
+.blackjack-hands {
+  display: grid;
+  gap: 14px;
+}
+
+.blackjack-hand {
+  position: relative;
+  padding: 10px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.blackjack-hand.is-active {
+  border-color: rgba(233, 185, 92, 0.42);
+  background: rgba(233, 185, 92, 0.055);
+}
+
+.blackjack-hand.is-done {
+  opacity: 0.62;
+}
+
+.blackjack-hand__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 7px;
+  color: rgba(255, 255, 255, 0.54);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+}
+
+.blackjack-hand__head strong {
+  color: var(--gold-2);
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  letter-spacing: 0;
+}
+
+.blackjack-result {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 54px;
+  padding: 12px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.18);
+}
+
+.blackjack-result strong {
+  color: var(--text);
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.blackjack-result span {
+  color: rgba(255, 255, 255, 0.56);
+  font-size: 0.74rem;
+}
+
+.blackjack-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.blackjack-actions .btn {
+  min-width: 94px;
+}
+
+.blackjack-hand__result {
+  min-height: 1.2em;
+  margin-top: 8px;
+  color: var(--muted-2);
+  font-size: 0.74rem;
+  line-height: 1.5;
+}
+
+.blackjack-hand__result:empty {
+  display: none;
+}
+
+.blackjack-hand__result.is-win {
+  color: var(--mint);
+}
+
+.blackjack-hand__result.is-lose {
+  color: var(--danger);
+}
+
+.blackjack-hand__result.is-push {
+  color: var(--muted);
+}
+
+.blackjack-hand:has(.blackjack-hand__result.is-win) {
+  border-color: rgba(94, 216, 170, 0.32);
+  background: rgba(94, 216, 170, 0.045);
+}
+
+.blackjack-hand:has(.blackjack-hand__result.is-lose) {
+  border-color: rgba(255, 125, 112, 0.22);
+}
+
+.blackjack-hand:has(.blackjack-hand__result.is-push) {
+  border-color: var(--line-2);
+}
+
+/* 輪盤：下注格結構與中獎高亮 */
+.roulette-board {
+  grid-template-areas:
+    "zero numbers"
+    "outside outside";
+}
+
+.number-cell--zero {
+  grid-area: zero;
+}
+
+.number-grid {
+  grid-area: numbers;
+}
+
+.outside-grid {
+  grid-area: outside;
+}
+
+.number-cell.is-hit,
+.outside-cell.is-hit {
+  outline: 2px solid var(--gold-2);
+  outline-offset: 1px;
+  box-shadow: 0 0 20px rgba(233, 185, 92, 0.45);
+  z-index: 2;
+}
+
+.outside-cell small {
+  display: block;
+  margin-top: 2px;
+  color: rgba(255, 255, 255, 0.46);
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  font-weight: 400;
+  line-height: 1.3;
+}
+
+.freespin-banner.is-triggered {
+  animation: freespin-pop 0.55s ease 2;
+}
+
+@keyframes freespin-pop {
+  0%,
+  100% {
+    transform: translateX(-50%) scale(1);
+  }
+  45% {
+    transform: translateX(-50%) scale(1.12);
+  }
+}
+
+/* 8. 遊戲頁內容排版 ------------------------------------------------------- */
+.game-content {
+  padding-top: clamp(40px, 6vw, 64px);
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: clamp(28px, 5vw, 60px);
+  align-items: start;
+}
+
+.game-sidebar {
+  position: sticky;
+  top: calc(var(--header-h) + 24px);
+  display: grid;
+  gap: 14px;
+}
+
+.spec-list {
+  display: grid;
+  gap: 0;
+  margin: 0;
+}
+
+.spec-list div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line-2);
+  font-size: 0.78rem;
+}
+
+.spec-list div:last-child {
+  border-bottom: 0;
+}
+
+.spec-list dt {
+  color: var(--muted-2);
+}
+
+.spec-list dd {
+  margin: 0;
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  text-align: right;
+}
+
+.paytable-symbols {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.paytable-symbol {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 4px;
+  border: 1px solid var(--line-2);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.02);
+  font-size: 0.66rem;
+  color: var(--muted-2);
+  text-align: center;
+}
+
+.paytable-symbol b {
+  color: var(--gold-2);
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.paytable-symbol--wild {
+  border-color: rgba(255, 111, 97, 0.3);
+}
+
+.paytable-symbol--scatter {
+  border-color: rgba(94, 216, 170, 0.3);
+}
+
+.fsm-diagram {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin: 16px 0;
+  padding: 16px;
+  border: 1px solid var(--line-2);
+  border-radius: var(--radius-s);
+  background: rgba(0, 0, 0, 0.18);
+}
+
+.fsm-node {
+  padding: 5px 9px;
+  border: 1px solid rgba(233, 185, 92, 0.35);
+  border-radius: 6px;
+  background: rgba(233, 185, 92, 0.07);
+  color: var(--gold-2);
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  line-height: 1.3;
+}
+
+.fsm-arrow {
+  color: var(--muted-2);
+  font-size: 0.72rem;
+}
+
+/* 9. 響應式 --------------------------------------------------------------- */
+@media (max-width: 1020px) {
+  .baccarat-layout,
+  .blackjack-layout,
+  .roulette-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .baccarat-main,
+  .blackjack-main,
+  .roulette-wheel-panel {
+    border-right: 0;
+    border-bottom: 1px solid var(--line-2);
+  }
+
+  .content-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .game-sidebar {
+    position: static;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .game-hud {
+    padding: 12px 14px;
+  }
+
+  .hud-group {
+    gap: 8px 18px;
+  }
+
+  .hud-stat {
+    min-width: 68px;
+  }
+
+  .game-controls {
+    padding: 14px;
+  }
+
+  .controls-left,
+  .controls-right {
+    width: 100%;
+  }
+
+  .controls-right {
+    justify-content: stretch;
+  }
+
+  .controls-right .btn,
+  .controls-right .spin-btn {
+    flex: 1;
+  }
+
+  .baccarat-bets {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .baccarat-bets .bet-spot:nth-child(4),
+  .baccarat-bets .bet-spot:nth-child(5) {
+    grid-column: span 1;
+  }
+
+  .baccarat-hands {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .baccarat-hand__cards {
+    min-height: 92px;
+  }
+
+  .baccarat-table {
+    min-height: 0;
+  }
+
+  .game-sidebar {
+    grid-template-columns: 1fr;
+  }
+
+  .roulette-board {
+    grid-template-columns: 34px minmax(0, 1fr);
+  }
+
+  .outside-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .number-cell {
+    min-height: 42px;
+  }
+
+  .chip-btn {
+    width: 38px;
+    height: 38px;
+  }
+
+  .paytable-symbols {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .playing-card {
+    width: 64px;
+  }
+}
+
+@media (max-width: 480px) {
+  .game-shell {
+    border-radius: 16px;
+  }
+
+  .demo-bar,
+  .game-status {
+    padding-inline: 14px;
+  }
+
+  .hud-group {
+    width: 100%;
+    justify-content: space-between;
+    gap: 6px;
+  }
+
+  .hud-stat {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .hud-stat span {
+    font-size: 0.56rem;
+  }
+
+  .hud-stat output,
+  .hud-stat strong {
+    font-size: 0.9rem;
+  }
+
+  .bet-stepper {
+    flex: 1;
+  }
+
+  .bet-stepper output {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .spin-btn {
+    min-width: 120px;
+  }
+
+  .bigwin__card {
+    padding: 24px 16px 20px;
+  }
+
+  .baccarat-bets {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .baccarat-bets .bet-spot:first-child {
+    grid-column: span 2;
+    min-height: 50px;
+  }
+
+  .baccarat-hand__cards {
+    gap: 4px;
+  }
+
+  .playing-card {
+    width: clamp(54px, 15vw, 68px);
+  }
+
+  .roulette-board {
+    grid-template-columns: 30px minmax(0, 1fr);
+  }
+
+  .number-cell {
+    min-height: 39px;
+    font-size: 0.74rem;
+  }
+
+  .outside-cell {
+    min-height: 44px;
+    font-size: 0.62rem;
+  }
+
+  .wheel-result {
+    min-height: 50px;
+  }
+
+  .blackjack-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .blackjack-actions .btn {
+    min-width: 0;
+  }
+}

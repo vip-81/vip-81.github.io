@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>document.documentElement.classList.add("js");</script>
+<title>HTML5 賭場遊戲工程指南：老虎機、捕魚機、公平性與效能｜LuckyForge Lab</title>
+<meta name="description" content="四篇可重現的 HTML5 賭場遊戲工程指南：老虎機 FSM 與滾輪物理、捕魚機魚群 AI 與碰撞、百家樂／輪盤／21 點公平性與斷線重連、Canvas／Web Audio 效能與除錯。每篇附程式碼、檢查表與常見坑。">
+<meta name="keywords" content="HTML5 賭場遊戲,老虎機 FSM,滾輪物理,捕魚機 AI,碰撞偵測,百家樂公平性,輪盤 RTP,21點狀態機,斷線重連,Canvas 效能,Web Audio">
+<meta name="author" content="LuckyForge Lab">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#070a10">
+<link rel="canonical" href="https://luckyforge-lab.pages.dev/guides/">
+<link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/img/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="LuckyForge Lab 幸運工坊">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="HTML5 賭場遊戲工程指南：四篇從玩法到公平性">
+<meta property="og:description" content="老虎機 FSM、捕魚機 AI、桌遊公平性與 Canvas 效能。四篇附程式碼與檢查表的實戰指南。">
+<meta property="og:url" content="https://luckyforge-lab.pages.dev/guides/">
+<meta property="og:image" content="https://luckyforge-lab.pages.dev/assets/img/og-cover.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="LuckyForge Lab 工程指南封面">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="HTML5 賭場遊戲工程指南：四篇從玩法到公平性">
+<meta name="twitter:description" content="老虎機 FSM、捕魚機 AI、桌遊公平性與 Canvas 效能。四篇附程式碼與檢查表的實戰指南。">
+<meta name="twitter:image" content="https://luckyforge-lab.pages.dev/assets/img/og-cover.png">
+<meta name="twitter:image:alt" content="LuckyForge Lab 工程指南封面">
+<link rel="stylesheet" href="/assets/css/site.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "首頁", "item": "https://luckyforge-lab.pages.dev/" },
+        { "@type": "ListItem", "position": 2, "name": "工程指南", "item": "https://luckyforge-lab.pages.dev/guides/" }
+      ]
+    },
+    {
+      "@type": "CollectionPage",
+      "@id": "https://luckyforge-lab.pages.dev/guides/#webpage",
+      "url": "https://luckyforge-lab.pages.dev/guides/",
+      "name": "HTML5 賭場遊戲工程指南",
+      "description": "四篇可重現的 HTML5 賭場遊戲工程指南，涵蓋老虎機 FSM、捕魚機 AI、桌遊公平性與 Canvas 效能。",
+      "inLanguage": "zh-Hant-TW",
+      "isPartOf": { "@id": "https://luckyforge-lab.pages.dev/#website" },
+      "datePublished": "2026-11-16",
+      "dateModified": "2026-11-16",
+      "primaryImageOfPage": "https://luckyforge-lab.pages.dev/assets/img/og-cover.png"
+    },
+    {
+      "@type": "ItemList",
+      "name": "LuckyForge Lab 工程指南",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "url": "https://luckyforge-lab.pages.dev/guides/slots-fsm-reel-physics/", "name": "老虎機 FSM：滾輪物理、停輪手感與 Free Spin" },
+        { "@type": "ListItem", "position": 2, "url": "https://luckyforge-lab.pages.dev/guides/fish-shooting-ai-collision/", "name": "捕魚機 AI：魚群路徑、碰撞判定與伺服器結算" },
+        { "@type": "ListItem", "position": 3, "url": "https://luckyforge-lab.pages.dev/guides/table-games-fairness/", "name": "百家樂、輪盤、21 點：公平性、RNG 與斷線重連" },
+        { "@type": "ListItem", "position": 4, "url": "https://luckyforge-lab.pages.dev/guides/html5-casino-performance/", "name": "HTML5 賭場遊戲效能：Canvas、音訊與除錯" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://luckyforge-lab.pages.dev/guides/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "這些指南適合誰閱讀？", "acceptedAnswer": { "@type": "Answer", "text": "適合已會基本 JavaScript、想了解瀏覽器遊戲架構的前端工程師，以及需要評估 HTML5 賭場遊戲技術方案的產品與數學人員。每篇都從可運行的 demo 出發，並標示示範版與正式產品的差異。" } },
+        { "@type": "Question", "name": "指南中的程式碼可以直接用在真錢產品嗎？", "acceptedAnswer": { "@type": "Answer", "text": "不行。指南與 demo 使用前端亂數與 localStorage，只適合教學與原型。真錢產品必須把 RNG、牌靴、餘額、局單與派彩放在伺服器，加入簽章、稽核、限額、年齡驗證與法規遵循。" } },
+        { "@type": "Question", "name": "為什麼每篇都強調「結果先定、動畫後播」？", "acceptedAnswer": { "@type": "Answer", "text": "因為動畫幀率、背景暫停與裝置效能都會影響模擬結果。先決定結果再播放，能讓低階手機、減少動態模式與正式伺服器結算共用同一套流程，也讓公平性可以被重算與稽核。" } },
+        { "@type": "Question", "name": "可以引用或轉載指南內容嗎？", "acceptedAnswer": { "@type": "Answer", "text": "可以引用並附上固定網址、標題與最後更新日期；每頁都有「複製引用連結」按鈕。大量轉載請先聯絡 hello@luckyforge-lab.example。" } }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<a class="skip-link" href="#main-content">跳至主要內容</a>
+
+<header class="site-header" data-header>
+  <div class="container header-inner">
+    <a class="brand" href="/">
+      <span class="brand-mark" aria-hidden="true">LF</span>
+      <span class="brand-name"><strong>LuckyForge Lab</strong><span>幸運工坊</span></span>
+    </a>
+    <nav class="site-nav" id="primary-nav" aria-label="主要導覽">
+      <a href="/games/slots/">老虎機</a>
+      <a href="/games/fish-shooting/">捕魚機</a>
+      <a href="/games/baccarat/">百家樂</a>
+      <a href="/games/roulette/">輪盤</a>
+      <a href="/games/blackjack/">21 點</a>
+      <a href="/guides/" aria-current="page">指南</a>
+      <a class="btn btn-primary btn-sm" href="/games/slots/">免費試玩</a>
+    </nav>
+    <div class="header-tools">
+      <button class="icon-btn" type="button" data-audio-toggle aria-pressed="false" aria-label="關閉音效" title="關閉音效">
+        <svg class="icon-sound-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4Z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M19.5 6a8.5 8.5 0 0 1 0 12"/></svg>
+        <svg class="icon-sound-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4Z"/><path d="m17 9 5 5"/><path d="m22 9-5 5"/></svg>
+      </button>
+    </div>
+    <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="primary-nav" aria-label="開啟導覽選單"><span></span></button>
+  </div>
+</header>
+
+<main id="main-content">
+  <nav class="breadcrumbs" aria-label="麵包屑">
+    <div class="container"><ol><li><a href="/">首頁</a></li><li><span aria-current="page">工程指南</span></li></ol></div>
+  </nav>
+
+  <header class="page-hero">
+    <div class="container">
+      <span class="eyebrow">Engineering guides · 4 篇</span>
+      <h1>從玩法到公平性：HTML5 賭場遊戲工程指南</h1>
+      <p class="lead">四篇指南對應五款試玩背後的四個核心問題：滾輪怎麼停得自然、魚群怎麼游得像魚、桌遊結果怎麼被驗證、以及為什麼同樣的 Canvas 在手機上會卡。每篇都附可重現的程式碼、檢查表與正式產品該補的伺服器責任。</p>
+      <div class="page-meta"><span>最後更新 <time datetime="2026-11-16">2026-11-16</time></span><span class="dot" aria-hidden="true"></span><span>共 4 篇 · 約 42 分鐘</span><span class="dot" aria-hidden="true"></span><span>18+ · 技術教學</span></div>
+      <div class="key-takeaway">
+        <strong>30 秒摘要</strong>
+        <p>五款遊戲都以「結果先定、動畫後播」為原則：亂數或牌靴先產生結果，Canvas 只負責呈現。老虎機用 FSM 管理旋轉、評估、Big Win 與 Free Spin；捕魚機用物件池與圓形碰撞維持幀率；桌遊把牌靴與局單的權威放在伺服器；效能章節則處理 devicePixelRatio、離屏快取、Web Audio 解鎖與記憶體洩漏。</p>
+      </div>
+    </div>
+  </header>
+
+  <section class="section section--tight" aria-labelledby="guide-list-title">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow">All guides</span>
+          <h2 id="guide-list-title">選擇你的入口</h2>
+        </div>
+        <p>建議先讀第 1 篇理解狀態機，再依產品類型選讀。每篇可獨立閱讀，不需要先玩過 demo。</p>
+      </div>
+
+      <div class="guide-grid">
+        <a class="guide-card" href="/guides/slots-fsm-reel-physics/">
+          <div class="guide-meta"><span>01 · SLOTS</span><span>12 分鐘</span></div>
+          <h2>老虎機 FSM：滾輪物理、停輪手感與 Free Spin</h2>
+          <p>用五個狀態管好旋轉、評估、Big Win 與免費遊戲。拆解等速滾動＋緩出曲線、相鄰符號間距、停輪回彈、連線判定與 Symbol 物件池。</p>
+          <span class="link-arrow">閱讀指南 →</span>
+        </a>
+        <a class="guide-card" href="/guides/fish-shooting-ai-collision/">
+          <div class="guide-meta"><span>02 · FISH</span><span>11 分鐘</span></div>
+          <h2>捕魚機 AI：魚群路徑、碰撞判定與伺服器結算</h2>
+          <p>從 Boids 分離、對齊、聚合開始，加上路徑跟隨與物件池。說明圓形碰撞、穿透修正、砲台倍率，以及為什麼命中判定不能只信前端。</p>
+          <span class="link-arrow">閱讀指南 →</span>
+        </a>
+        <a class="guide-card" href="/guides/table-games-fairness/">
+          <div class="guide-meta"><span>03 · TABLE</span><span>10 分鐘</span></div>
+          <h2>百家樂、輪盤、21 點：公平性、RNG 與斷線重連</h2>
+          <p>三種桌遊的隨機來源、賠付與 RTP 基準、SHA-256 指紋的侷限，以及 seed commitment、局單狀態機與重連後避免重複派彩的做法。</p>
+          <span class="link-arrow">閱讀指南 →</span>
+        </a>
+        <a class="guide-card" href="/guides/html5-casino-performance/">
+          <div class="guide-meta"><span>04 · PERFORMANCE</span><span>9 分鐘</span></div>
+          <h2>HTML5 賭場遊戲效能：Canvas、音訊與除錯</h2>
+          <p>處理 devicePixelRatio、離屏快取、固定時間步、WebGL context lost、iOS 音訊解鎖、visibilitychange 與常見記憶體洩漏。</p>
+          <span class="link-arrow">閱讀指南 →</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="path-title">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow">Reading path</span>
+          <h2 id="path-title">三種閱讀路徑</h2>
+        </div>
+        <p>不必照順序讀。依你現在要解決的問題選一條路。</p>
+      </div>
+      <div class="grid-3">
+        <div class="card card--pad">
+          <h3 class="h3">第一次做遊戲</h3>
+          <p class="note">先讀老虎機 FSM，理解狀態與動畫分離；再讀效能篇，避免一開始就寫出每幀重建 DOM 的架構。</p>
+          <a class="link-arrow" href="/guides/slots-fsm-reel-physics/">從老虎機開始 →</a>
+        </div>
+        <div class="card card--pad">
+          <h3 class="h3">要做即時射擊</h3>
+          <p class="note">先讀捕魚機 AI，掌握物件池與碰撞；再讀效能篇的固定時間步與離屏快取，處理大量實體。</p>
+          <a class="link-arrow" href="/guides/fish-shooting-ai-collision/">從捕魚機開始 →</a>
+        </div>
+        <div class="card card--pad">
+          <h3 class="h3">要接真錢系統</h3>
+          <p class="note">先讀公平性與重連，釐清伺服器權威、局單與 seed commitment；再回頭看各遊戲的結算流程。</p>
+          <a class="link-arrow" href="/guides/table-games-fairness/">從公平性開始 →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tight" aria-labelledby="guide-faq-title">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow">FAQ</span>
+          <h2 id="guide-faq-title">關於這些指南</h2>
+        </div>
+      </div>
+      <div class="faq">
+        <details>
+          <summary>這些指南適合誰閱讀？</summary>
+          <div class="faq-answer"><p>適合已會基本 JavaScript、想了解瀏覽器遊戲架構的前端工程師，以及需要評估 HTML5 賭場遊戲技術方案的產品與數學人員。每篇都從可運行的 demo 出發，並標示示範版與正式產品的差異。</p></div>
+        </details>
+        <details>
+          <summary>指南中的程式碼可以直接用在真錢產品嗎？</summary>
+          <div class="faq-answer"><p>不行。指南與 demo 使用前端亂數與 localStorage，只適合教學與原型。真錢產品必須把 RNG、牌靴、餘額、局單與派彩放在伺服器，加入簽章、稽核、限額、年齡驗證與法規遵循。</p></div>
+        </details>
+        <details>
+          <summary>為什麼每篇都強調「結果先定、動畫後播」？</summary>
+          <div class="faq-answer"><p>因為動畫幀率、背景暫停與裝置效能都會影響模擬結果。先決定結果再播放，能讓低階手機、減少動態模式與正式伺服器結算共用同一套流程，也讓公平性可以被重算與稽核。</p></div>
+        </details>
+        <details>
+          <summary>可以引用或轉載指南內容嗎？</summary>
+          <div class="faq-answer"><p>可以引用並附上固定網址、標題與最後更新日期；每頁都有「複製引用連結」按鈕。大量轉載請先聯絡 hello@luckyforge-lab.example。</p></div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-band">
+    <div class="container cta-inner">
+      <div>
+        <h2>讀完之後，實際玩一局</h2>
+        <p>五款 demo 都是同一套原則的實作：結果先定、狀態機驅動、動畫只負責呈現。所有籌碼皆為虛擬點數。</p>
+      </div>
+      <div class="cta-actions">
+        <a class="btn btn-primary" href="/games/slots/">玩老虎機</a>
+        <a class="btn btn-ghost" href="/games/fish-shooting/">玩捕魚機</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-main">
+      <div class="footer-brand">
+        <a class="brand" href="/">
+          <span class="brand-mark" aria-hidden="true">LF</span>
+          <span class="brand-name"><strong>LuckyForge Lab</strong><span>幸運工坊</span></span>
+        </a>
+        <p>純前端 HTML5 賭場遊戲實驗室。用可玩的 demo 拆解 FSM、物件池、碰撞、公平性與效能，全部使用虛擬籌碼。</p>
+        <div class="footer-badges"><span class="badge">18+</span><span class="badge badge--mint">虛擬籌碼</span><span class="badge badge--muted">零外部請求</span></div>
+      </div>
+      <nav class="footer-col" aria-labelledby="footer-games">
+        <h2 id="footer-games">遊戲</h2>
+        <ul>
+          <li><a href="/games/slots/">老虎機</a></li>
+          <li><a href="/games/fish-shooting/">捕魚機</a></li>
+          <li><a href="/games/baccarat/">百家樂</a></li>
+          <li><a href="/games/roulette/">輪盤</a></li>
+          <li><a href="/games/blackjack/">21 點</a></li>
+        </ul>
+      </nav>
+      <nav class="footer-col" aria-labelledby="footer-guides">
+        <h2 id="footer-guides">指南</h2>
+        <ul>
+          <li><a href="/guides/">全部指南</a></li>
+          <li><a href="/guides/slots-fsm-reel-physics/">老虎機 FSM</a></li>
+          <li><a href="/guides/fish-shooting-ai-collision/">捕魚機 AI</a></li>
+          <li><a href="/guides/table-games-fairness/">公平性與重連</a></li>
+          <li><a href="/guides/html5-casino-performance/">效能與除錯</a></li>
+        </ul>
+      </nav>
+      <nav class="footer-col" aria-labelledby="footer-site">
+        <h2 id="footer-site">網站</h2>
+        <ul>
+          <li><a href="/about/">關於我們</a></li>
+          <li><a href="/accessibility/">無障礙</a></li>
+          <li><a href="/privacy/">隱私與資料</a></li>
+          <li><a href="/responsible-gaming/">責任遊戲</a></li>
+          <li><a href="/llms.txt">llms.txt</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="footer-bottom">
+      <p>© <span data-current-year>2026</span> LuckyForge Lab（幸運工坊）。內容為技術教學與娛樂展示，不構成賭博建議。</p>
+      <p>18+ · 虛擬籌碼 · 無真錢交易 · <a href="/responsible-gaming/">請理性遊玩</a></p>
+    </div>
+  </div>
+</footer>
+
+<script type="module" src="/assets/js/site.js"></script>
+</body>
+</html>

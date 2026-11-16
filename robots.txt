@@ -1,0 +1,37 @@
+# robots.txt — LuckyForge Lab
+# 公開內容歡迎搜尋引擎與 AI 助理索引；工具與原始碼目錄不列入。
+
+User-agent: *
+Allow: /
+Disallow: /tools/
+Disallow: /README.md
+Disallow: /netlify.toml
+Disallow: /vercel.json
+
+# 明確允許主要 AI 爬蟲（仍受上面 Disallow 限制）
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+Sitemap: https://luckyforge-lab.pages.dev/sitemap.xml
+# LLM 摘要入口：https://luckyforge-lab.pages.dev/llms.txt

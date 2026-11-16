@@ -1,0 +1,34 @@
+{
+  "name": "LuckyForge Lab 幸運工坊",
+  "short_name": "LuckyForge",
+  "description": "純前端 HTML5 賭場遊戲實驗室：五款虛擬籌碼試玩與工程指南。18+，無真錢交易。",
+  "lang": "zh-Hant-TW",
+  "dir": "ltr",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#070a10",
+  "theme_color": "#070a10",
+  "categories": ["games", "education", "entertainment"],
+  "icons": [
+    {
+      "src": "/assets/img/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/img/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/img/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

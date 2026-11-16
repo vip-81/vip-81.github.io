@@ -1,0 +1,22 @@
+# Netlify 設定：純靜態、無建置流程
+# 直接將此目錄連到 Netlify，publish 設為 "." 即可。
+# _headers 與 _redirects 會由 Netlify 自動套用。
+
+[build]
+  publish = "."
+
+[build.processing]
+  skip_processing = true
+
+[build.processing.css]
+  bundle = false
+  minify = false
+
+[build.processing.js]
+  bundle = false
+  minify = false
+
+[build.processing.html]
+  pretty_urls = true
+
+# 若使用 Netlify 表單或 Functions，可在此擴充；本專案不需要。

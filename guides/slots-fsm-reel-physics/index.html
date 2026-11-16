@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>document.documentElement.classList.add("js");</script>
+<title>老虎機 FSM 與滾輪物理：停輪手感、連線判定與 Free Spin｜LuckyForge Lab</title>
+<meta name="description" content="從零拆解 HTML5 老虎機：五狀態 FSM、等速滾動與 ease-out 停輪、回彈手感、相鄰符號間距、10 條賠付線判定、Big Win 分級與 Free Spin 流程，附可運行思維與常見坑。">
+<meta name="keywords" content="老虎機 FSM,滾輪物理,停輪手感,slot reel physics,連線判定,Free Spin,Big Win,HTML5 老虎機,Canvas 老虎機,物件池">
+<meta name="author" content="LuckyForge Lab">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#070a10">
+<link rel="canonical" href="https://luckyforge-lab.pages.dev/guides/slots-fsm-reel-physics/">
+<link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/img/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="LuckyForge Lab 幸運工坊">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="老虎機 FSM 與滾輪物理：停輪手感、連線判定與 Free Spin">
+<meta property="og:description" content="五狀態 FSM、ease-out 停輪、回彈手感、10 條賠付線與 Free Spin 的完整拆解。">
+<meta property="og:url" content="https://luckyforge-lab.pages.dev/guides/slots-fsm-reel-physics/">
+<meta property="og:image" content="https://luckyforge-lab.pages.dev/assets/img/og-cover.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="LuckyForge Lab 老虎機工程指南封面">
+<meta property="og:article:published_time" content="2026-11-16T09:00:00+08:00">
+<meta property="og:article:modified_time" content="2026-11-16T09:00:00+08:00">
+<meta property="og:article:section" content="Slots engineering">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="老虎機 FSM 與滾輪物理：停輪手感、連線判定與 Free Spin">
+<meta name="twitter:description" content="五狀態 FSM、ease-out 停輪、回彈手感、10 條賠付線與 Free Spin 的完整拆解。">
+<meta name="twitter:image" content="https://luckyforge-lab.pages.dev/assets/img/og-cover.png">
+<meta name="twitter:image:alt" content="LuckyForge Lab 老虎機工程指南封面">
+<link rel="stylesheet" href="/assets/css/site.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "首頁", "item": "https://luckyforge-lab.pages.dev/" },
+        { "@type": "ListItem", "position": 2, "name": "工程指南", "item": "https://luckyforge-lab.pages.dev/guides/" },
+        { "@type": "ListItem", "position": 3, "name": "老虎機 FSM 與滾輪物理", "item": "https://luckyforge-lab.pages.dev/guides/slots-fsm-reel-physics/" }
+      ]
+    },
+    {
+      "@type": "Article",
+      "@id": "https://luckyforge-lab.pages.dev/guides/slots-fsm-reel-physics/#article",
+      "headline": "老虎機 FSM 與滾輪物理：停輪手感、連線判定與 Free Spin",
+      "description": "從零拆解 HTML5 老虎機的狀態機、滾輪動畫、連線判定、Big Win 與 Free Spin。",
+      "inLanguage": "zh-Hant-TW",
+      "datePublished": "2026-11-16T09:00:00+08:00",
+      "dateModified": "2026-11-16T09:00:00+08:00",
+      "articleSection": "Slots engineering",
+      "timeRequired": "PT12M",
+      "author": { "@type": "Organization", "name": "LuckyForge Lab 工程編輯", "url": "https://luckyforge-lab.pages.dev/about/" },
+      "publisher": { "@id": "https://luckyforge-lab.pages.dev/#organization" },
+      "mainEntityOfPage": { "@id": "https://luckyforge-lab.pages.dev/guides/slots-fsm-reel-physics/#webpage" },
+      "image": "https://luckyforge-lab.pages.dev/assets/img/og-cover.png",
+      "about": ["Slot machine", "Finite state machine", "Canvas 2D", "Game animation"]
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://luckyforge-lab.pages.dev/guides/slots-fsm-reel-physics/#webpage",
+      "url": "https://luckyforge-lab.pages.dev/guides/slots-fsm-reel-physics/",
+      "name": "老虎機 FSM 與滾輪物理：停輪手感、連線判定與 Free Spin",
+      "description": "HTML5 老虎機的 FSM、滾輪物理、連線判定與 Free Spin 實作指南。",
+      "inLanguage": "zh-Hant-TW",
+      "isPartOf": { "@id": "https://luckyforge-lab.pages.dev/#website" },
+      "datePublished": "2026-11-16",
+      "dateModified": "2026-11-16",
+      "primaryImageOfPage": "https://luckyforge-lab.pages.dev/assets/img/og-cover.png"
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://luckyforge-lab.pages.dev/guides/slots-fsm-reel-physics/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "老虎機的停輪動畫會影響結果嗎？", "acceptedAnswer": { "@type": "Answer", "text": "不會。結果在旋轉開始前就由隨機來源決定，滾輪只是被動畫帶到目標位置。這樣即使裝置掉幀、切到背景或開啟減少動態，結果仍保持一致。" } },
+        { "@type": "Question", "name": "為什麼滾輪停下時要回彈？", "acceptedAnswer": { "@type": "Answer", "text": "回彈是視覺與音效的「重量感」設計，模擬機械滾輪的慣性。它只作用在顯示座標，不會改變最終停下的符號索引；實作上要在動畫結束後把位移歸零，避免累積誤差。" } },
+        { "@type": "Question", "name": "10 條賠付線要怎麼判定？", "acceptedAnswer": { "@type": "Answer", "text": "把每條線的 (reel, row) 座標寫成資料表，從第一輪開始取符號；若後續輪不符合就停止。只有從第一輪連續出現的組合才算連線，Scatter 通常不看線，而是計算全盤數量。" } },
+        { "@type": "Question", "name": "Free Spin 為什麼需要獨立狀態？", "acceptedAnswer": { "@type": "Answer", "text": "免費遊戲會改變投注扣除、剩餘次數、倍率與自動旋轉流程，也可能在同一次結果中再次觸發。把它做成 FSM 的獨立狀態，可以避免與一般旋轉的按鈕狀態、Big Win 演出和餘額結算互相污染。" } },
+        { "@type": "Question", "name": "Symbol 物件池真的有必要嗎？", "acceptedAnswer": { "@type": "Answer", "text": "若每幀都建立新物件與 DOM，垃圾回收會造成週期性卡頓。物件池預先配置固定數量並重複使用，能降低 GC 壓力；但在 5×3 且只重繪 Canvas 的情況下，效益主要來自避免配置，而不是池本身。" } }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<a class="skip-link" href="#main-content">跳至主要內容</a>
+
+<header class="site-header" data-header>
+  <div class="container header-inner">
+    <a class="brand" href="/">
+      <span class="brand-mark" aria-hidden="true">LF</span>
+      <span class="brand-name"><strong>LuckyForge Lab</strong><span>幸運工坊</span></span>
+    </a>
+    <nav class="site-nav" id="primary-nav" aria-label="主要導覽">
+      <a href="/games/slots/">老虎機</a>
+      <a href="/games/fish-shooting/">捕魚機</a>
+      <a href="/games/baccarat/">百家樂</a>
+      <a href="/games/roulette/">輪盤</a>
+      <a href="/games/blackjack/">21 點</a>
+      <a href="/guides/" aria-current="page">指南</a>
+      <a class="btn btn-primary btn-sm" href="/games/slots/">免費試玩</a>
+    </nav>
+    <div class="header-tools">
+      <button class="icon-btn" type="button" data-audio-toggle aria-pressed="false" aria-label="關閉音效" title="關閉音效">
+        <svg class="icon-sound-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4Z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M19.5 6a8.5 8.5 0 0 1 0 12"/></svg>
+        <svg class="icon-sound-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4Z"/><path d="m17 9 5 5"/><path d="m22 9-5 5"/></svg>
+      </button>
+    </div>
+    <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="primary-nav" aria-label="開啟導覽選單"><span></span></button>
+  </div>
+</header>
+
+<main id="main-content">
+  <nav class="breadcrumbs" aria-label="麵包屑">
+    <div class="container"><ol><li><a href="/">首頁</a></li><li><a href="/guides/">工程指南</a></li><li><span aria-current="page">老虎機 FSM 與滾輪物理</span></li></ol></div>
+  </nav>
+
+  <header class="page-hero">
+    <div class="container">
+      <span class="eyebrow">Guide 01 · Slots engineering</span>
+      <h1>老虎機 FSM 與滾輪物理：停輪手感、連線判定與 Free Spin</h1>
+      <p class="lead">老虎機看起來是「按一下、轉一轉、看有沒有中」，但真正難的是狀態：什麼時候可以再按、什麼時候該扣款、Big Win 演出期間能不能操作、免費遊戲剩下幾次。這篇用一個五狀態 FSM 把流程固定下來，再處理滾輪的重量感與賠付線判定。</p>
+      <div class="page-meta"><span>最後更新 <time datetime="2026-11-16">2026-11-16</time></span><span class="dot" aria-hidden="true"></span><span>閱讀約 12 分鐘</span><span class="dot" aria-hidden="true"></span><span>18+ · 技術教學</span></div>
+      <div class="key-takeaway">
+        <strong>先說結論</strong>
+        <p>先決定結果，再播放動畫。滾輪用「等速滾動＋緩出停止＋小幅回彈」三段組成；賠付線用資料表而不是視覺位置推測；Free Spin 是獨立狀態，必須處理「免費遊戲中再次觸發」與剩餘次數；Big Win 是覆蓋層，不是一般結果文字。</p>
+      </div>
+    </div>
+  </header>
+
+  <section class="section section--tight">
+    <div class="container article-layout">
+      <article class="prose">
+        <h2 id="why-fsm">為什麼用 FSM，而不是一堆布林值</h2>
+        <p>一個可運作的老虎機至少有五個互斥狀態：<code>idle</code>（待機）、<code>spinning</code>（滾輪轉動）、<code>evaluating</code>（結算連線）、<code>bigwin</code>（演出）、<code>freespin</code>（免費遊戲）。用 <code>isSpinning</code>、<code>isFreeSpin</code>、<code>isBigWin</code> 三個布林值，很容易出現「正在 Big Win 但又按了旋轉」或「免費遊戲結束後餘額扣了兩次」的組合。</p>
+        <p>FSM 的好處不是程式碼比較漂亮，而是把「哪些操作合法」變成可檢查的表。以本專案的 <code>StateMachine</code> 為例，每個狀態只宣告自己能接受的事件：</p>
+        <pre><code>const machine = new StateMachine("idle", {
+  idle:       { on: { SPIN: { target: "spinning" } } },
+  spinning:   { on: { REELS_STOPPED: { target: "evaluating", action: evaluateRound } } },
+  evaluating: { on: { BIGWIN: { target: "bigwin" }, FS_START: { target: "freespin" }, END: { target: "idle" } } },
+  bigwin:     { onEnter: showBigWin, onExit: hideBigWin,
+                on: { CONTINUE: { target: "idle" }, CONTINUE_FS: { target: "freespin" } } },
+  freespin:   { onEnter: enterFreeSpin, onExit: exitFreeSpin,
+                on: { SPIN: { target: "spinning" }, END: { target: "idle" } } },
+});</code></pre>
+        <p>任何未宣告的事件都會被忽略，而不是偷偷改變狀態。這讓「旋轉中不能改注」、「Big Win 期間不能旋轉」、「免費遊戲由計時器自動推進」變成規則，而不是散落在事件監聽裡的 <code>if</code>。</p>
+        <div class="callout"><strong>實務提醒：</strong>FSM 只管理流程，不管理資料。餘額、投注、剩餘免費次數仍應放在獨立的 state 物件，並在每次轉移後持久化；不要把餘額塞進 FSM 的 context 後就忘記同步畫面。</div>
+
+        <h2 id="result-first">結果先定：讓動畫只是演員</h2>
+        <p>按下旋轉時，先做三件事：扣投注、抽出五輪的目標停位、把結果寫入本局紀錄。之後才啟動滾輪動畫。這樣做的好處是：</p>
+        <ul>
+          <li>低階手機掉幀時，結果不會跟著改變。</li>
+          <li>切到背景再回來，可以直接跳到最終位置，不需要補完所有幀。</li>
+          <li>正式產品可以改成「向伺服器要結果」，前端仍用同一個 <code>animateTo(result)</code>。</li>
+        </ul>
+        <pre><code>function prepareRound() {
+  const stops = Array.from({ length: REELS }, () => randomInt(STRIP.length));
+  const grid = stops.map((stop, reel) =&gt;
+    Array.from({ length: ROWS }, (_, row) =&gt;
+      STRIP[(stop + row) % STRIP.length]
+    )
+  );
+  return { stops, grid };
+}</code></pre>
+        <p>注意 <code>STRIP</code> 是每個滾輪自己的符號帶。真實老虎機的滾輪長度與符號權重可能不同，甚至每個滾輪各有一條帶；不要用「從 0 到 N 隨機取一個符號」來模擬，否則賠付線的機率會與美術配置脫節。</p>
+
+        <h2 id="reel-physics">滾輪物理：重量感從哪裡來</h2>
+        <p>停輪手感通常由三段曲線組成，而不是單純的 <code>linear</code>：</p>
+        <ol>
+          <li><strong>加速段</strong>：0–120ms 從 0 拉到最大速度，避免一按就瞬移。</li>
+          <li><strong>等速段</strong>：大部分時間維持固定速度，讓玩家看清楚符號流動。</li>
+          <li><strong>緩出段</strong>：最後 500–700ms 用 ease-out 把速度收乾，停下前通常再加 4–8px 的回彈。</li>
+        </ol>
+        <pre><code>function reelOffset(elapsed, duration, distance, bounce) {
+  const t = Math.min(1, elapsed / duration);
+  const eased = 1 - Math.pow(1 - t, 3);       // easeOutCubic
+  const base = distance * eased;
+  if (t &lt; 0.82) return base;
+  const k = (t - 0.82) / 0.18;                 // 0 → 1
+  return base + Math.sin(k * Math.PI) * bounce; // 停前小幅回彈
+}</code></pre>
+        <p>回彈必須只影響繪製位移，不能改變最終的符號索引。動畫結束後把 offset 歸零，否則連續旋轉會累積誤差，最後停位會偏一格。若使用 <code>requestAnimationFrame</code> 的 <code>deltaTime</code>，請把 delta 上限設在 50ms，避免分頁回來時一次跳過太多距離。</p>
+        <p>停輪順序也有講究：左到右依序停（例如每輪間隔 140ms）能製造期待感；但如果結果早已決定，停輪間隔不應影響結果。若你想做「接近大獎」的假張力，也必須確保最終停位與結果一致，不能為了好玩而讓某一輪多轉一圈後停在錯誤位置。</p>
+
+        <h2 id="paylines">連線判定：從資料表開始</h2>
+        <p>10 條賠付線不是「看起來橫的、V 形的」就好，必須把每條線的列索引寫成資料。例如 5×3 的線可以表示為 <code>[1,1,1,1,1]</code>（中間橫線）或 <code>[0,1,2,1,0]</code>（V 形）。判定時從第一輪開始：</p>
+        <pre><code>function evaluateLine(grid, line, paytable) {
+  const first = grid[0][line[0]];
+  if (first === "scatter") return null;
+  let count = 1;
+  for (let reel = 1; reel &lt; grid.length; reel += 1) {
+    if (grid[reel][line[reel]] !== first) break;
+    count += 1;
+  }
+  if (count &lt; 3) return null;
+  return { symbol: first, count, payout: paytable[first]?.[count] ?? 0 };
+}</code></pre>
+        <p>常見錯誤是用「整盤有幾個相同符號」來判定，這會把分散在不同輪、不同列的符號算成連線。另一種錯誤是允許 Wild 取代 Scatter，或讓 Scatter 從第二輪才開始算；這些都要依賠付表明確規定，不能靠猜。</p>
+        <div class="table-wrap">
+          <table class="data">
+            <caption>本示範的連線與賠付設計（僅供教學）</caption>
+            <thead><tr><th scope="col">符號</th><th scope="col">3 連</th><th scope="col">4 連</th><th scope="col">5 連</th><th scope="col">備註</th></tr></thead>
+            <tbody>
+              <tr><td>7</td><td class="num">10×</td><td class="num">40×</td><td class="num">200×</td><td>最高賠付</td></tr>
+              <tr><td>寶石</td><td class="num">6×</td><td class="num">20×</td><td class="num">80×</td><td>中高賠付</td></tr>
+              <tr><td>星星</td><td class="num">4×</td><td class="num">12×</td><td class="num">40×</td><td>中賠付</td></tr>
+              <tr><td>BAR</td><td class="num">2×</td><td class="num">6×</td><td class="num">20×</td><td>低賠付</td></tr>
+              <tr><td>Scatter</td><td class="num">2×</td><td class="num">10×</td><td class="num">50×</td><td>全盤 3 個觸發 Free Spin</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>賠付倍率是「投注的倍數」還是「總投注除以線數」？這是產品定義，必須寫在規則裡。本示範以「每線投注 × 賠付倍率」計算，並在 UI 顯示 總投注與線數，避免玩家誤解。</p>
+
+        <h2 id="free-spin">Free Spin：一個狀態，而不是一個計時器</h2>
+        <p>免費遊戲的流程通常是：一般旋轉中出現 3 個以上 Scatter → 結算一般連線 → 顯示「Free Spin 觸發」→ 進入免費遊戲 → 每局自動旋轉 → 剩餘次數歸零 → 回到一般遊戲。這裡有兩個容易出錯的點：</p>
+        <ul>
+          <li><strong>觸發與 Big Win 的優先順序</strong>：若同一局既有大獎又觸發免費遊戲，應該先播 Big Win，再進 Free Spin，或反過來？這是產品決策，但 FSM 必須只有一條合法路徑（本示範用 <code>CONTINUE_FS</code>）。</li>
+          <li><strong>免費遊戲中再次觸發</strong>：剩餘次數要加上新觸發的次數，而不是覆蓋。若用倒數計時器，容易在非同步結算時重複扣除。</li>
+        </ul>
+        <pre><code>function enterFreeSpin() {
+  fsRemaining = 10;
+  fsTotal = 0;
+  freeRoundWin = 0;
+  announce(`免費遊戲開始，共 ${fsRemaining} 次。`);
+  scheduleFreeSpin();
+}
+
+function onFreeRoundSettled(win, retriggered) {
+  fsTotal += win;
+  freeRoundWin += win;
+  fsRemaining -= 1;
+  if (retriggered &gt; 0) fsRemaining += retriggered;
+  if (fsRemaining &gt; 0) scheduleFreeSpin();
+  else machine.send("END");
+}</code></pre>
+        <p>免費遊戲期間，投注按鈕與「補充籌碼」應停用；旋轉按鈕可以顯示「免費遊戲進行中」而不是可點擊。若玩家重新整理，免費次數與累積獎金必須能恢復，否則會產生「斷線就吃掉免費遊戲」的爭議。</p>
+
+        <h2 id="object-pool">Symbol 物件池與繪製策略</h2>
+        <p>5×3 只有 15 個可見符號，物件池的收益不像彈幕遊戲那麼大，但仍有兩個好處：避免每局重建 15 個繪製物件，以及讓符號的動畫狀態（縮放、發光、位移）可以重設而不是重新配置。重點不是「池越大越好」，而是「固定上限、歸還時重設」。</p>
+        <pre><code>class SymbolPool {
+  constructor(size, factory) {
+    this.free = Array.from({ length: size }, factory);
+    this.active = [];
+  }
+  acquire() {
+    const item = this.free.pop() ?? this.active[0];
+    item.reset?.();
+    this.active.push(item);
+    return item;
+  }
+  releaseAll() {
+    for (const item of this.active) this.free.push(item);
+    this.active.length = 0;
+  }
+}</code></pre>
+        <p>如果你用 DOM 畫符號，頻繁 <code>innerHTML</code> 反而比物件池更傷效能；此時應只更新文字與 class，或改用 Canvas。若用 Canvas，請把靜態符號預先畫到離屏 canvas，再 <code>drawImage</code>，不要每幀重畫路徑與漸層。</p>
+
+        <h2 id="big-win">Big Win 分級與可存取性</h2>
+        <p>Big Win 不是單純的「WIN」文字，而是依「本局贏得 ÷ 投注」分級：25× 以上 BIG WIN、50× 以上 MEGA WIN、100× 以上 LEGENDARY。分級只影響演出與音效，不應改變派彩。演出期間要：</p>
+        <ul>
+          <li>把背景內容設為 <code>inert</code> 或至少讓焦點鎖在對話框內；</li>
+          <li>提供「繼續」按鈕，並支援 Escape；</li>
+          <li>用 <code>aria-live</code> 公告最終金額，不要只靠動畫數字；</li>
+          <li>尊重 <code>prefers-reduced-motion</code>，直接顯示最終金額。</li>
+        </ul>
+        <p>本專案的 Big Win 對話框會在顯示後把焦點移到「繼續」，Tab 只在對話框內循環；關閉後焦點回到原本的旋轉按鈕。這些細節不影響數學，但會直接影響鍵盤與螢幕閱讀器使用者能否完成遊戲。</p>
+
+        <h2 id="rtp">RTP、波動與「感覺」的區別</h2>
+        <p>RTP 是長期返還率，波動（volatility）是結果分布的離散程度。高波動遊戲可能長時間不中，但中獎時金額較大；低波動則較常中小獎。兩者都可以有相同的 RTP。停輪回彈、Big Win 音樂與硬幣粒子只影響體感，不影響 RTP。</p>
+        <p>本示範不承諾固定 RTP，因為符號權重、滾輪帶與賠付表是教學用配置。正式產品必須以模擬（數億局）驗證實際 RTP、命中率與最大倍數，並把數學報告與版本號保存下來。前端 demo 的 <code>crypto.getRandomValues</code> 也不能取代伺服器 RNG 與簽章。</p>
+
+        <h2 id="checklist">上線前檢查表</h2>
+        <ul>
+          <li>結果是否在動畫前決定？重新整理後是否能恢復未完成的免費遊戲？</li>
+          <li>旋轉中、Big Win 中、免費遊戲中，所有按鈕的 disabled 狀態是否一致？</li>
+          <li>滾輪停位是否與結果索引一致？回彈後 offset 是否歸零？</li>
+          <li>賠付線是否從第一輪連續判定？Wild／Scatter 規則是否寫進賠付表？</li>
+          <li>快速連按旋轉是否會重複扣款？是否有 <code>phase</code> 或 FSM 保護？</li>
+          <li>降低動態時是否跳過粒子與長時間倒數，但仍顯示結果？</li>
+          <li>手機 320px 寬度是否仍能看到投注、餘額與結果？</li>
+        </ul>
+
+        <h2 id="faq">常見問題</h2>
+        <div class="faq">
+          <details>
+            <summary>老虎機的停輪動畫會影響結果嗎？</summary>
+            <div class="faq-answer"><p>不會。結果在旋轉開始前就由隨機來源決定，滾輪只是被動畫帶到目標位置。這樣即使裝置掉幀、切到背景或開啟減少動態，結果仍保持一致。</p></div>
+          </details>
+          <details>
+            <summary>為什麼滾輪停下時要回彈？</summary>
+            <div class="faq-answer"><p>回彈是視覺與音效的「重量感」設計，模擬機械滾輪的慣性。它只作用在顯示座標，不會改變最終停下的符號索引；實作上要在動畫結束後把位移歸零，避免累積誤差。</p></div>
+          </details>
+          <details>
+            <summary>10 條賠付線要怎麼判定？</summary>
+            <div class="faq-answer"><p>把每條線的 (reel, row) 座標寫成資料表，從第一輪開始取符號；若後續輪不符合就停止。只有從第一輪連續出現的組合才算連線，Scatter 通常不看線，而是計算全盤數量。</p></div>
+          </details>
+          <details>
+            <summary>Free Spin 為什麼需要獨立狀態？</summary>
+            <div class="faq-answer"><p>免費遊戲會改變投注扣除、剩餘次數、倍率與自動旋轉流程，也可能在同一次結果中再次觸發。把它做成 FSM 的獨立狀態，可以避免與一般旋轉的按鈕狀態、Big Win 演出和餘額結算互相污染。</p></div>
+          </details>
+          <details>
+            <summary>Symbol 物件池真的有必要嗎？</summary>
+            <div class="faq-answer"><p>若每幀都建立新物件與 DOM，垃圾回收會造成週期性卡頓。物件池預先配置固定數量並重複使用，能降低 GC 壓力；但在 5×3 且只重繪 Canvas 的情況下，效益主要來自避免配置，而不是池本身。</p></div>
+          </details>
+        </div>
+
+        <div class="related-links" aria-label="相關內容">
+          <a href="/games/slots/">老虎機試玩</a>
+          <a href="/guides/fish-shooting-ai-collision/">捕魚機 AI 指南</a>
+          <a href="/guides/html5-casino-performance/">效能與除錯</a>
+        </div>
+
+        <div class="author-box">
+          <span class="author-avatar" aria-hidden="true">LF</span>
+          <div>
+            <h2>LuckyForge Lab 工程編輯</h2>
+            <p>專注於瀏覽器遊戲架構、可驗證隨機與無障礙互動。內容以可重現的 demo 為基礎，並在每頁標示最後更新日期。</p>
+          </div>
+        </div>
+      </article>
+
+      <aside class="toc" aria-label="本頁目錄">
+        <h2>本頁目錄</h2>
+        <ol>
+          <li><a href="#why-fsm">為什麼用 FSM</a></li>
+          <li><a href="#result-first">結果先定</a></li>
+          <li><a href="#reel-physics">滾輪物理</a></li>
+          <li><a href="#paylines">連線判定</a></li>
+          <li><a href="#free-spin">Free Spin</a></li>
+          <li><a href="#object-pool">物件池</a></li>
+          <li><a href="#big-win">Big Win 與無障礙</a></li>
+          <li><a href="#rtp">RTP 與波動</a></li>
+          <li><a href="#checklist">上線檢查表</a></li>
+          <li><a href="#faq">常見問題</a></li>
+        </ol>
+        <button class="btn btn-ghost btn-sm" type="button" data-copy-link="https://luckyforge-lab.pages.dev/guides/slots-fsm-reel-physics/">複製引用連結</button>
+      </aside>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-main">
+      <div class="footer-brand">
+        <a class="brand" href="/">
+          <span class="brand-mark" aria-hidden="true">LF</span>
+          <span class="brand-name"><strong>LuckyForge Lab</strong><span>幸運工坊</span></span>
+        </a>
+        <p>純前端 HTML5 賭場遊戲實驗室。用可玩的 demo 拆解 FSM、物件池、碰撞、公平性與效能，全部使用虛擬籌碼。</p>
+        <div class="footer-badges"><span class="badge">18+</span><span class="badge badge--mint">虛擬籌碼</span><span class="badge badge--muted">零外部請求</span></div>
+      </div>
+      <nav class="footer-col" aria-labelledby="footer-games">
+        <h2 id="footer-games">遊戲</h2>
+        <ul>
+          <li><a href="/games/slots/">老虎機</a></li>
+          <li><a href="/games/fish-shooting/">捕魚機</a></li>
+          <li><a href="/games/baccarat/">百家樂</a></li>
+          <li><a href="/games/roulette/">輪盤</a></li>
+          <li><a href="/games/blackjack/">21 點</a></li>
+        </ul>
+      </nav>
+      <nav class="footer-col" aria-labelledby="footer-guides">
+        <h2 id="footer-guides">指南</h2>
+        <ul>
+          <li><a href="/guides/">全部指南</a></li>
+          <li><a href="/guides/slots-fsm-reel-physics/">老虎機 FSM</a></li>
+          <li><a href="/guides/fish-shooting-ai-collision/">捕魚機 AI</a></li>
+          <li><a href="/guides/table-games-fairness/">公平性與重連</a></li>
+          <li><a href="/guides/html5-casino-performance/">效能與除錯</a></li>
+        </ul>
+      </nav>
+      <nav class="footer-col" aria-labelledby="footer-site">
+        <h2 id="footer-site">網站</h2>
+        <ul>
+          <li><a href="/about/">關於我們</a></li>
+          <li><a href="/accessibility/">無障礙</a></li>
+          <li><a href="/privacy/">隱私與資料</a></li>
+          <li><a href="/responsible-gaming/">責任遊戲</a></li>
+          <li><a href="/llms.txt">llms.txt</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="footer-bottom">
+      <p>© <span data-current-year>2026</span> LuckyForge Lab（幸運工坊）。內容為技術教學與娛樂展示，不構成賭博建議。</p>
+      <p>18+ · 虛擬籌碼 · 無真錢交易 · <a href="/responsible-gaming/">請理性遊玩</a></p>
+    </div>
+  </div>
+</footer>
+
+<script type="module" src="/assets/js/site.js"></script>
+</body>
+</html>

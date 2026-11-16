@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>document.documentElement.classList.add("js");</script>
+<title>捕魚機 Fish Shooting 試玩：碰撞、魚群 AI 與砲台倍率｜LuckyForge Lab</title>
+<meta name="description" content="免費玩 HTML5 捕魚機，並拆解線段 vs 圓碰撞、boids 魚群 AI、正弦路徑、砲台倍率、物件池與伺服器結算。支援自動捕魚、鍵盤瞄準與手機觸控，全部使用虛擬籌碼。">
+<meta name="keywords" content="捕魚機,fish shooting,HTML5 捕魚,碰撞判定,魚群 AI,boids,砲台倍率,物件池,Canvas 遊戲,伺服器結算">
+<meta name="author" content="LuckyForge Lab">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#070a10">
+<link rel="canonical" href="https://luckyforge-lab.pages.dev/games/fish-shooting/">
+<link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/img/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="LuckyForge Lab 幸運工坊">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="捕魚機 Fish Shooting 試玩：碰撞、魚群 AI 與砲台倍率">
+<meta property="og:description" content="可玩的 HTML5 捕魚機，附線段碰撞、魚群 AI、砲台倍率與伺服器結算的完整拆解。">
+<meta property="og:url" content="https://luckyforge-lab.pages.dev/games/fish-shooting/">
+<meta property="og:image" content="https://luckyforge-lab.pages.dev/assets/img/og-cover.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="LuckyForge Lab 捕魚機試玩封面">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="捕魚機 Fish Shooting 試玩：碰撞、魚群 AI 與砲台倍率">
+<meta name="twitter:description" content="可玩的 HTML5 捕魚機，附線段碰撞、魚群 AI、砲台倍率與伺服器結算的完整拆解。">
+<meta name="twitter:image" content="https://luckyforge-lab.pages.dev/assets/img/og-cover.png">
+<meta name="twitter:image:alt" content="LuckyForge Lab 捕魚機試玩封面">
+<link rel="stylesheet" href="/assets/css/site.css">
+<link rel="stylesheet" href="/assets/css/games.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "首頁", "item": "https://luckyforge-lab.pages.dev/" },
+        { "@type": "ListItem", "position": 2, "name": "捕魚機 Fish Shooting", "item": "https://luckyforge-lab.pages.dev/games/fish-shooting/" }
+      ]
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://luckyforge-lab.pages.dev/games/fish-shooting/#webpage",
+      "url": "https://luckyforge-lab.pages.dev/games/fish-shooting/",
+      "name": "捕魚機 Fish Shooting 試玩：碰撞、魚群 AI 與砲台倍率",
+      "description": "可玩的 HTML5 捕魚機與碰撞、AI、物件池、伺服器結算的工程拆解。",
+      "inLanguage": "zh-Hant-TW",
+      "isPartOf": { "@id": "https://luckyforge-lab.pages.dev/#website" },
+      "datePublished": "2026-11-16",
+      "dateModified": "2026-11-16",
+      "primaryImageOfPage": "https://luckyforge-lab.pages.dev/assets/img/og-cover.png"
+    },
+    {
+      "@type": "VideoGame",
+      "@id": "https://luckyforge-lab.pages.dev/games/fish-shooting/#game",
+      "name": "Deep Reef 捕魚機",
+      "url": "https://luckyforge-lab.pages.dev/games/fish-shooting/",
+      "description": "HTML5 Canvas 捕魚機示範，含魚群 AI、碰撞、砲台倍率與自動捕魚。",
+      "image": "https://luckyforge-lab.pages.dev/assets/img/og-cover.png",
+      "genre": "Casino",
+      "gamePlatform": "Web browser",
+      "applicationCategory": "Game",
+      "operatingSystem": "Any",
+      "playMode": "SinglePlayer",
+      "numberOfPlayers": 1,
+      "inLanguage": "zh-Hant-TW",
+      "datePublished": "2026-11-16",
+      "dateModified": "2026-11-16",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "TWD" },
+      "publisher": { "@id": "https://luckyforge-lab.pages.dev/#organization" }
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://luckyforge-lab.pages.dev/games/fish-shooting/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "捕魚機的命中判定為什麼不用點碰撞？", "acceptedAnswer": { "@type": "Answer", "text": "子彈速度可達每秒 1100 像素，若只檢查子彈當前位置是否落在魚的圓內，低幀率時可能直接穿過。改用上一幀到這一幀的線段與魚的圓做碰撞，能避免 tunneling。" } },
+        { "@type": "Question", "name": "砲台倍率越高越好嗎？", "acceptedAnswer": { "@type": "Answer", "text": "不一定。倍率提高會增加每發成本與傷害，但若命中率低或魚種 HP 高，期望回報不一定更好。正式產品的倍率與魚群權重必須一起調整，並由伺服器結算。" } },
+        { "@type": "Question", "name": "為什麼魚群要分開處理？", "acceptedAnswer": { "@type": "Answer", "text": "小魚使用簡化 boids 產生群聚感，大魚使用正弦路徑維持可預測的巡航；兩者視覺需求與運算成本不同。物件池固定容量也能避免長局遊玩時記憶體持續成長。" } },
+        { "@type": "Question", "name": "自動捕魚是外掛嗎？", "acceptedAnswer": { "@type": "Answer", "text": "不是。它是 demo 內建的輔助模式，會優先鎖定高價值魚種並自動開火；正式產品若提供類似功能，必須受伺服器速率限制與風險控制。" } },
+        { "@type": "Question", "name": "正式捕魚機如何防止作弊？", "acceptedAnswer": { "@type": "Answer", "text": "魚群生成、子彈命中、傷害與派彩都必須由伺服器權威計算或驗證。前端只送瞄準與開火意圖，伺服器依時間戳、彈道與魚群狀態結算，並記錄可稽核的局單。" } }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<a class="skip-link" href="#main-content">跳至主要內容</a>
+
+<header class="site-header" data-header>
+  <div class="container header-inner">
+    <a class="brand" href="/">
+      <span class="brand-mark" aria-hidden="true">LF</span>
+      <span class="brand-name"><strong>LuckyForge Lab</strong><span>幸運工坊</span></span>
+    </a>
+    <nav class="site-nav" id="primary-nav" aria-label="主要導覽">
+      <a href="/games/slots/">老虎機</a>
+      <a href="/games/fish-shooting/" aria-current="page">捕魚機</a>
+      <a href="/games/baccarat/">百家樂</a>
+      <a href="/games/roulette/">輪盤</a>
+      <a href="/games/blackjack/">21 點</a>
+      <a href="/guides/">指南</a>
+      <a class="btn btn-primary btn-sm" href="/games/slots/">免費試玩</a>
+    </nav>
+    <div class="header-tools">
+      <button class="icon-btn" type="button" data-audio-toggle aria-pressed="false" aria-label="關閉音效" title="關閉音效">
+        <svg class="icon-sound-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4Z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M19.5 6a8.5 8.5 0 0 1 0 12"/></svg>
+        <svg class="icon-sound-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4Z"/><path d="m17 9 5 5"/><path d="m22 9-5 5"/></svg>
+      </button>
+    </div>
+    <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="primary-nav" aria-label="開啟導覽選單"><span></span></button>
+  </div>
+</header>
+
+<main id="main-content">
+  <nav class="breadcrumbs" aria-label="麵包屑">
+    <div class="container"><ol><li><a href="/">首頁</a></li><li><span aria-current="page">捕魚機 Fish Shooting</span></li></ol></div>
+  </nav>
+
+  <header class="page-hero">
+    <div class="container">
+      <span class="eyebrow">Playable demo · Real-time collision</span>
+      <h1>捕魚機 Fish Shooting 試玩：彈道、魚群 AI 與砲台倍率</h1>
+      <p class="lead">點擊海面射擊，或用鍵盤左右瞄準、空白鍵開火。這台捕魚機示範了線段碰撞、固定容量物件池、簡化 boids 魚群與五段砲台倍率；往下可以讀到每個決策背後的取捨。</p>
+      <div class="page-meta"><span>最後更新 <time datetime="2026-11-16">2026-11-16</time></span><span class="dot" aria-hidden="true"></span><span>閱讀約 10 分鐘</span><span class="dot" aria-hidden="true"></span><span>18+ · 虛擬籌碼</span></div>
+      <div class="key-takeaway">
+        <strong>重點摘要</strong>
+        <p>捕魚機的難點是「即時」與「權威」：前端要讓子彈在 60fps 下看起來命中，後端要能證明命中與派彩正確。本示範用線段 vs 圓避免高速穿透，用固定容量池控制記憶體，並把魚群生成與倍率寫成可調參數；正式產品則必須把命中與結算移到伺服器。</p>
+      </div>
+    </div>
+  </header>
+
+  <section class="demo-section" aria-labelledby="demo-title">
+    <div class="container">
+      <div class="game-shell">
+        <div class="demo-bar">
+          <div class="demo-bar__title"><span class="live-dot" aria-hidden="true"></span><span id="demo-title">Deep Reef 試玩機台</span></div>
+          <div class="demo-bar__meta"><span>960 × 540</span><span>CANVAS 2D</span><span>VIRTUAL CREDITS</span></div>
+        </div>
+
+        <div class="game-hud">
+          <div class="hud-group">
+            <div class="hud-stat"><span>餘額</span><output id="fish-balance">5,000</output></div>
+            <div class="hud-stat"><span>每發成本</span><output id="fish-cost">1</output></div>
+            <div class="hud-stat"><span>砲台倍率</span><output id="fish-level">×1</output></div>
+            <div class="hud-stat"><span>精準度</span><output id="fish-accuracy">—</output></div>
+            <div class="hud-stat hud-stat--win"><span>擊破</span><output id="fish-kills">0</output></div>
+          </div>
+        </div>
+
+        <div class="fish-stage">
+          <canvas id="fish-canvas" width="960" height="540" tabindex="0" role="application" aria-label="捕魚機遊戲畫面。點擊或拖曳海面射擊；鍵盤左右方向鍵瞄準，空白鍵或 Enter 開火。">
+            您的瀏覽器不支援 Canvas。請改用支援 Canvas 的現代瀏覽器，或閱讀下方的捕魚機規則與碰撞說明。
+          </canvas>
+          <div class="fish-overlay" aria-hidden="true">
+            <span class="fish-badge">DEEP REEF <strong>DEMO</strong></span>
+            <span class="fish-badge fish-badge--warm">龍王每 42–62 秒出現</span>
+          </div>
+        </div>
+
+        <div class="game-controls">
+          <div class="controls-left">
+            <span class="bet-label">砲台火力</span>
+            <div class="cannon-levels" role="group" aria-label="砲台火力選擇">
+              <button type="button" data-fish-level="1" aria-pressed="true">×1</button>
+              <button type="button" data-fish-level="2" aria-pressed="false">×2</button>
+              <button type="button" data-fish-level="3" aria-pressed="false">×3</button>
+              <button type="button" data-fish-level="4" aria-pressed="false">×4</button>
+              <button type="button" data-fish-level="5" aria-pressed="false">×5</button>
+            </div>
+          </div>
+          <div class="controls-right">
+            <button class="btn btn-ghost auto-toggle" type="button" id="fish-auto" aria-pressed="false">自動捕魚</button>
+            <button class="btn btn-ghost" type="button" id="fish-reset">補充籌碼</button>
+          </div>
+        </div>
+
+        <div class="game-status" id="fish-status" role="status">正在準備海域…</div>
+        <div class="sr-only" id="fish-sr" aria-live="polite" aria-atomic="true"></div>
+        <div class="demo-note"><span><strong>操作：</strong>點擊／拖曳射擊 · ← → 瞄準 · 空白鍵開火</span><span>無真錢交易</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="game-content" aria-labelledby="fish-rules-title">
+    <div class="container content-grid">
+      <article class="prose">
+        <h2 id="fish-rules-title">捕魚機規則快速看</h2>
+        <p>每次開火都會消耗「每發成本」，子彈命中魚隻時扣除其 HP；HP 歸零即擊破，玩家獲得「魚種獎勵 × 砲台倍率」的虛擬點數。五段火力分別是 ×1 到 ×5，成本與傷害同步提高。</p>
+        <div class="table-wrap">
+          <table class="data">
+            <caption>魚種、HP 與獎勵（示範參數）</caption>
+            <thead><tr><th scope="col">魚種</th><th scope="col">HP</th><th scope="col">基礎獎勵</th><th scope="col">移動方式</th><th scope="col">出現權重</th></tr></thead>
+            <tbody>
+              <tr><td>小丑魚</td><td class="num">1</td><td class="num">2</td><td>群聚 boids</td><td class="num">42</td></tr>
+              <tr><td>河豚</td><td class="num">2</td><td class="num">5</td><td>正弦巡航</td><td class="num">24</td></tr>
+              <tr><td>海龜</td><td class="num">4</td><td class="num">10</td><td>正弦巡航</td><td class="num">18</td></tr>
+              <tr><td>鯊魚</td><td class="num">8</td><td class="num">24</td><td>正弦巡航</td><td class="num">11</td></tr>
+              <tr><td>龍王</td><td class="num">16</td><td class="num">70</td><td>大型正弦巡航</td><td class="num">5</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="note">獎勵為「基礎值 × 砲台倍率」。正式產品的數值必須由伺服器設定，並以期望值模型調整，不能用這張表直接上線。</p>
+
+        <h2 id="ballistics">彈道與命中：為什麼不能只檢查點碰撞</h2>
+        <p>子彈速度是每秒 1120 像素，畫面寬度 960。若在某個 frame 子彈從魚的左側跳到右側，而程式只檢查「目前位置是否在魚的圓內」，就會發生穿透（tunneling）。本實作保存上一幀位置，將兩個位置連成線段，再計算線段與魚圓心的最短距離。</p>
+        <pre><code>function segmentCircleHit(x1, y1, x2, y2, cx, cy, radius) {
+  const dx = x2 - x1;
+  const dy = y2 - y1;
+  const lengthSquared = dx * dx + dy * dy || 1;
+  let t = ((cx - x1) * dx + (cy - y1) * dy) / lengthSquared;
+  t = clamp(t, 0, 1);
+  const px = x1 + dx * t;
+  const py = y1 + dy * t;
+  return (px - cx) ** 2 + (py - cy) ** 2 &lt;= radius * radius;
+}</code></pre>
+        <p>這個做法對圓形魚體已經足夠；若魚的碰撞形狀不規則，可改用多個圓或膠囊體。重點是碰撞必須用「這一段移動」而不是「這一瞬間的位置」。</p>
+
+        <h2 id="ai">魚群 AI：小魚群聚，大魚巡航</h2>
+        <p>小丑魚以簡化 boids 成群：檢查 130px 內的同伴，計算凝聚力（往群心靠）與分離力（避免重疊），再加上原本的向右或向左速度。為了控制 O(n²) 成本，魚池上限只有 36 隻，且只比較同一個 school ID 的魚。</p>
+        <p>河豚、海龜、鯊魚與龍王使用正弦擾動的巡航路徑：<code>vy = baseVy + sin(phase × 1.6 + seed) × amplitude</code>。這讓大魚看起來有生命感，但不會像 boids 一樣不可預測，方便美術與伺服器對齊。</p>
+        <p>魚隻離開畫面一定距離後就回收，而不是刪除物件；下次生成直接覆寫欄位。這是固定容量池的核心：記憶體不會隨時間線性成長。</p>
+
+        <h2 id="multiplier">砲台倍率與期望值</h2>
+        <p>假設某魚種的基礎獎勵是 <code>R</code>、HP 是 <code>H</code>，砲台倍率是 <code>M</code>、每發成本是 <code>C</code>、命中率是 <code>p</code>。擊破一隻魚的期望成本約為 <code>(H / (p × M)) × C</code>，期望回報是 <code>R × M</code>。兩者相除就能得到該魚種的粗略回報率。</p>
+        <p>提高倍率會同時提高傷害與成本，因此不一定更划算；真正的平衡需要把魚種權重、HP、獎勵、砲台成本與玩家命中率一起模擬。這也是為什麼正式捕魚機的倍率與魚群生成必須由伺服器控制。</p>
+        <div class="callout"><strong>重要：</strong>本頁的「自動捕魚」是 demo 輔助模式，會優先鎖定高價值魚種。它不是外掛，也不代表正式產品應允許無限制自動化；伺服器仍需速率限制與風險控制。</div>
+
+        <h2 id="server">同步伺服器結算：前端只送意圖</h2>
+        <p>在多人捕魚機中，魚群與子彈通常是共享狀態。常見做法是：</p>
+        <ol>
+          <li>伺服器產生魚群、HP、路徑與可見時間，廣播給同一房間的客戶端。</li>
+          <li>客戶端只送出「開火」意圖（角度、時間、砲台等級），不送「我打中了」。</li>
+          <li>伺服器依權威彈道與魚群狀態判定命中、扣血、擊破與派彩，再廣播結果。</li>
+          <li>客戶端收到結果後播放爆炸與加分動畫；若預測與伺服器不同，以伺服器為準。</li>
+        </ol>
+        <p>為了避免延遲感，客戶端可以先用相同參數做預測，但必須在收到伺服器結果時校正。結算紀錄應包含局單 ID、玩家、魚隻 ID、子彈 ID、時間戳、傷害、餘額變化與簽章。</p>
+
+        <h2 id="performance">物件池、背景快取與離屏繪製</h2>
+        <p>本頁有三個固定容量池：36 條魚、48 發子彈、180 個粒子。背景（海水漸層、光柱、珊瑚、海床、水波紋）只繪製一次到離屏 canvas，之後每幀只做一次 <code>drawImage</code>。這比每幀重畫數百條貝茲曲線便宜得多。</p>
+        <p>當分頁切到背景時，<code>visibilitychange</code> 會取消 <code>requestAnimationFrame</code> 並儲存餘額，回來才重新啟動。這能避免背景分頁持續消耗 CPU，也避免長局遊玩後記憶體累積。</p>
+
+        <h2 id="accessibility">手機、鍵盤與無障礙</h2>
+        <p>Canvas 設有 <code>tabindex="0"</code> 與 <code>role="application"</code>，可用左右方向鍵調整角度、空白鍵或 Enter 開火。所有擊破與餘額變化都會透過 <code>aria-live</code> 公告。觸控使用 Pointer Events，並以 <code>touch-action: none</code> 避免瀏覽器手勢干擾瞄準。</p>
+        <p>若使用滑鼠，移到海面即可瞄準，按住連續射擊；放開即停止。若使用自動捕魚，系統會在瞄準誤差小於 0.08 弧度時開火。</p>
+
+        <h2 id="faq">常見問題</h2>
+        <div class="faq">
+          <details>
+            <summary>捕魚機的命中判定為什麼不用點碰撞？</summary>
+            <div class="faq-answer"><p>子彈速度可達每秒 1100 像素，若只檢查子彈當前位置是否落在魚的圓內，低幀率時可能直接穿過。改用上一幀到這一幀的線段與魚的圓做碰撞，能避免 tunneling。</p></div>
+          </details>
+          <details>
+            <summary>砲台倍率越高越好嗎？</summary>
+            <div class="faq-answer"><p>不一定。倍率提高會增加每發成本與傷害，但若命中率低或魚種 HP 高，期望回報不一定更好。正式產品的倍率與魚群權重必須一起調整，並由伺服器結算。</p></div>
+          </details>
+          <details>
+            <summary>為什麼魚群要分開處理？</summary>
+            <div class="faq-answer"><p>小魚使用簡化 boids 產生群聚感，大魚使用正弦路徑維持可預測的巡航；兩者視覺需求與運算成本不同。物件池固定容量也能避免長局遊玩時記憶體持續成長。</p></div>
+          </details>
+          <details>
+            <summary>自動捕魚是外掛嗎？</summary>
+            <div class="faq-answer"><p>不是。它是 demo 內建的輔助模式，會優先鎖定高價值魚種並自動開火；正式產品若提供類似功能，必須受伺服器速率限制與風險控制。</p></div>
+          </details>
+          <details>
+            <summary>正式捕魚機如何防止作弊？</summary>
+            <div class="faq-answer"><p>魚群生成、子彈命中、傷害與派彩都必須由伺服器權威計算或驗證。前端只送瞄準與開火意圖，伺服器依時間戳、彈道與魚群狀態結算，並記錄可稽核的局單。</p></div>
+          </details>
+        </div>
+
+        <div class="related-links" aria-label="相關指南">
+          <a href="/guides/fish-shooting-ai-collision/">捕魚機 AI 與碰撞指南</a>
+          <a href="/guides/html5-casino-performance/">效能與除錯</a>
+          <a href="/guides/table-games-fairness/">公平性與重連</a>
+          <a href="/games/slots/">老虎機試玩</a>
+        </div>
+
+        <div class="author-box">
+          <span class="author-avatar" aria-hidden="true">LF</span>
+          <div>
+            <h2>LuckyForge Lab 工程編輯</h2>
+            <p>專注於瀏覽器遊戲架構、可驗證隨機與無障礙互動。內容以可重現的 demo 為基礎，並在每頁標示最後更新日期。</p>
+          </div>
+        </div>
+      </article>
+
+      <aside class="game-sidebar" aria-label="捕魚機規格與引用">
+        <div class="card card--pad">
+          <h2 class="h3">機台規格</h2>
+          <dl class="spec-list">
+            <div><dt>邏輯解析度</dt><dd>960 × 540</dd></div>
+            <div><dt>魚池</dt><dd>36</dd></div>
+            <div><dt>子彈池</dt><dd>48</dd></div>
+            <div><dt>粒子池</dt><dd>180</dd></div>
+            <div><dt>砲台</dt><dd>×1–×5</dd></div>
+            <div><dt>碰撞</dt><dd>線段 vs 圓</dd></div>
+            <div><dt>背景</dt><dd>離屏快取</dd></div>
+          </dl>
+        </div>
+        <div class="card card--pad">
+          <h2 class="h3">引用此頁</h2>
+          <p class="note">固定網址與更新日期可作為引用依據。引用時請保留「LuckyForge Lab」與標題。</p>
+          <button class="btn btn-ghost btn-sm" type="button" data-copy-link="https://luckyforge-lab.pages.dev/games/fish-shooting/">複製引用連結</button>
+        </div>
+        <div class="card card--pad">
+          <h2 class="h3">射擊提示</h2>
+          <p class="note">先切到 ×1 觀察魚群路徑，再提高火力。鯊魚與龍王需要多次命中，建議在牠們穿過畫面中央時集中射擊。</p>
+        </div>
+      </aside>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-main">
+      <div class="footer-brand">
+        <a class="brand" href="/">
+          <span class="brand-mark" aria-hidden="true">LF</span>
+          <span class="brand-name"><strong>LuckyForge Lab</strong><span>幸運工坊</span></span>
+        </a>
+        <p>純前端 HTML5 賭場遊戲實驗室。用可玩的 demo 拆解 FSM、物件池、碰撞、公平性與效能，全部使用虛擬籌碼。</p>
+        <div class="footer-badges"><span class="badge">18+</span><span class="badge badge--mint">虛擬籌碼</span><span class="badge badge--muted">零外部請求</span></div>
+      </div>
+      <nav class="footer-col" aria-labelledby="footer-games">
+        <h2 id="footer-games">遊戲</h2>
+        <ul>
+          <li><a href="/games/slots/">老虎機</a></li>
+          <li><a href="/games/fish-shooting/">捕魚機</a></li>
+          <li><a href="/games/baccarat/">百家樂</a></li>
+          <li><a href="/games/roulette/">輪盤</a></li>
+          <li><a href="/games/blackjack/">21 點</a></li>
+        </ul>
+      </nav>
+      <nav class="footer-col" aria-labelledby="footer-guides">
+        <h2 id="footer-guides">指南</h2>
+        <ul>
+          <li><a href="/guides/">全部指南</a></li>
+          <li><a href="/guides/slots-fsm-reel-physics/">老虎機 FSM</a></li>
+          <li><a href="/guides/fish-shooting-ai-collision/">捕魚機 AI</a></li>
+          <li><a href="/guides/table-games-fairness/">公平性與重連</a></li>
+          <li><a href="/guides/html5-casino-performance/">效能與除錯</a></li>
+        </ul>
+      </nav>
+      <nav class="footer-col" aria-labelledby="footer-site">
+        <h2 id="footer-site">網站</h2>
+        <ul>
+          <li><a href="/about/">關於我們</a></li>
+          <li><a href="/accessibility/">無障礙</a></li>
+          <li><a href="/privacy/">隱私與資料</a></li>
+          <li><a href="/responsible-gaming/">責任遊戲</a></li>
+          <li><a href="/llms.txt">llms.txt</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="footer-bottom">
+      <p>© <span data-current-year>2026</span> LuckyForge Lab（幸運工坊）。內容為技術教學與娛樂展示，不構成賭博建議。</p>
+      <p>18+ · 虛擬籌碼 · 無真錢交易 · <a href="/responsible-gaming/">請理性遊玩</a></p>
+    </div>
+  </div>
+</footer>
+
+<script type="module" src="/assets/js/site.js"></script>
+<script type="module" src="/assets/js/games/fish.js"></script>
+</body>
+</html>

@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>document.documentElement.classList.add("js");</script>
+<title>HTML5 賭場遊戲效能：Canvas、Web Audio、記憶體洩漏與除錯｜LuckyForge Lab</title>
+<meta name="description" content="HTML5 賭場遊戲效能完整指南：devicePixelRatio 與 resize、離屏快取、固定時間步、DOM 與 Canvas 分工、iOS Web Audio 解鎖、visibilitychange、WebGL context lost、記憶體洩漏與實測流程。">
+<meta name="keywords" content="HTML5 遊戲效能,Canvas 效能,devicePixelRatio,離屏canvas,Web Audio,iOS 音訊解鎖,記憶體洩漏,WebGL context lost,requestAnimationFrame,遊戲除錯">
+<meta name="author" content="LuckyForge Lab">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#070a10">
+<link rel="canonical" href="https://luckyforge-lab.pages.dev/guides/html5-casino-performance/">
+<link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/img/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="LuckyForge Lab 幸運工坊">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="HTML5 賭場遊戲效能：Canvas、Web Audio、記憶體洩漏與除錯">
+<meta property="og:description" content="從 devicePixelRatio 到 iOS 音訊解鎖、從離屏快取到記憶體洩漏，建立可測量的效能流程。">
+<meta property="og:url" content="https://luckyforge-lab.pages.dev/guides/html5-casino-performance/">
+<meta property="og:image" content="https://luckyforge-lab.pages.dev/assets/img/og-cover.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="LuckyForge Lab 效能指南封面">
+<meta property="og:article:published_time" content="2026-11-16T09:00:00+08:00">
+<meta property="og:article:modified_time" content="2026-11-16T09:00:00+08:00">
+<meta property="og:article:section" content="Web game performance">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="HTML5 賭場遊戲效能：Canvas、Web Audio、記憶體洩漏與除錯">
+<meta name="twitter:description" content="從 devicePixelRatio 到 iOS 音訊解鎖、從離屏快取到記憶體洩漏，建立可測量的效能流程。">
+<meta name="twitter:image" content="https://luckyforge-lab.pages.dev/assets/img/og-cover.png">
+<meta name="twitter:image:alt" content="LuckyForge Lab 效能指南封面">
+<link rel="stylesheet" href="/assets/css/site.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "首頁", "item": "https://luckyforge-lab.pages.dev/" },
+        { "@type": "ListItem", "position": 2, "name": "工程指南", "item": "https://luckyforge-lab.pages.dev/guides/" },
+        { "@type": "ListItem", "position": 3, "name": "HTML5 賭場遊戲效能與除錯", "item": "https://luckyforge-lab.pages.dev/guides/html5-casino-performance/" }
+      ]
+    },
+    {
+      "@type": "Article",
+      "@id": "https://luckyforge-lab.pages.dev/guides/html5-casino-performance/#article",
+      "headline": "HTML5 賭場遊戲效能：Canvas、Web Audio、記憶體洩漏與除錯",
+      "description": "HTML5 賭場遊戲的 Canvas、Web Audio、時間步、context lost、記憶體與除錯完整指南。",
+      "inLanguage": "zh-Hant-TW",
+      "datePublished": "2026-11-16T09:00:00+08:00",
+      "dateModified": "2026-11-16T09:00:00+08:00",
+      "articleSection": "Web game performance",
+      "timeRequired": "PT9M",
+      "author": { "@type": "Organization", "name": "LuckyForge Lab 工程編輯", "url": "https://luckyforge-lab.pages.dev/about/" },
+      "publisher": { "@id": "https://luckyforge-lab.pages.dev/#organization" },
+      "mainEntityOfPage": { "@id": "https://luckyforge-lab.pages.dev/guides/html5-casino-performance/#webpage" },
+      "image": "https://luckyforge-lab.pages.dev/assets/img/og-cover.png",
+      "about": ["Canvas 2D", "Web Audio API", "Game performance", "Memory leak", "WebGL context loss"]
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://luckyforge-lab.pages.dev/guides/html5-casino-performance/#webpage",
+      "url": "https://luckyforge-lab.pages.dev/guides/html5-casino-performance/",
+      "name": "HTML5 賭場遊戲效能：Canvas、Web Audio、記憶體洩漏與除錯",
+      "description": "HTML5 賭場遊戲的 Canvas、Web Audio、時間步、context lost、記憶體與除錯完整指南。",
+      "inLanguage": "zh-Hant-TW",
+      "isPartOf": { "@id": "https://luckyforge-lab.pages.dev/#website" },
+      "datePublished": "2026-11-16",
+      "dateModified": "2026-11-16",
+      "primaryImageOfPage": "https://luckyforge-lab.pages.dev/assets/img/og-cover.png"
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://luckyforge-lab.pages.dev/guides/html5-casino-performance/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "為什麼 Canvas 在高解析螢幕上會模糊？", "acceptedAnswer": { "@type": "Answer", "text": "因為 canvas 的 width/height 是邏輯像素，不是裝置像素。若 CSS 尺寸是 400×400、devicePixelRatio 是 3，實際需要 1200×1200 的繪圖緩衝；只設 400×400 會被拉伸而模糊。正確做法是依 DPR 放大內部尺寸，再用 ctx.setTransform 縮放繪製座標。" } },
+        { "@type": "Question", "name": "iOS Safari 為什麼沒有聲音？", "acceptedAnswer": { "@type": "Answer", "text": "Web Audio 必須由使用者手勢（點擊、按鍵）解鎖。請在第一個 pointerdown 或 keydown 時建立或 resume AudioContext，並在之後的播放函式中檢查 state。僅在頁面載入時建立 context 通常會處於 suspended。" } },
+        { "@type": "Question", "name": "什麼是 WebGL context lost？", "acceptedAnswer": { "@type": "Answer", "text": "GPU 資源可能因驅動、記憶體或背景切換而被回收，瀏覽器會發出 webglcontextlost 事件。應先 preventDefault 阻止預設行為，停止渲染，等 webglcontextrestored 後重建紋理、緩衝與著色器。Canvas 2D 不會有這個事件，但可能因尺寸過大而失敗。" } },
+        { "@type": "Question", "name": "為什麼遊戲玩久了越來越卡？", "acceptedAnswer": { "@type": "Answer", "text": "常見原因是事件監聽器、計時器、Canvas 或 Image 物件沒有釋放，或陣列只增不減。每次建立動畫或連線都要有對應的 cleanup；用 Chrome DevTools 的 Memory 與 Performance 面板觀察 heap 與 listener 數量是否持續上升。" } },
+        { "@type": "Question", "name": "要不要用 Will-change 或 translateZ 加速？", "acceptedAnswer": { "@type": "Answer", "text": "只在確實有效的地方使用。對大量元素濫用 will-change 會增加記憶體與合成成本，反而更慢。Canvas 遊戲通常不需要；若是 DOM 卡牌或面板動畫，先量測再局部提升。" } }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<a class="skip-link" href="#main-content">跳至主要內容</a>
+
+<header class="site-header" data-header>
+  <div class="container header-inner">
+    <a class="brand" href="/">
+      <span class="brand-mark" aria-hidden="true">LF</span>
+      <span class="brand-name"><strong>LuckyForge Lab</strong><span>幸運工坊</span></span>
+    </a>
+    <nav class="site-nav" id="primary-nav" aria-label="主要導覽">
+      <a href="/games/slots/">老虎機</a>
+      <a href="/games/fish-shooting/">捕魚機</a>
+      <a href="/games/baccarat/">百家樂</a>
+      <a href="/games/roulette/">輪盤</a>
+      <a href="/games/blackjack/">21 點</a>
+      <a href="/guides/" aria-current="page">指南</a>
+      <a class="btn btn-primary btn-sm" href="/games/slots/">免費試玩</a>
+    </nav>
+    <div class="header-tools">
+      <button class="icon-btn" type="button" data-audio-toggle aria-pressed="false" aria-label="關閉音效" title="關閉音效">
+        <svg class="icon-sound-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4Z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M19.5 6a8.5 8.5 0 0 1 0 12"/></svg>
+        <svg class="icon-sound-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4Z"/><path d="m17 9 5 5"/><path d="m22 9-5 5"/></svg>
+      </button>
+    </div>
+    <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="primary-nav" aria-label="開啟導覽選單"><span></span></button>
+  </div>
+</header>
+
+<main id="main-content">
+  <nav class="breadcrumbs" aria-label="麵包屑">
+    <div class="container"><ol><li><a href="/">首頁</a></li><li><a href="/guides/">工程指南</a></li><li><span aria-current="page">效能與除錯</span></li></ol></div>
+  </nav>
+
+  <header class="page-hero">
+    <div class="container">
+      <span class="eyebrow">Guide 04 · Performance</span>
+      <h1>HTML5 賭場遊戲效能：Canvas、Web Audio、記憶體洩漏與除錯</h1>
+      <p class="lead">「在我的電腦很順」不是效能結論。這篇建立一個可測量的流程：先設定幀率與記憶體預算，再處理 Canvas 解析度、離屏快取、時間步、音訊解鎖、背景暫停與 context lost，最後用 DevTools 找出真正的瓶頸。</p>
+      <div class="page-meta"><span>最後更新 <time datetime="2026-11-16">2026-11-16</time></span><span class="dot" aria-hidden="true"></span><span>閱讀約 9 分鐘</span><span class="dot" aria-hidden="true"></span><span>18+ · 技術教學</span></div>
+      <div class="key-takeaway">
+        <strong>先說結論</strong>
+        <p>先量測，再優化。Canvas 依 devicePixelRatio 放大但設定上限；靜態背景與符號用離屏快取；邏輯用固定時間步，渲染可插值；Web Audio 在第一個手勢解鎖；切到背景要停止或降頻；每個監聽器、計時器與紋理都要有 cleanup。效能的敵人通常是配置與佈局，而不是「Canvas 本身」。</p>
+      </div>
+    </div>
+  </header>
+
+  <section class="section section--tight">
+    <div class="container article-layout">
+      <article class="prose">
+        <h2 id="budget">先定預算：幀率、互動延遲與記憶體</h2>
+        <p>沒有預算就沒有優化。對賭場遊戲，建議至少定三個指標：</p>
+        <ul>
+          <li><strong>幀率</strong>：中階手機 60fps，低階手機不低於 45fps；掉到 30fps 時要能降級而不是卡死。</li>
+          <li><strong>互動延遲</strong>：按下旋轉到第一幀動畫小於 100ms；音效小於 50ms。</li>
+          <li><strong>記憶體</strong>：連續玩 30 分鐘，JS heap 不應持續線性上升；單一 Canvas 不超過裝置可承受的尺寸。</li>
+        </ul>
+        <p>用 <code>performance.mark()</code> 與 <code>performance.measure()</code> 標記「按下按鈕 → 開始動畫 → 結算」的區間，比只看 FPS 更能找出使用者感受到的延遲。FPS 高但按下後 300ms 才反應，仍然是不及格。</p>
+
+        <h2 id="dpr">Canvas 解析度：devicePixelRatio 與上限</h2>
+        <p>Canvas 的 <code>width</code>／<code>height</code> 是繪圖緩衝尺寸，CSS 的 <code>width</code>／<code>height</code> 是顯示尺寸。若 CSS 是 400×400、DPR 是 3，緩衝應為 1200×1200；否則瀏覽器會把 400×400 拉伸，看起來模糊。</p>
+        <pre><code>function fitCanvas(canvas, maxDpr = 2) {
+  const rect = canvas.getBoundingClientRect();
+  const dpr = Math.min(window.devicePixelRatio || 1, maxDpr);
+  const width = Math.max(1, Math.round(rect.width * dpr));
+  const height = Math.max(1, Math.round(rect.height * dpr));
+  if (canvas.width !== width || canvas.height !== height) {
+    canvas.width = width;
+    canvas.height = height;
+  }
+  const ctx = canvas.getContext("2d");
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  return { ctx, width: rect.width, height: rect.height, dpr };
+}</code></pre>
+        <p>為什麼要設 <code>maxDpr = 2</code>？因為 3× 或 4× 的緩衝面積是 2× 的 2.25–4 倍，記憶體與填充率都會暴增，但肉眼差異有限。可以依裝置記憶體或 fps 動態調整，但不要讓 DPR 無上限。</p>
+        <p>用 <code>ResizeObserver</code> 監聽容器尺寸，而不是只聽 <code>window.resize</code>；行動瀏覽器的網址列收合、鍵盤彈出與旋轉都可能改變可用高度。重設 <code>canvas.width</code> 會清空內容與狀態，請在之後重新設定 transform 與快取。</p>
+
+        <h2 id="offscreen">離屏快取：只重畫會動的東西</h2>
+        <p>賭場遊戲有大量靜態元素：賭桌絨布、輪盤底盤、背景漸層、標題、按鈕。這些不需要每幀重畫。把它們畫到離屏 canvas，主迴圈只 <code>drawImage</code> 一次，通常就能省下可觀的填充率。</p>
+        <pre><code>const bg = document.createElement("canvas");
+bg.width = LOGICAL_W; bg.height = LOGICAL_H;
+const bctx = bg.getContext("2d");
+drawTableBackground(bctx);
+
+function render() {
+  ctx.clearRect(0, 0, LOGICAL_W, LOGICAL_H);
+  ctx.drawImage(bg, 0, 0);
+  drawFish(ctx);
+  drawBullets(ctx);
+  drawHud(ctx);
+}</code></pre>
+        <p>注意：若背景會隨著視窗比例改變，快取就要重畫；若只是翻譯或主題切換，也要失效重建。不要快取「會整體旋轉的輪盤」再旋轉那張圖，因為額外的合成與取樣可能比直接畫 37 個扇形更慢，還會模糊。</p>
+
+        <h2 id="timestep">固定時間步與背景暫停</h2>
+        <p><code>requestAnimationFrame</code> 的 delta 不穩定：120Hz 螢幕、背景切換、GC 都會讓它跳動。若直接把 delta 乘上速度，魚或滾輪可能瞬移，碰撞也可能穿透。用固定步長與累加器，讓邏輯可重播：</p>
+        <pre><code>const STEP = 1 / 60;
+let acc = 0;
+let last = performance.now();
+
+function loop(now) {
+  const delta = Math.min(0.05, (now - last) / 1000);
+  last = now;
+  acc += delta;
+  while (acc &gt;= STEP) {
+    update(STEP);
+    acc -= STEP;
+  }
+  render(acc / STEP);
+  requestAnimationFrame(loop);
+}</code></pre>
+        <p>切到背景時，瀏覽器會暫停 rAF，但音訊與計時器不一定停。請監聽 <code>visibilitychange</code>：<code>document.hidden</code> 為 true 時停止生成、暫停音效、記錄時間；回來時把 <code>last</code> 重設為 <code>performance.now()</code>，避免一次補上幾十秒的 delta。若遊戲有倒數，應以伺服器時間為準，而不是背景被凍結的 <code>setTimeout</code>。</p>
+
+        <h2 id="dom">DOM 與 Canvas 的分工</h2>
+        <p>不是所有東西都該畫在 Canvas。餘額、投注、按鈕、結果文字、FAQ 用 DOM 更合適：可選取、可被螢幕閱讀器讀取、可用 CSS 響應式。Canvas 只負責遊戲視覺與粒子。混合架構的關鍵是「不要每幀改 DOM」：</p>
+        <ul>
+          <li>文字只在資料變動時更新，不要每幀寫 <code>textContent</code>。</li>
+          <li>用 <code>classList.toggle</code> 取代重複設定 <code>style</code>。</li>
+          <li>批次讀取幾何資訊，再批次寫入，避免 layout thrashing。</li>
+          <li>清單用 <code>DocumentFragment</code> 或 <code>replaceChildren</code>，不要逐筆插入造成多次 reflow。</li>
+        </ul>
+        <p>若卡牌或面板有大量動畫，考慮用 <code>transform</code> 與 <code>opacity</code>，這兩個屬性通常只觸發合成。避免動畫 <code>top</code>、<code>left</code>、<code>width</code>、<code>height</code>，因為會觸發佈局。</p>
+
+        <h2 id="audio">Web Audio：iOS 解鎖與節流</h2>
+        <p>iOS Safari 要求音訊由使用者手勢啟動。最穩的做法是監聽第一個 <code>pointerdown</code> 與 <code>keydown</code>，在事件中建立或 <code>resume()</code> AudioContext，成功後移除監聽：</p>
+        <pre><code>let ctx;
+let unlocked = false;
+
+async function unlockAudio() {
+  if (unlocked) return true;
+  ctx ??= new (window.AudioContext || window.webkitAudioContext)();
+  if (ctx.state === "suspended") await ctx.resume();
+  unlocked = ctx.state === "running";
+  return unlocked;
+}
+
+window.addEventListener("pointerdown", unlockAudio, { once: true, capture: true });
+window.addEventListener("keydown", unlockAudio, { once: true, capture: true });</code></pre>
+        <p>不要在頁面載入時就播放聲音，也不要在每次點擊都建立新的 AudioContext。連續命中時，限制同時播放的節點數量，或重用同一個 buffer；否则音效會變成噪音，還會拖慢主執行緒。靜音時不要只是把 <code>gain</code> 設為 0，應停止排程新音效，節省 CPU。</p>
+
+        <h2 id="context">WebGL context lost 與 Canvas 失敗</h2>
+        <p>若使用 WebGL，必須處理 context lost。GPU 資源可能因驅動更新、記憶體不足或背景切換被回收：</p>
+        <pre><code>canvas.addEventListener("webglcontextlost", (event) =&gt; {
+  event.preventDefault();       // 允許之後恢復
+  running = false;
+  showNotice("圖形資源中斷，正在恢復…");
+}, false);
+
+canvas.addEventListener("webglcontextrestored", () =&gt; {
+  rebuildTextures();
+  rebuildBuffers();
+  rebuildShaders();
+  running = true;
+}, false);</code></pre>
+        <p>恢復後要重建所有 GPU 資源，不能沿用舊的 texture 或 buffer。Canvas 2D 不會有 context lost，但過大的 canvas（例如 DPR 4× 的 4K 畫布）可能配置失敗或變成空白；請設定尺寸上限並在失敗時降級。</p>
+
+        <h2 id="leaks">記憶體洩漏：最常見的五個來源</h2>
+        <ol>
+          <li><strong>事件監聽器</strong>：每次建立遊戲都 <code>addEventListener</code>，卻沒有在離開時移除。用 <code>AbortController</code> 一次清理。</li>
+          <li><strong>計時器</strong>：<code>setInterval</code> 持續執行，即使畫面已卸載。保存 ID 並在 cleanup 中 <code>clearInterval</code>。</li>
+          <li><strong>閉包</strong>：回呼捕獲了整個 state 或 DOM，導致無法回收。只捕獲需要的變數。</li>
+          <li><strong>影像與 Canvas</strong>：不断建立新 Image／canvas 而沒有釋放。重用或設為 <code>null</code> 讓 GC 回收。</li>
+          <li><strong>只增不減的陣列</strong>：粒子、歷史紀錄、訊息列表沒有上限。設定最大長度並淘汰舊資料。</li>
+        </ol>
+        <pre><code>const controller = new AbortController();
+window.addEventListener("resize", onResize, { signal: controller.signal });
+document.addEventListener("visibilitychange", onVisibility, { signal: controller.signal });
+
+function destroy() {
+  controller.abort();
+  cancelAnimationFrame(rafId);
+}</code></pre>
+        <p>用 DevTools 的 Memory 面板取兩次 snapshot，比對 detached DOM 與 listener 數量；Performance 面板錄製 30 秒，觀察 GC 是否頻繁、long task 是否集中在結算或建立 DOM。</p>
+
+        <h2 id="measure">實測流程：不要靠感覺</h2>
+        <ol>
+          <li>用中階 Android 與 iPhone Safari 各測一次，不要只在桌機 Chrome。</li>
+          <li>開啟 4× CPU 節流，模擬低階裝置；觀察互動延遲與掉幀。</li>
+          <li>錄製 Performance，找出最長的 task 與強制同步佈局。</li>
+          <li>玩 10 分鐘，檢查 heap 與 listener 是否持續上升。</li>
+          <li>切到背景 30 秒再回來，確認時間步與音效沒有補播或爆音。</li>
+          <li>開啟「減少動態」，確認動畫縮短但結果仍正確。</li>
+        </ol>
+        <p>把量測結果寫進 PR 或 issue，而不是只說「優化了」。例如「iPhone 12 Safari，旋轉到首幀 82ms，平均 58fps，10 分鐘 heap 從 18MB 到 21MB」比「感覺很順」有用得多。</p>
+
+        <h2 id="checklist">行動端效能檢查表</h2>
+        <ul>
+          <li>Canvas 是否依 DPR 放大？是否設定上限？resize 後是否重設 transform？</li>
+          <li>靜態背景與符號是否快取？是否避免每幀重建路徑與漸層？</li>
+          <li>是否使用固定時間步？delta 是否有上限？背景回來是否重設 last？</li>
+          <li>是否只在資料變動時更新 DOM？是否避免每幀讀寫幾何？</li>
+          <li>Web Audio 是否由手勢解鎖？是否限制同時播放數？</li>
+          <li>WebGL 是否處理 context lost／restored？Canvas 是否有尺寸上限？</li>
+          <li>事件監聽、計時器、rAF、影像是否都有 cleanup？</li>
+          <li>是否在真實手機與減少動態模式下測試？</li>
+        </ul>
+
+        <h2 id="faq">常見問題</h2>
+        <div class="faq">
+          <details>
+            <summary>為什麼 Canvas 在高解析螢幕上會模糊？</summary>
+            <div class="faq-answer"><p>因為 canvas 的 width/height 是邏輯像素，不是裝置像素。若 CSS 尺寸是 400×400、devicePixelRatio 是 3，實際需要 1200×1200 的繪圖緩衝；只設 400×400 會被拉伸而模糊。正確做法是依 DPR 放大內部尺寸，再用 ctx.setTransform 縮放繪製座標。</p></div>
+          </details>
+          <details>
+            <summary>iOS Safari 為什麼沒有聲音？</summary>
+            <div class="faq-answer"><p>Web Audio 必須由使用者手勢（點擊、按鍵）解鎖。請在第一個 pointerdown 或 keydown 時建立或 resume AudioContext，並在之後的播放函式中檢查 state。僅在頁面載入時建立 context 通常會處於 suspended。</p></div>
+          </details>
+          <details>
+            <summary>什麼是 WebGL context lost？</summary>
+            <div class="faq-answer"><p>GPU 資源可能因驅動、記憶體或背景切換而被回收，瀏覽器會發出 webglcontextlost 事件。應先 preventDefault 阻止預設行為，停止渲染，等 webglcontextrestored 後重建紋理、緩衝與著色器。Canvas 2D 不會有這個事件，但可能因尺寸過大而失敗。</p></div>
+          </details>
+          <details>
+            <summary>為什麼遊戲玩久了越來越卡？</summary>
+            <div class="faq-answer"><p>常見原因是事件監聽器、計時器、Canvas 或 Image 物件沒有釋放，或陣列只增不減。每次建立動畫或連線都要有對應的 cleanup；用 Chrome DevTools 的 Memory 與 Performance 面板觀察 heap 與 listener 數量是否持續上升。</p></div>
+          </details>
+          <details>
+            <summary>要不要用 will-change 或 translateZ 加速？</summary>
+            <div class="faq-answer"><p>只在確實有效的地方使用。對大量元素濫用 will-change 會增加記憶體與合成成本，反而更慢。Canvas 遊戲通常不需要；若是 DOM 卡牌或面板動畫，先量測再局部提升。</p></div>
+          </details>
+        </div>
+
+        <div class="related-links" aria-label="相關內容">
+          <a href="/games/roulette/">輪盤試玩</a>
+          <a href="/guides/slots-fsm-reel-physics/">老虎機 FSM</a>
+          <a href="/guides/fish-shooting-ai-collision/">捕魚機 AI</a>
+          <a href="/accessibility/">無障礙說明</a>
+        </div>
+
+        <div class="author-box">
+          <span class="author-avatar" aria-hidden="true">LF</span>
+          <div>
+            <h2>LuckyForge Lab 工程編輯</h2>
+            <p>專注於瀏覽器遊戲架構、可驗證隨機與無障礙互動。內容以可重現的 demo 為基礎，並在每頁標示最後更新日期。</p>
+          </div>
+        </div>
+      </article>
+
+      <aside class="toc" aria-label="本頁目錄">
+        <h2>本頁目錄</h2>
+        <ol>
+          <li><a href="#budget">效能預算</a></li>
+          <li><a href="#dpr">Canvas 與 DPR</a></li>
+          <li><a href="#offscreen">離屏快取</a></li>
+          <li><a href="#timestep">固定時間步</a></li>
+          <li><a href="#dom">DOM 與 Canvas</a></li>
+          <li><a href="#audio">Web Audio</a></li>
+          <li><a href="#context">Context lost</a></li>
+          <li><a href="#leaks">記憶體洩漏</a></li>
+          <li><a href="#measure">實測流程</a></li>
+          <li><a href="#faq">常見問題</a></li>
+        </ol>
+        <button class="btn btn-ghost btn-sm" type="button" data-copy-link="https://luckyforge-lab.pages.dev/guides/html5-casino-performance/">複製引用連結</button>
+      </aside>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-main">
+      <div class="footer-brand">
+        <a class="brand" href="/">
+          <span class="brand-mark" aria-hidden="true">LF</span>
+          <span class="brand-name"><strong>LuckyForge Lab</strong><span>幸運工坊</span></span>
+        </a>
+        <p>純前端 HTML5 賭場遊戲實驗室。用可玩的 demo 拆解 FSM、物件池、碰撞、公平性與效能，全部使用虛擬籌碼。</p>
+        <div class="footer-badges"><span class="badge">18+</span><span class="badge badge--mint">虛擬籌碼</span><span class="badge badge--muted">零外部請求</span></div>
+      </div>
+      <nav class="footer-col" aria-labelledby="footer-games">
+        <h2 id="footer-games">遊戲</h2>
+        <ul>
+          <li><a href="/games/slots/">老虎機</a></li>
+          <li><a href="/games/fish-shooting/">捕魚機</a></li>
+          <li><a href="/games/baccarat/">百家樂</a></li>
+          <li><a href="/games/roulette/">輪盤</a></li>
+          <li><a href="/games/blackjack/">21 點</a></li>
+        </ul>
+      </nav>
+      <nav class="footer-col" aria-labelledby="footer-guides">
+        <h2 id="footer-guides">指南</h2>
+        <ul>
+          <li><a href="/guides/">全部指南</a></li>
+          <li><a href="/guides/slots-fsm-reel-physics/">老虎機 FSM</a></li>
+          <li><a href="/guides/fish-shooting-ai-collision/">捕魚機 AI</a></li>
+          <li><a href="/guides/table-games-fairness/">公平性與重連</a></li>
+          <li><a href="/guides/html5-casino-performance/">效能與除錯</a></li>
+        </ul>
+      </nav>
+      <nav class="footer-col" aria-labelledby="footer-site">
+        <h2 id="footer-site">網站</h2>
+        <ul>
+          <li><a href="/about/">關於我們</a></li>
+          <li><a href="/accessibility/">無障礙</a></li>
+          <li><a href="/privacy/">隱私與資料</a></li>
+          <li><a href="/responsible-gaming/">責任遊戲</a></li>
+          <li><a href="/llms.txt">llms.txt</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="footer-bottom">
+      <p>© <span data-current-year>2026</span> LuckyForge Lab（幸運工坊）。內容為技術教學與娛樂展示，不構成賭博建議。</p>
+      <p>18+ · 虛擬籌碼 · 無真錢交易 · <a href="/responsible-gaming/">請理性遊玩</a></p>
+    </div>
+  </div>
+</footer>
+
+<script type="module" src="/assets/js/site.js"></script>
+</body>
+</html>

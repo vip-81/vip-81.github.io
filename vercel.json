@@ -1,0 +1,76 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "cleanUrls": false,
+  "trailingSlash": true,
+  "redirects": [
+    { "source": "/index.html", "destination": "/", "statusCode": 308 },
+    { "source": "/games/slots", "destination": "/games/slots/", "statusCode": 308 },
+    { "source": "/games/fish-shooting", "destination": "/games/fish-shooting/", "statusCode": 308 },
+    { "source": "/games/baccarat", "destination": "/games/baccarat/", "statusCode": 308 },
+    { "source": "/games/roulette", "destination": "/games/roulette/", "statusCode": 308 },
+    { "source": "/games/blackjack", "destination": "/games/blackjack/", "statusCode": 308 },
+    { "source": "/guides", "destination": "/guides/", "statusCode": 308 },
+    {
+      "source": "/guides/slots-fsm-reel-physics",
+      "destination": "/guides/slots-fsm-reel-physics/",
+      "statusCode": 308
+    },
+    {
+      "source": "/guides/fish-shooting-ai-collision",
+      "destination": "/guides/fish-shooting-ai-collision/",
+      "statusCode": 308
+    },
+    {
+      "source": "/guides/table-games-fairness",
+      "destination": "/guides/table-games-fairness/",
+      "statusCode": 308
+    },
+    {
+      "source": "/guides/html5-casino-performance",
+      "destination": "/guides/html5-casino-performance/",
+      "statusCode": 308
+    },
+    { "source": "/about", "destination": "/about/", "statusCode": 308 },
+    {
+      "source": "/responsible-gaming",
+      "destination": "/responsible-gaming/",
+      "statusCode": 308
+    },
+    { "source": "/accessibility", "destination": "/accessibility/", "statusCode": 308 },
+    { "source": "/privacy", "destination": "/privacy/", "statusCode": 308 }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; media-src 'self' blob:; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests"
+        },
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+        {
+          "key": "Permissions-Policy",
+          "value": "accelerometer=(), camera=(), geolocation=(), gyroscope=(), microphone=(), payment=(), usb=(), interest-cohort=()"
+        },
+        { "key": "Cross-Origin-Opener-Policy", "value": "same-origin" },
+        { "key": "Cross-Origin-Resource-Policy", "value": "same-origin" },
+        { "key": "X-Robots-Tag", "value": "noindex, nofollow" }
+      ]
+    },
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    },
+    {
+      "source": "/tools/(.*)",
+      "headers": [
+        { "key": "X-Robots-Tag", "value": "noindex, nofollow" },
+        { "key": "Cache-Control", "value": "no-store" }
+      ]
+    }
+  ]
+}

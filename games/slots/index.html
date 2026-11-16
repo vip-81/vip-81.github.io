@@ -1,0 +1,427 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>document.documentElement.classList.add("js");</script>
+<title>老虎機 Slots 試玩：5×3、10 條賠付線與 Free Spin 狀態機｜LuckyForge Lab</title>
+<meta name="description" content="免費玩 5×3、10 條賠付線的 HTML5 老虎機，並拆解滾輪物理、停輪回彈、Wild 與 Scatter 連線判定、Free Spin 有限狀態機、Big Win 分級與 Symbol 物件池。全部使用虛擬籌碼。">
+<meta name="keywords" content="老虎機,slot 試玩,5x3 老虎機,免費旋轉,Free Spin,FSM,滾輪物理,Big Win,HTML5 Canvas,RTP">
+<meta name="author" content="LuckyForge Lab">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#070a10">
+<link rel="canonical" href="https://luckyforge-lab.pages.dev/games/slots/">
+<link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/img/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="LuckyForge Lab 幸運工坊">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="老虎機 Slots 試玩：5×3、10 線與 Free Spin 狀態機">
+<meta property="og:description" content="可玩的 5×3 老虎機，附滾輪物理、連線判定、Free Spin FSM、Big Win 分級與物件池的完整拆解。">
+<meta property="og:url" content="https://luckyforge-lab.pages.dev/games/slots/">
+<meta property="og:image" content="https://luckyforge-lab.pages.dev/assets/img/og-cover.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="LuckyForge Lab 老虎機試玩封面">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="老虎機 Slots 試玩：5×3、10 線與 Free Spin 狀態機">
+<meta name="twitter:description" content="可玩的 5×3 老虎機，附滾輪物理、連線判定、FSM 與 Big Win 分級的完整拆解。">
+<meta name="twitter:image" content="https://luckyforge-lab.pages.dev/assets/img/og-cover.png">
+<meta name="twitter:image:alt" content="LuckyForge Lab 老虎機試玩封面">
+<link rel="stylesheet" href="/assets/css/site.css">
+<link rel="stylesheet" href="/assets/css/games.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "首頁", "item": "https://luckyforge-lab.pages.dev/" },
+        { "@type": "ListItem", "position": 2, "name": "老虎機 Slots", "item": "https://luckyforge-lab.pages.dev/games/slots/" }
+      ]
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://luckyforge-lab.pages.dev/games/slots/#webpage",
+      "url": "https://luckyforge-lab.pages.dev/games/slots/",
+      "name": "老虎機 Slots 試玩：5×3、10 條賠付線與 Free Spin 狀態機",
+      "description": "可玩的 HTML5 老虎機與滾輪物理、FSM、物件池的工程拆解。",
+      "inLanguage": "zh-Hant-TW",
+      "isPartOf": { "@id": "https://luckyforge-lab.pages.dev/#website" },
+      "datePublished": "2026-11-16",
+      "dateModified": "2026-11-16",
+      "primaryImageOfPage": "https://luckyforge-lab.pages.dev/assets/img/og-cover.png"
+    },
+    {
+      "@type": "VideoGame",
+      "@id": "https://luckyforge-lab.pages.dev/games/slots/#game",
+      "name": "Lucky Reels 老虎機",
+      "url": "https://luckyforge-lab.pages.dev/games/slots/",
+      "description": "5 滾輪、3 列、10 條賠付線的 HTML5 老虎機示範，含 Free Spin 與 Big Win 分級。",
+      "image": "https://luckyforge-lab.pages.dev/assets/img/og-cover.png",
+      "genre": "Casino",
+      "gamePlatform": "Web browser",
+      "applicationCategory": "Game",
+      "operatingSystem": "Any",
+      "playMode": "SinglePlayer",
+      "numberOfPlayers": 1,
+      "inLanguage": "zh-Hant-TW",
+      "datePublished": "2026-11-16",
+      "dateModified": "2026-11-16",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "TWD", "availability": "https://schema.org/InStock" },
+      "publisher": { "@id": "https://luckyforge-lab.pages.dev/#organization" }
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://luckyforge-lab.pages.dev/games/slots/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "這個老虎機的 RTP 是多少？", "acceptedAnswer": { "@type": "Answer", "text": "示範版沒有宣稱固定 RTP。RTP 由賠付表、符號權重、賠付線數與特色規則共同決定，必須用蒙地卡羅模擬或精確列舉計算。正式產品會由伺服器設定並公開可驗證的數字。" } },
+        { "@type": "Question", "name": "Free Spin 怎麼觸發？", "acceptedAnswer": { "@type": "Answer", "text": "任一時段出現 3 個以上 SCATTER 即觸發：3 個 10 轉、4 個 15 轉、5 個以上 20 轉。免費遊戲期間所有獎金 ×2，且可再次觸發，剩餘轉數上限為 50。" } },
+        { "@type": "Question", "name": "Wild 和 Scatter 有什麼不同？", "acceptedAnswer": { "@type": "Answer", "text": "Wild 可以替代一般符號組成連線，但不會替代 SCATTER；SCATTER 不依賴賠付線，只要在畫面任意位置出現 3 個以上就會賠付並觸發免費遊戲。" } },
+        { "@type": "Question", "name": "為什麼要讓滾輪回彈？", "acceptedAnswer": { "@type": "Answer", "text": "回彈是停輪後的短暫位移與衰减，用來模擬實體滾輪的慣性，讓停輪更有重量感。它只影響視覺，不改變已抽出的最終位置。" } },
+        { "@type": "Question", "name": "正式產品可以直接用這份程式碼嗎？", "acceptedAnswer": { "@type": "Answer", "text": "不行。示範版在前端產生結果並存在 localStorage；正式產品必須由伺服器產生並簽章結果、持有餘額與局單，前端只負責送出請求與播放對應動畫。" } }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<a class="skip-link" href="#main-content">跳至主要內容</a>
+
+<header class="site-header" data-header>
+  <div class="container header-inner">
+    <a class="brand" href="/">
+      <span class="brand-mark" aria-hidden="true">LF</span>
+      <span class="brand-name"><strong>LuckyForge Lab</strong><span>幸運工坊</span></span>
+    </a>
+    <nav class="site-nav" id="primary-nav" aria-label="主要導覽">
+      <a href="/games/slots/" aria-current="page">老虎機</a>
+      <a href="/games/fish-shooting/">捕魚機</a>
+      <a href="/games/baccarat/">百家樂</a>
+      <a href="/games/roulette/">輪盤</a>
+      <a href="/games/blackjack/">21 點</a>
+      <a href="/guides/">指南</a>
+      <a class="btn btn-primary btn-sm" href="/games/slots/">免費試玩</a>
+    </nav>
+    <div class="header-tools">
+      <button class="icon-btn" type="button" data-audio-toggle aria-pressed="false" aria-label="關閉音效" title="關閉音效">
+        <svg class="icon-sound-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4Z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M19.5 6a8.5 8.5 0 0 1 0 12"/></svg>
+        <svg class="icon-sound-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4Z"/><path d="m17 9 5 5"/><path d="m22 9-5 5"/></svg>
+      </button>
+    </div>
+    <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="primary-nav" aria-label="開啟導覽選單"><span></span></button>
+  </div>
+</header>
+
+<main id="main-content">
+  <nav class="breadcrumbs" aria-label="麵包屑">
+    <div class="container"><ol><li><a href="/">首頁</a></li><li><span aria-current="page">老虎機 Slots</span></li></ol></div>
+  </nav>
+
+  <header class="page-hero">
+    <div class="container">
+      <span class="eyebrow">Playable demo · Slot mechanics</span>
+      <h1>老虎機 Slots 試玩：5×3、10 條賠付線與 Free Spin 狀態機</h1>
+      <p class="lead">這是一台可以直接玩的老虎機，也是一份可閱讀的實作。轉動後看滾輪如何减速、回彈，再往下讀停輪位置、連線判定、免費遊戲與 Big Win 分級的程式設計。</p>
+      <div class="page-meta"><span>最後更新 <time datetime="2026-11-16">2026-11-16</time></span><span class="dot" aria-hidden="true"></span><span>閱讀約 9 分鐘</span><span class="dot" aria-hidden="true"></span><span>18+ · 虛擬籌碼</span></div>
+      <div class="key-takeaway">
+        <strong>重點摘要</strong>
+        <p>結果在旋轉開始前就已決定：每一條滾輪先抽最終停位，動畫只負責把符號帶到那裡。連線一律由左至右判定，Wild 可替代一般符號，SCATTER 只看全盤數量。FSM 將流程分成 idle、spinning、evaluating、freespin、bigwin 五個狀態，任何不在狀態內的操作都會被拒絕。</p>
+      </div>
+    </div>
+  </header>
+
+  <section class="demo-section" aria-labelledby="demo-title">
+    <div class="container">
+      <div class="game-shell">
+        <div class="demo-bar">
+          <div class="demo-bar__title"><span class="live-dot" aria-hidden="true"></span><span id="demo-title">Lucky Reels 試玩機台</span></div>
+          <div class="demo-bar__meta"><span>5×3</span><span>10 LINES</span><span>VIRTUAL CREDITS</span></div>
+        </div>
+
+        <div class="game-hud">
+          <div class="hud-group">
+            <div class="hud-stat"><span>餘額</span><output id="slot-balance">10,000</output></div>
+            <div class="hud-stat"><span>總投注</span><output id="slot-bet">20</output></div>
+            <div class="hud-stat hud-stat--win"><span>本局贏分</span><output id="slot-win">0</output></div>
+            <div class="hud-stat hud-stat--fs"><span>免費旋轉</span><output id="slot-fs">—</output></div>
+          </div>
+          <div class="hud-group">
+            <div class="hud-stat"><span>FSM 狀態</span><output id="slot-state">IDLE</output></div>
+          </div>
+        </div>
+
+        <div class="slots-stage">
+          <div class="slots-canvas-wrap">
+            <canvas id="slot-canvas" width="900" height="540" role="img" aria-label="老虎機 5 乘 3 滾輪畫面。使用下方的旋轉按鈕或空白鍵遊玩，結果與狀態會以文字公告。">
+              您的瀏覽器不支援 Canvas。請改用支援 Canvas 的現代瀏覽器，或閱讀下方的老虎機規則與賠付表。
+            </canvas>
+            <div class="freespin-banner" id="slot-freespin" hidden>免費旋轉 <strong id="slot-freespin-count">0 / 0</strong></div>
+            <div class="bigwin" id="slot-bigwin" hidden role="dialog" aria-modal="true" aria-labelledby="slot-bigwin-tier">
+              <div class="bigwin__card">
+                <span class="bigwin__tier" id="slot-bigwin-tier">BIG WIN</span>
+                <span class="bigwin__amount" id="slot-bigwin-amount">0</span>
+                <p>虛擬點數 · 僅為 demo 演出</p>
+                <button class="btn btn-primary btn-block" type="button" id="slot-bigwin-continue">繼續</button>
+              </div>
+            </div>
+          </div>
+          <div class="slot-payline-note"><span class="slot-legend"><i aria-hidden="true"></i> 10 條固定賠付線</span><span>中獎線會依序畫出；Wild 可替代一般符號。</span></div>
+        </div>
+
+        <div class="game-controls">
+          <div class="controls-left">
+            <span class="bet-label" id="slot-bet-label">每局投注</span>
+            <div class="bet-stepper" role="group" aria-labelledby="slot-bet-label">
+              <button type="button" id="slot-bet-down" aria-label="降低投注">−</button>
+              <output id="slot-bet-stepper" aria-live="polite">20</output>
+              <button type="button" id="slot-bet-up" aria-label="提高投注">+</button>
+            </div>
+          </div>
+          <div class="controls-right">
+            <button class="btn btn-ghost" type="button" id="slot-reset">補充籌碼</button>
+            <button class="spin-btn" type="button" id="slot-spin">旋轉</button>
+          </div>
+        </div>
+
+        <div class="game-status" id="slot-status" role="status">正在準備機台…</div>
+        <div class="sr-only" id="slot-sr" aria-live="polite" aria-atomic="true"></div>
+        <div class="demo-note"><span><strong>Demo 提示：</strong>空白鍵可旋轉；投注與餘額會存在本機。</span><span>無真錢交易</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="game-content" aria-labelledby="rules-title">
+    <div class="container content-grid">
+      <article class="prose">
+        <h2 id="rules-title">老虎機規則快速看</h2>
+        <p>這台機台是 5 滾輪 × 3 列、固定 10 條賠付線。每次旋轉的總投注會平均分配到 10 條線，因此「每線投注」等於總投注除以 10。連線一律從最左邊的滾輪開始，連續 3、4 或 5 個相同符號才算完成。</p>
+        <ul>
+          <li><strong>Wild</strong> 可以替代 10、J、Q、K、A、GEM、COIN、SEVEN，但不會替代 SCATTER。</li>
+          <li><strong>SCATTER</strong> 不依賴賠付線，出現在畫面任意位置都算；3 個以上同時賠付並觸發免費旋轉。</li>
+          <li><strong>免費旋轉</strong> 期間所有獎金 ×2，可再次被 SCATTER 觸發，剩餘次數上限 50。</li>
+          <li><strong>Big Win</strong> 依「本局贏分 ÷ 總投注」分級：10 倍進入演出、25 倍 BIG WIN、50 倍 MEGA WIN、100 倍 LEGENDARY。</li>
+        </ul>
+
+        <div class="paytable-symbols" role="list" aria-label="符號賠付表">
+          <div class="paytable-symbol" role="listitem"><b>10</b>3×2 · 4×5 · 5×10</div>
+          <div class="paytable-symbol" role="listitem"><b>J</b>3×2 · 4×6 · 5×15</div>
+          <div class="paytable-symbol" role="listitem"><b>Q</b>3×3 · 4×8 · 5×25</div>
+          <div class="paytable-symbol" role="listitem"><b>K</b>3×4 · 4×12 · 5×40</div>
+          <div class="paytable-symbol" role="listitem"><b>A</b>3×5 · 4×15 · 5×60</div>
+          <div class="paytable-symbol" role="listitem"><b>◆</b>GEM 3×10 · 4×30 · 5×120</div>
+          <div class="paytable-symbol" role="listitem"><b>●</b>COIN 3×15 · 4×50 · 5×200</div>
+          <div class="paytable-symbol" role="listitem"><b>7</b>3×20 · 4×75 · 5×300</div>
+          <div class="paytable-symbol paytable-symbol--wild" role="listitem"><b>WILD</b>3×25 · 4×100 · 5×500</div>
+          <div class="paytable-symbol paytable-symbol--scatter" role="listitem"><b>★</b>SCATTER 3×2 · 4×10 · 5×50</div>
+        </div>
+        <p class="note">表內數字為「每線投注倍數」；SCATTER 為「總投注倍數」。所有賠付以整數點數四捨五入。</p>
+
+        <h2 id="reel-physics">滾輪物理與停輪手感</h2>
+        <p>老虎機的「物理感」不是真的模擬剛體，而是三個視覺訊號的組合：<strong>加速曲線、停輪回彈、動態模糊</strong>。本實作在旋轉開始時就為每條滾輪決定最終停位，再計算需要多轉幾圈才能抵達：</p>
+        <pre><code>const finalPos = randomInt(reel.strip.length);
+const startPos = reel.position % reel.strip.length;
+const forward = mod(finalPos - startPos, reel.strip.length);
+const extraTurns = 4 + index * 2 + randomInt(2);
+
+reel.anim = {
+  start: now,
+  startPos,
+  delta: forward + extraTurns * reel.strip.length,
+  duration: 980 + index * 165,
+  finalPos,
+};</code></pre>
+        <p>更新時使用四次方的 ease-out，讓滾輪在前段保持高速、後段快速收斂。停輪後再疊加一個 260ms 的正弦回彈，位移只有 10px，目的是讓「停住」有重量，而不是硬切。</p>
+        <p>旋轉中的動態模糊以低透明度重複繪製一次符號，成本比濾鏡低，也不會在低階手機上造成大面積合成負擔。若使用者開啟「減少動態」，動畫縮短為 320ms 並移除回彈與震動。</p>
+
+        <h2 id="line-evaluation">連線判定：由左至右，Wild 不是萬能</h2>
+        <p>判定時先看第一條滾輪的符號，再逐輪往右延伸。若遇到非候選符號就停止；Wild 可以接續任何一般符號，但 SCATTER 不參與線獎。為了避免同一條線同時符合多個候選，程式會選出賠付最高的一組。</p>
+        <pre><code>for (let reelIndex = 0; reelIndex &lt; REEL_COUNT; reelIndex += 1) {
+  const symbol = grid[reelIndex][line[reelIndex]];
+  if (symbol === candidate || symbol === "WILD") count += 1;
+  else break;
+}</code></pre>
+        <p>SCATTER 則獨立掃描整個 5×3 盤面。這種「線獎 + 全盤計數」的雙軌設計很常見，也意味著後端必須同時回傳盤面、線獎明細與 SCATTER 數量，前端不能自行推測。</p>
+
+        <h2 id="fsm">Free Spin 狀態機：把流程從 if 裡拿出來</h2>
+        <p>老虎機最容易出現 bug 的地方不是賠付，而是「現在到底能不能按」。例如：旋轉中調整投注、免費遊戲中誤觸旋轉、Big Win 還沒關閉就再次旋轉。這些問題用散落的布林值會很難維護，因此本實作使用明確的 FSM。</p>
+        <div class="fsm-diagram" aria-label="老虎機狀態機流程">
+          <span class="fsm-node">idle</span><span class="fsm-arrow">→ SPIN →</span>
+          <span class="fsm-node">spinning</span><span class="fsm-arrow">→ REELS_STOPPED →</span>
+          <span class="fsm-node">evaluating</span><span class="fsm-arrow">→ FS_START / BIGWIN / END →</span>
+          <span class="fsm-node">freespin</span><span class="fsm-arrow">↔</span>
+          <span class="fsm-node">bigwin</span>
+        </div>
+        <ul>
+          <li><code>idle</code>：只接受 SPIN，投注可調整。</li>
+          <li><code>spinning</code>：等待五條滾輪停止，拒絕下注與再次旋轉。</li>
+          <li><code>evaluating</code>：計算線獎、SCATTER、免費遊戲與 Big Win 等級。</li>
+          <li><code>freespin</code>：由計時器自動推進，剩餘次數歸零才回到 idle。</li>
+          <li><code>bigwin</code>：顯示分級演出，只能按「繼續」離開；若仍有免費轉數則接到 freespin。</li>
+        </ul>
+        <p>FSM 的 <code>guard</code> 讓「能不能做」與「做了之後做什麼」分開；轉移紀錄保留最近 20 筆，除錯時可以直接看到狀態變化，不必在幾十個 console.log 裡找答案。</p>
+
+        <h2 id="bigwin">Big Win 分級與演出節奏</h2>
+        <p>Big Win 的門檻以「總投注」為基準，而不是單線投注。這樣不同投注額的玩家會感受到一致的比例回饋。本示範的級距如下：</p>
+        <div class="table-wrap">
+          <table class="data">
+            <caption>Big Win 分級（贏分 ÷ 總投注）</caption>
+            <thead><tr><th scope="col">級別</th><th scope="col">倍率門檻</th><th scope="col">演出</th></tr></thead>
+            <tbody>
+              <tr><td>NICE WIN</td><td class="num">≥ 10×</td><td>金色數字、金幣粒子</td></tr>
+              <tr><td>BIG WIN</td><td class="num">≥ 25×</td><td>畫面震動、更多粒子</td></tr>
+              <tr><td>MEGA WIN</td><td class="num">≥ 50×</td><td>更長的金幣雨</td></tr>
+              <tr><td>LEGENDARY</td><td class="num">≥ 100×</td><td>最大粒子量與史詩音效</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>數字會從 0 跑到最終贏分，但派彩在演出前就已經入帳，因此重新整理或關閉視窗不會重複領取。正式產品應由伺服器回傳「已結算」狀態，前端只負責顯示。</p>
+
+        <h2 id="object-pool">Symbol 物件池與離屏紋理</h2>
+        <p>老虎機每轉都會產生大量短命物件。若每次都 <code>new</code> 粒子或重新繪製符號，長局遊玩容易出現垃圾回收尖峰。本實作做兩件事：</p>
+        <ol>
+          <li><strong>固定容量粒子池</strong>：180 個粒子預先配置， spawn 時覆寫欄位，生命結束只設 <code>active = false</code>。</li>
+          <li><strong>離屏符號紋理</strong>：每種符號只畫一次到 256×256 的隱藏 canvas，之後用 <code>drawImage</code> 縮放。</li>
+        </ol>
+        <p>主迴圈只在有動畫時才 <code>requestAnimationFrame</code>；靜止時完全停止重繪，行動裝置的耗電與發熱會明顯較低。這也是「Canvas 遊戲不一定比較耗電」的關鍵：重點是有沒有在不需要時繼續畫。</p>
+
+        <h2 id="fairness">公平性：前端 RNG 只適合展示</h2>
+        <p>本頁使用 <code>crypto.getRandomValues</code> 與拒絕取樣，避免 <code>Math.random</code> 的可預測性與模數偏差。但這仍然只是前端展示：玩家可以修改 JavaScript、攔截請求或直接改 localStorage。</p>
+        <p>正式的老虎機必須由伺服器：</p>
+        <ul>
+          <li>持有 RNG 與符號權重，產生盤面與特色結果；</li>
+          <li>以局單 ID 記錄投注、結果、派彩與時間戳；</li>
+          <li>回傳伺服器簽章，讓前端與稽核端驗證結果未被竄改；</li>
+          <li>在需要時可公開 seed commitment，並在局後揭示 seed。</li>
+        </ul>
+        <p>RTP 也應由後端以大量模擬或精確列舉計算，而非用單一 demo 的短期結果推估。</p>
+
+        <h2 id="accessibility">鍵盤與無障礙</h2>
+        <p>Canvas 本身對螢幕閱讀器不友善，因此所有重要狀態都同步到 DOM：餘額、投注、贏分、免費轉數與 FSM 狀態都有可讀文字；每次旋轉與中獎也會透過 <code>aria-live</code> 公告。空白鍵在焦點不在按鈕時可旋轉；Big Win 對話框會把焦點移到「繼續」，Esc 可關閉。</p>
+        <p>若你使用鍵盤：Tab 到「旋轉」按鈕後按 Enter／空白鍵，或直接按空白鍵。若你開啟減少動態，滾輪會快速定位，仍會公告結果。</p>
+
+        <h2 id="faq">常見問題</h2>
+        <div class="faq">
+          <details>
+            <summary>這個老虎機的 RTP 是多少？</summary>
+            <div class="faq-answer"><p>示範版沒有宣稱固定 RTP。RTP 由賠付表、符號權重、賠付線數與特色規則共同決定，必須用蒙地卡羅模擬或精確列舉計算。正式產品會由伺服器設定並公開可驗證的數字。</p></div>
+          </details>
+          <details>
+            <summary>Free Spin 怎麼觸發？</summary>
+            <div class="faq-answer"><p>任一時段出現 3 個以上 SCATTER 即觸發：3 個 10 轉、4 個 15 轉、5 個以上 20 轉。免費遊戲期間所有獎金 ×2，且可再次觸發，剩餘轉數上限為 50。</p></div>
+          </details>
+          <details>
+            <summary>Wild 和 Scatter 有什麼不同？</summary>
+            <div class="faq-answer"><p>Wild 可以替代一般符號組成連線，但不會替代 SCATTER；SCATTER 不依賴賠付線，只要在畫面任意位置出現 3 個以上就會賠付並觸發免費遊戲。</p></div>
+          </details>
+          <details>
+            <summary>為什麼要讓滾輪回彈？</summary>
+            <div class="faq-answer"><p>回彈是停輪後的短暫位移與衰减，用來模擬實體滾輪的慣性，讓停輪更有重量感。它只影響視覺，不改變已抽出的最終位置。</p></div>
+          </details>
+          <details>
+            <summary>正式產品可以直接用這份程式碼嗎？</summary>
+            <div class="faq-answer"><p>不行。示範版在前端產生結果並存在 localStorage；正式產品必須由伺服器產生並簽章結果、持有餘額與局單，前端只負責送出請求與播放對應動畫。</p></div>
+          </details>
+        </div>
+
+        <div class="related-links" aria-label="相關指南">
+          <a href="/guides/slots-fsm-reel-physics/">老虎機 FSM 與滾輪物理</a>
+          <a href="/guides/html5-casino-performance/">效能與除錯</a>
+          <a href="/guides/table-games-fairness/">公平性與重連</a>
+          <a href="/games/fish-shooting/">捕魚機試玩</a>
+        </div>
+
+        <div class="author-box">
+          <span class="author-avatar" aria-hidden="true">LF</span>
+          <div>
+            <h2>LuckyForge Lab 工程編輯</h2>
+            <p>專注於瀏覽器遊戲架構、可驗證隨機與無障礙互動。內容以可重現的 demo 為基礎，並在每頁標示最後更新日期。</p>
+          </div>
+        </div>
+      </article>
+
+      <aside class="game-sidebar" aria-label="老虎機規格與引用">
+        <div class="card card--pad">
+          <h2 class="h3">機台規格</h2>
+          <dl class="spec-list">
+            <div><dt>盤面</dt><dd>5 × 3</dd></div>
+            <div><dt>賠付線</dt><dd>10 條固定</dd></div>
+            <div><dt>投注級距</dt><dd>10–500</dd></div>
+            <div><dt>免費遊戲</dt><dd>×2 · 最多 50 轉</dd></div>
+            <div><dt>隨機來源</dt><dd>crypto.getRandomValues</dd></div>
+            <div><dt>狀態機</dt><dd>5 狀態</dd></div>
+            <div><dt>持久化</dt><dd>localStorage</dd></div>
+          </dl>
+        </div>
+        <div class="card card--pad">
+          <h2 class="h3">引用此頁</h2>
+          <p class="note">固定網址與更新日期可作為引用依據。引用時請保留「LuckyForge Lab」與標題。</p>
+          <button class="btn btn-ghost btn-sm" type="button" data-copy-link="https://luckyforge-lab.pages.dev/games/slots/">複製引用連結</button>
+        </div>
+        <div class="card card--pad">
+          <h2 class="h3">先玩再讀</h2>
+          <p class="note">建議先旋轉 10–20 次，觀察停輪回彈、Wild 連線與免費遊戲的節奏，再回到文章對照程式。</p>
+          <a class="btn btn-primary btn-sm" href="#rules-title">跳到規則</a>
+        </div>
+      </aside>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-main">
+      <div class="footer-brand">
+        <a class="brand" href="/">
+          <span class="brand-mark" aria-hidden="true">LF</span>
+          <span class="brand-name"><strong>LuckyForge Lab</strong><span>幸運工坊</span></span>
+        </a>
+        <p>純前端 HTML5 賭場遊戲實驗室。用可玩的 demo 拆解 FSM、物件池、碰撞、公平性與效能，全部使用虛擬籌碼。</p>
+        <div class="footer-badges"><span class="badge">18+</span><span class="badge badge--mint">虛擬籌碼</span><span class="badge badge--muted">零外部請求</span></div>
+      </div>
+      <nav class="footer-col" aria-labelledby="footer-games">
+        <h2 id="footer-games">遊戲</h2>
+        <ul>
+          <li><a href="/games/slots/">老虎機</a></li>
+          <li><a href="/games/fish-shooting/">捕魚機</a></li>
+          <li><a href="/games/baccarat/">百家樂</a></li>
+          <li><a href="/games/roulette/">輪盤</a></li>
+          <li><a href="/games/blackjack/">21 點</a></li>
+        </ul>
+      </nav>
+      <nav class="footer-col" aria-labelledby="footer-guides">
+        <h2 id="footer-guides">指南</h2>
+        <ul>
+          <li><a href="/guides/">全部指南</a></li>
+          <li><a href="/guides/slots-fsm-reel-physics/">老虎機 FSM</a></li>
+          <li><a href="/guides/fish-shooting-ai-collision/">捕魚機 AI</a></li>
+          <li><a href="/guides/table-games-fairness/">公平性與重連</a></li>
+          <li><a href="/guides/html5-casino-performance/">效能與除錯</a></li>
+        </ul>
+      </nav>
+      <nav class="footer-col" aria-labelledby="footer-site">
+        <h2 id="footer-site">網站</h2>
+        <ul>
+          <li><a href="/about/">關於我們</a></li>
+          <li><a href="/accessibility/">無障礙</a></li>
+          <li><a href="/privacy/">隱私與資料</a></li>
+          <li><a href="/responsible-gaming/">責任遊戲</a></li>
+          <li><a href="/llms.txt">llms.txt</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="footer-bottom">
+      <p>© <span data-current-year>2026</span> LuckyForge Lab（幸運工坊）。內容為技術教學與娛樂展示，不構成賭博建議。</p>
+      <p>18+ · 虛擬籌碼 · 無真錢交易 · <a href="/responsible-gaming/">請理性遊玩</a></p>
+    </div>
+  </div>
+</footer>
+
+<script type="module" src="/assets/js/site.js"></script>
+<script type="module" src="/assets/js/games/slots.js"></script>
+</body>
+</html>

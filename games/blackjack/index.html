@@ -1,0 +1,481 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>document.documentElement.classList.add("js");</script>
+<title>21 點 Blackjack 試玩：6 副牌、S17 與基本策略｜LuckyForge Lab</title>
+<meta name="description" content="免費玩 HTML5 21 點：6 副牌、莊家 S17、Blackjack 3:2、加倍與一次分牌。含即時點數、軟硬牌說明、基本策略速查、牌靴指紋與重新載入恢復。全部使用虛擬籌碼。">
+<meta name="keywords" content="21點,blackjack,二十一點,21點試玩,基本策略,Blackjack 3:2,S17,分牌,加倍,HTML5 賭桌,虛擬籌碼">
+<meta name="author" content="LuckyForge Lab">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#070a10">
+<link rel="canonical" href="https://luckyforge-lab.pages.dev/games/blackjack/">
+<link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/img/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="LuckyForge Lab 幸運工坊">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="21 點 Blackjack 試玩：6 副牌、S17 與基本策略">
+<meta property="og:description" content="可玩的 HTML5 21 點，附即時點數、基本策略、牌靴指紋與斷線恢復的完整拆解。">
+<meta property="og:url" content="https://luckyforge-lab.pages.dev/games/blackjack/">
+<meta property="og:image" content="https://luckyforge-lab.pages.dev/assets/img/og-cover.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="LuckyForge Lab 21 點試玩封面">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="21 點 Blackjack 試玩：6 副牌、S17 與基本策略">
+<meta name="twitter:description" content="可玩的 HTML5 21 點，附即時點數、基本策略、牌靴指紋與斷線恢復的完整拆解。">
+<meta name="twitter:image" content="https://luckyforge-lab.pages.dev/assets/img/og-cover.png">
+<meta name="twitter:image:alt" content="LuckyForge Lab 21 點試玩封面">
+<link rel="stylesheet" href="/assets/css/site.css">
+<link rel="stylesheet" href="/assets/css/games.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "首頁", "item": "https://luckyforge-lab.pages.dev/" },
+        { "@type": "ListItem", "position": 2, "name": "21 點 Blackjack", "item": "https://luckyforge-lab.pages.dev/games/blackjack/" }
+      ]
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://luckyforge-lab.pages.dev/games/blackjack/#webpage",
+      "url": "https://luckyforge-lab.pages.dev/games/blackjack/",
+      "name": "21 點 Blackjack 試玩：6 副牌、S17 與基本策略",
+      "description": "可玩的 HTML5 21 點與點數、策略、牌靴、公平性與斷線重連的工程拆解。",
+      "inLanguage": "zh-Hant-TW",
+      "isPartOf": { "@id": "https://luckyforge-lab.pages.dev/#website" },
+      "datePublished": "2026-11-16",
+      "dateModified": "2026-11-16",
+      "primaryImageOfPage": "https://luckyforge-lab.pages.dev/assets/img/og-cover.png"
+    },
+    {
+      "@type": "VideoGame",
+      "@id": "https://luckyforge-lab.pages.dev/games/blackjack/#game",
+      "name": "Twenty-One 21 點",
+      "url": "https://luckyforge-lab.pages.dev/games/blackjack/",
+      "description": "6 副牌、S17、Blackjack 3:2、一次分牌的 HTML5 21 點示範。",
+      "image": "https://luckyforge-lab.pages.dev/assets/img/og-cover.png",
+      "genre": "Casino",
+      "gamePlatform": "Web browser",
+      "applicationCategory": "Game",
+      "operatingSystem": "Any",
+      "playMode": "SinglePlayer",
+      "numberOfPlayers": 1,
+      "inLanguage": "zh-Hant-TW",
+      "datePublished": "2026-11-16",
+      "dateModified": "2026-11-16",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "TWD" },
+      "publisher": { "@id": "https://luckyforge-lab.pages.dev/#organization" }
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://luckyforge-lab.pages.dev/games/blackjack/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "21 點的基本規則是什麼？", "acceptedAnswer": { "@type": "Answer", "text": "玩家與莊家各發兩張牌，目標是讓手牌點數接近 21 但不超過。2–10 依面值，J／Q／K 算 10 點，A 可算 1 或 11 點。玩家可加牌、停牌、加倍或分牌；莊家依固定規則補牌，本示範為軟 17 停牌（S17）。" } },
+        { "@type": "Question", "name": "為什麼 Blackjack 賠 3:2？", "acceptedAnswer": { "@type": "Answer", "text": "Blackjack 指首兩張牌就是 21 點（A 加一張 10 點牌），機率約 4.8%。3:2 的賠付讓它的期望值高於一般勝局，也是 21 點之所以強調「基本策略」的原因之一。若賠 6:5，莊家優勢會明顯上升。" } },
+        { "@type": "Question", "name": "軟 17 是什麼？為什麼莊家 S17？", "acceptedAnswer": { "@type": "Answer", "text": "軟 17 指手牌含一張可算 11 點的 A，總點數為 17（例如 A+6）。S17 表示莊家在軟 17 停牌，H17 則表示要補牌。S17 對玩家較有利，本示範採用 S17。" } },
+        { "@type": "Question", "name": "分牌 A 為什麼只補一張？", "acceptedAnswer": { "@type": "Answer", "text": "若兩張起始牌都是 A，分牌後每手各得一張 A；為避免玩家透過反覆分牌取得多個 21 點，標準規則是每手只補一張牌就自動停牌。本示範遵循此規則，且只允許分牌一次。" } },
+        { "@type": "Question", "name": "重新整理後未完成的牌局會保留嗎？", "acceptedAnswer": { "@type": "Answer", "text": "會。牌靴、牌靴索引、餘額、手牌、目前輪到哪一手、莊家牌與統計都會存在 localStorage。重新載入後會驗證資料並恢復；若當時輪到莊家，會自動繼續補牌。正式產品應由伺服器持有牌靴與局單。" } },
+        { "@type": "Question", "name": "這個 21 點 demo 可以用真錢玩嗎？", "acceptedAnswer": { "@type": "Answer", "text": "不行。所有籌碼都是虛擬點數，無法兌換現金或任何有價物。正式真錢產品必須由伺服器產生牌靴、簽章結算、持有餘額，並符合當地年齡驗證、限額與反洗錢法規。" } }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<a class="skip-link" href="#main-content">跳至主要內容</a>
+
+<header class="site-header" data-header>
+  <div class="container header-inner">
+    <a class="brand" href="/">
+      <span class="brand-mark" aria-hidden="true">LF</span>
+      <span class="brand-name"><strong>LuckyForge Lab</strong><span>幸運工坊</span></span>
+    </a>
+    <nav class="site-nav" id="primary-nav" aria-label="主要導覽">
+      <a href="/games/slots/">老虎機</a>
+      <a href="/games/fish-shooting/">捕魚機</a>
+      <a href="/games/baccarat/">百家樂</a>
+      <a href="/games/roulette/">輪盤</a>
+      <a href="/games/blackjack/" aria-current="page">21 點</a>
+      <a href="/guides/">指南</a>
+      <a class="btn btn-primary btn-sm" href="/games/slots/">免費試玩</a>
+    </nav>
+    <div class="header-tools">
+      <button class="icon-btn" type="button" data-audio-toggle aria-pressed="false" aria-label="關閉音效" title="關閉音效">
+        <svg class="icon-sound-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4Z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M19.5 6a8.5 8.5 0 0 1 0 12"/></svg>
+        <svg class="icon-sound-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4Z"/><path d="m17 9 5 5"/><path d="m22 9-5 5"/></svg>
+      </button>
+    </div>
+    <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="primary-nav" aria-label="開啟導覽選單"><span></span></button>
+  </div>
+</header>
+
+<main id="main-content">
+  <nav class="breadcrumbs" aria-label="麵包屑">
+    <div class="container"><ol><li><a href="/">首頁</a></li><li><span aria-current="page">21 點 Blackjack</span></li></ol></div>
+  </nav>
+
+  <header class="page-hero">
+    <div class="container">
+      <span class="eyebrow">Playable demo · Table game</span>
+      <h1>21 點 Blackjack 試玩：6 副牌、S17 與基本策略</h1>
+      <p class="lead">選籌碼、按「發牌」，然後用加牌、停牌、加倍或分牌把點數打到最接近 21 點。這是一張可直接玩的 21 點牌桌，也是一份關於軟硬牌、牌靴、賠付與斷線恢復的實作拆解。</p>
+      <div class="page-meta"><span>最後更新 <time datetime="2026-11-16">2026-11-16</time></span><span class="dot" aria-hidden="true"></span><span>閱讀約 10 分鐘</span><span class="dot" aria-hidden="true"></span><span>18+ · 虛擬籌碼</span></div>
+      <div class="key-takeaway">
+        <strong>重點摘要</strong>
+        <p>21 點的技術難點不是發牌動畫，而是「狀態」：現在輪到哪一手、A 要算 1 還是 11、分牌後哪一手已完成、重新載入後莊家是否該繼續補牌。本示範用 6 副牌、S17、Blackjack 3:2、一次分牌，並把牌靴與未完成牌局存在本機；正式產品必須由伺服器持有牌靴與結算。</p>
+      </div>
+    </div>
+  </header>
+
+  <section class="demo-section" aria-labelledby="demo-title">
+    <div class="container">
+      <div class="game-shell">
+        <div class="demo-bar">
+          <div class="demo-bar__title"><span class="live-dot" aria-hidden="true"></span><span id="demo-title">Twenty-One 試玩牌桌</span></div>
+          <div class="demo-bar__meta"><span>6 DECKS</span><span>S17 · 3:2</span><span>VIRTUAL CREDITS</span></div>
+        </div>
+
+        <div class="game-hud">
+          <div class="hud-group">
+            <div class="hud-stat"><span>餘額</span><output id="bj-balance">10,000</output></div>
+            <div class="hud-stat"><span>目前注碼</span><output id="bj-bet">50</output></div>
+            <div class="hud-stat"><span>本局總注</span><output id="bj-total-bet">50</output></div>
+            <div class="hud-stat"><span>牌靴剩餘</span><output id="bj-shoe-left">312</output></div>
+            <div class="hud-stat"><span>完成局數</span><output id="bj-rounds">0</output></div>
+          </div>
+        </div>
+
+        <div class="blackjack-layout">
+          <div class="blackjack-main">
+            <div class="felt">
+              <div class="blackjack-table">
+                <div class="blackjack-table__head">
+                  <h2>二十一點 · 標準 S17</h2>
+                  <span>BLACKJACK 3:2 · DOUBLE ANY 2</span>
+                </div>
+
+                <section class="blackjack-zone" aria-labelledby="bj-dealer-label">
+                  <div class="blackjack-zone__label" id="bj-dealer-label">
+                    <span>莊家 DEALER</span>
+                    <b id="bj-dealer-points">—</b>
+                  </div>
+                  <div class="blackjack-cards" id="bj-dealer-cards" aria-label="莊家手牌"></div>
+                </section>
+
+                <section class="blackjack-zone" aria-labelledby="bj-player-label">
+                  <div class="blackjack-zone__label" id="bj-player-label">
+                    <span>玩家 PLAYER</span>
+                    <b id="bj-state">IDLE</b>
+                  </div>
+                  <div class="blackjack-hands" id="bj-player-hands" aria-label="玩家手牌"></div>
+                </section>
+
+                <div class="blackjack-result" role="status" aria-live="polite">
+                  <strong id="bj-result-title">等待下注</strong>
+                  <span id="bj-result-text">選擇籌碼後按「發牌」</span>
+                </div>
+
+                <div class="chip-picker" role="group" aria-label="下注籌碼">
+                  <span>下注</span>
+                  <button class="chip-btn" type="button" data-bj-chip="10" data-value="10" aria-pressed="false" aria-label="下注 10 點">10</button>
+                  <button class="chip-btn" type="button" data-bj-chip="25" data-value="25" aria-pressed="false" aria-label="下注 25 點">25</button>
+                  <button class="chip-btn" type="button" data-bj-chip="50" data-value="50" aria-pressed="true" aria-label="下注 50 點">50</button>
+                  <button class="chip-btn" type="button" data-bj-chip="100" data-value="100" aria-pressed="false" aria-label="下注 100 點">100</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="game-controls" style="border-top:0;background:transparent;padding:16px 0 0">
+              <div class="controls-left blackjack-actions" role="group" aria-label="牌局操作">
+                <button class="btn btn-primary" type="button" id="bj-deal">發牌</button>
+                <button class="btn btn-ghost" type="button" id="bj-hit">加牌</button>
+                <button class="btn btn-ghost" type="button" id="bj-stand">停牌</button>
+                <button class="btn btn-ghost" type="button" id="bj-double">加倍</button>
+                <button class="btn btn-ghost" type="button" id="bj-split">分牌</button>
+                <button class="btn btn-ghost" type="button" id="bj-reset">補充籌碼</button>
+              </div>
+              <div class="controls-right">
+                <span class="bet-label">快捷鍵 H / S / D / P</span>
+              </div>
+            </div>
+          </div>
+
+          <aside class="blackjack-side" aria-label="牌靴與規則資訊">
+            <div class="side-panel">
+              <h2>牌靴指紋</h2>
+              <p class="road-empty">以 SHA-256 對整副牌靴取前 16 碼，僅供完整性比對，不能單獨證明公平。</p>
+              <div class="fingerprint" id="bj-fingerprint">計算中…</div>
+            </div>
+            <div class="side-panel">
+              <h2>本桌規則</h2>
+              <dl class="baccarat-stats">
+                <div><dt>牌靴</dt><dd>6 副</dd></div>
+                <div><dt>莊家</dt><dd>S17</dd></div>
+                <div><dt>Blackjack</dt><dd>3:2</dd></div>
+                <div><dt>加倍</dt><dd>任意兩張</dd></div>
+                <div><dt>分牌</dt><dd>一次</dd></div>
+                <div><dt>分 A</dt><dd>補一張</dd></div>
+                <div><dt>保險</dt><dd>未提供</dd></div>
+                <div><dt>投降</dt><dd>未提供</dd></div>
+              </dl>
+            </div>
+            <div class="side-panel">
+              <h2>引用此頁</h2>
+              <button class="btn btn-ghost btn-sm" type="button" data-copy-link="https://luckyforge-lab.pages.dev/games/blackjack/">複製引用連結</button>
+            </div>
+            <div class="side-panel">
+              <h2>策略提示</h2>
+              <p class="road-empty">先熟悉軟硬牌與 S17，再對照下方的基本策略表。這是虛擬籌碼 demo，不是真錢建議。</p>
+            </div>
+          </aside>
+        </div>
+
+        <div class="game-status" id="bj-status" role="status">正在準備牌靴…</div>
+        <div class="sr-only" id="bj-sr" aria-live="polite" aria-atomic="true"></div>
+        <div class="demo-note"><span><strong>Demo 提示：</strong>選籌碼後按「發牌」；分牌僅限一次，分 A 每手只補一張。所有點數皆為虛擬點數。</span><span>無真錢交易</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="game-content" aria-labelledby="bj-rules-title">
+    <div class="container content-grid">
+      <article class="prose">
+        <h2 id="bj-rules-title">21 點規則快速看</h2>
+        <p>玩家與莊家各發兩張牌。玩家的目標是讓手牌點數盡量接近 21 點，但不能超過；超過就是「爆牌」，立即輸掉該手。玩家可以先加牌（Hit）、停牌（Stand）、加倍（Double）或分牌（Split），莊家則依固定規則補牌，沒有決策空間。</p>
+        <ul>
+          <li><strong>牌值</strong>：2–10 依面值，J／Q／K 算 10 點，A 可算 1 或 11 點。</li>
+          <li><strong>軟牌</strong>：A 仍以 11 點計算且不會爆牌，例如 A+6 是「軟 17」。</li>
+          <li><strong>Blackjack</strong>：首兩張牌就是 21 點（A＋10 點牌），賠 3:2；分牌後的 21 點不算 Blackjack。</li>
+          <li><strong>莊家</strong>：本桌為 S17，莊家軟 17 停牌；硬 16 以下補牌。</li>
+          <li><strong>加倍</strong>：任意兩張牌可加倍，加注後只補一張牌。</li>
+          <li><strong>分牌</strong>：同點數的兩張牌可分牌一次；分 A 每手只補一張即停牌。</li>
+        </ul>
+        <p class="note">本示範未提供保險、投降與多次分牌。這些規則會改變最佳策略與莊家優勢，不能直接把本頁的策略表套用到所有牌桌。</p>
+
+        <h2 id="soft-hard">軟牌與硬牌：A 的兩種算法</h2>
+        <p>A 可以算 1 或 11，但同一手牌只能選一種算法。程式通常先以 11 計算，若總和超過 21 再把 A 降為 1。這種「至少有一張 A 仍算 11」的手牌稱為軟牌；沒有 A 或 A 已被迫降為 1 的手牌稱為硬牌。</p>
+        <pre><code>function blackjackValue(cards) {
+  let total = 0;
+  let aces = 0;
+  for (const card of cards) {
+    if (card.rank === 1) { aces += 1; total += 11; }
+    else total += Math.min(card.rank, 10);
+  }
+  let soft = aces &gt; 0;
+  while (total &gt; 21 &amp;&amp; aces &gt; 0) {
+    total -= 10;
+    aces -= 1;
+    soft = aces &gt; 0;
+  }
+  return { total, soft };
+}</code></pre>
+        <p>為什麼要區分軟硬？因為軟 17 與硬 17 的補牌風險完全不同。軟 17 補一張牌不會立刻爆牌（A 可降為 1），硬 17 補牌則有超過 21 的風險。莊家 S17 對玩家較有利，約比 H17 好 0.2 個百分點，實際差異取決於其他規則。</p>
+
+        <h2 id="strategy">基本策略：不是保證贏，而是最小化劣勢</h2>
+        <p>基本策略是根據「玩家手牌 × 莊家明牌」查表的最佳動作，目標是讓長期期望值最大化。它不能保證單局勝利，也無法逆轉莊家優勢；在標準規則下，完整基本策略可把莊家優勢壓到約 0.5%，也就是玩家 RTP 約 99.5%。</p>
+        <div class="table-wrap">
+          <table class="data">
+            <caption>基本策略速查（6 副牌、S17、可加倍任意兩張、僅一次分牌）</caption>
+            <thead><tr><th scope="col">玩家手牌</th><th scope="col">莊家明牌</th><th scope="col">動作</th></tr></thead>
+            <tbody>
+              <tr><td>8 或以下</td><td>任意</td><td>加牌</td></tr>
+              <tr><td>9</td><td>3–6</td><td>加倍，否則加牌</td></tr>
+              <tr><td>10</td><td>2–9</td><td>加倍，否則加牌</td></tr>
+              <tr><td>11</td><td>2–10</td><td>加倍，否則加牌</td></tr>
+              <tr><td>12</td><td>4–6</td><td>停牌，否則加牌</td></tr>
+              <tr><td>13–16</td><td>2–6</td><td>停牌，否則加牌</td></tr>
+              <tr><td>17 或以上</td><td>任意</td><td>停牌</td></tr>
+              <tr><td>軟 13–17</td><td>4–6</td><td>加倍，否則加牌</td></tr>
+              <tr><td>軟 18</td><td>2–6</td><td>加倍；7–8 停牌；9 以上加牌</td></tr>
+              <tr><td>軟 19 或以上</td><td>任意</td><td>停牌</td></tr>
+              <tr><td>對子 A、8</td><td>任意</td><td>分牌</td></tr>
+              <tr><td>對子 2、3、7</td><td>2–7</td><td>分牌，否則加牌</td></tr>
+              <tr><td>對子 6</td><td>2–6</td><td>分牌，否則加牌</td></tr>
+              <tr><td>對子 9</td><td>2–6、8–9</td><td>分牌；7、10、A 停牌</td></tr>
+              <tr><td>對子 5</td><td>任意</td><td>不加倍時加牌；可加倍時加倍</td></tr>
+              <tr><td>對子 4</td><td>5–6</td><td>分牌，否則加牌</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="note">表為教學整理，未涵蓋所有細微規則（例如 DAS、是否可再分 A、莊家是否檢查 Blackjack）。實際產品應以完整策略引擎或已驗證的表格為準。</p>
+
+        <h2 id="payout">賠付、RTP 與莊家優勢</h2>
+        <p>一般勝局賠 1:1，和局退回投注，Blackjack 賠 3:2。假設投注 100 點，拿到 Blackjack 時返還 250 點（100 本金＋150 利潤）。若牌桌把 Blackjack 改為 6:5，同樣的 100 點只返還 220 點，莊家優勢會增加約 1.4 個百分點，長期影響非常大。</p>
+        <div class="table-wrap">
+          <table class="data">
+            <caption>常見結果與派彩（投注 100 點）</caption>
+            <thead><tr><th scope="col">結果</th><th scope="col">返還</th><th scope="col">淨利</th></tr></thead>
+            <tbody>
+              <tr><td>Blackjack（3:2）</td><td class="num">250</td><td class="num">+150</td></tr>
+              <tr><td>一般勝利</td><td class="num">200</td><td class="num">+100</td></tr>
+              <tr><td>和局</td><td class="num">100</td><td class="num">0</td></tr>
+              <tr><td>失敗／爆牌</td><td class="num">0</td><td class="num">−100</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>RTP 與莊家優勢是長期統計，不是單局保證。即使使用完美基本策略，短期仍可能連續輸；任何投注系統都無法改變負期望值。</p>
+
+        <h2 id="state">牌局狀態：比發牌動畫更難的部分</h2>
+        <p>21 點的流程包含多個階段：<code>idle</code>（等待下注）、<code>dealing</code>（發初始四張牌）、<code>player</code>（玩家決策）、<code>dealer</code>（莊家補牌）、<code>settled</code>（已結算）。每個階段可用的按鈕不同，例如只有 <code>player</code> 能加牌，只有 <code>idle</code> 或 <code>settled</code> 能改注碼。</p>
+        <p>分牌會讓「一手」變成「兩手」，並且可能出現「第一手已完成、第二手還在進行」的狀態。程式必須追蹤 <code>active</code> 索引，並在目前手牌完成後尋找下一手未完成的手牌；兩手都完成才進入莊家回合。這就是為什麼只靠一個 <code>isPlaying</code> 布林值會很快失控。</p>
+        <p>還有一個常見坑：分牌 A 的自動停牌。若兩張 A 分牌後仍允許加牌，玩家可能取得多個 21 點，破壞規則與期望值。本實作在分牌時就將兩手標記為完成，並在畫面顯示「分牌 A · 自動停牌」。</p>
+
+        <h2 id="fairness">公平性與牌靴指紋</h2>
+        <p>本頁以 Fisher–Yates 洗 6 副牌，並在建立牌靴後計算 SHA-256 前 16 碼作為指紋。指紋可以幫你確認「重新整理後還是同一副牌靴」，也能在除錯時比對狀態，但它不能證明洗牌沒有被操縱。</p>
+        <p>正式系統應採用：</p>
+        <ol>
+          <li>伺服器產生 server seed，賽前公開其雜湊（commitment）。</li>
+          <li>玩家提供 client seed，雙方 seed 混合後洗牌。</li>
+          <li>局後揭示 server seed，玩家可重算雜湊與牌序。</li>
+          <li>每局結果以伺服器簽章封存，並保留可稽核的局單。</li>
+        </ol>
+        <p>此外，正式產品還需處理「牌靴中途換靴」與「未完成局」的伺服器狀態。客戶端不應自行決定是否換靴，也不應在重連後重播已派彩的牌。</p>
+
+        <h2 id="reconnect">斷線重連：恢復到哪一步？</h2>
+        <p>本頁把牌靴、牌靴索引、餘額、莊家牌、玩家手牌、目前手牌索引、階段、結果文字與統計寫入 localStorage。重新載入後會：</p>
+        <ul>
+          <li>驗證每張牌的 rank 與 suit，拒絕不合法資料；</li>
+          <li>清洗手牌，只保留有正數投注且牌面合法的手牌；</li>
+          <li>若階段是 <code>player</code>，恢復玩家回合與目前手牌；</li>
+          <li>若階段是 <code>dealer</code>，自動讓莊家繼續補牌；</li>
+          <li>若階段是 <code>settled</code>，顯示上一局結果，等待「下一局」。</li>
+        </ul>
+        <p>注意：<code>dealing</code> 階段的資料不會被保存，因為發牌中的暫時狀態沒有保存價值。正式產品則應由伺服器記錄「已發牌但未結算」的局單，重連後查詢結果，而不是由前端推測。</p>
+
+        <h2 id="accessibility">鍵盤、螢幕閱讀器與手機</h2>
+        <p>牌面以 DOM 呈現，每張牌都有可讀文字（例如「黑桃 A」），不依賴 Canvas。莊家點數、玩家點數、結果與餘額都會更新；重要變化也會透過 <code>aria-live</code> 公告。按鈕在不可用時會設為 <code>disabled</code>，避免使用者按下無效操作。</p>
+        <p>鍵盤快捷鍵：<code>H</code> 加牌、<code>S</code> 停牌、<code>D</code> 加倍、<code>P</code> 分牌；焦點在按鈕或連結時不會觸發，避免與 Enter／空白鍵衝突。手機版操作按鈕會改為 2 欄，牌面縮放但不隱藏點數。</p>
+
+        <h2 id="faq">常見問題</h2>
+        <div class="faq">
+          <details>
+            <summary>21 點的基本規則是什麼？</summary>
+            <div class="faq-answer"><p>玩家與莊家各發兩張牌，目標是讓手牌點數接近 21 但不超過。2–10 依面值，J／Q／K 算 10 點，A 可算 1 或 11 點。玩家可加牌、停牌、加倍或分牌；莊家依固定規則補牌，本示範為軟 17 停牌（S17）。</p></div>
+          </details>
+          <details>
+            <summary>為什麼 Blackjack 賠 3:2？</summary>
+            <div class="faq-answer"><p>Blackjack 指首兩張牌就是 21 點（A 加一張 10 點牌），機率約 4.8%。3:2 的賠付讓它的期望值高於一般勝局，也是 21 點之所以強調「基本策略」的原因之一。若賠 6:5，莊家優勢會明顯上升。</p></div>
+          </details>
+          <details>
+            <summary>軟 17 是什麼？為什麼莊家 S17？</summary>
+            <div class="faq-answer"><p>軟 17 指手牌含一張可算 11 點的 A，總點數為 17（例如 A+6）。S17 表示莊家在軟 17 停牌，H17 則表示要補牌。S17 對玩家較有利，本示範採用 S17。</p></div>
+          </details>
+          <details>
+            <summary>分牌 A 為什麼只補一張？</summary>
+            <div class="faq-answer"><p>若兩張起始牌都是 A，分牌後每手各得一張 A；為避免玩家透過反覆分牌取得多個 21 點，標準規則是每手只補一張牌就自動停牌。本示範遵循此規則，且只允許分牌一次。</p></div>
+          </details>
+          <details>
+            <summary>重新整理後未完成的牌局會保留嗎？</summary>
+            <div class="faq-answer"><p>會。牌靴、牌靴索引、餘額、手牌、目前輪到哪一手、莊家牌與統計都會存在 localStorage。重新載入後會驗證資料並恢復；若當時輪到莊家，會自動繼續補牌。正式產品應由伺服器持有牌靴與局單。</p></div>
+          </details>
+          <details>
+            <summary>這個 21 點 demo 可以用真錢玩嗎？</summary>
+            <div class="faq-answer"><p>不行。所有籌碼都是虛擬點數，無法兌換現金或任何有價物。正式真錢產品必須由伺服器產生牌靴、簽章結算、持有餘額，並符合當地年齡驗證、限額與反洗錢法規。</p></div>
+          </details>
+        </div>
+
+        <div class="related-links" aria-label="相關指南">
+          <a href="/guides/table-games-fairness/">公平性與重連指南</a>
+          <a href="/guides/html5-casino-performance/">效能與除錯</a>
+          <a href="/games/baccarat/">百家樂試玩</a>
+          <a href="/games/roulette/">輪盤試玩</a>
+        </div>
+
+        <div class="author-box">
+          <span class="author-avatar" aria-hidden="true">LF</span>
+          <div>
+            <h2>LuckyForge Lab 工程編輯</h2>
+            <p>專注於瀏覽器遊戲架構、可驗證隨機與無障礙互動。內容以可重現的 demo 為基礎，並在每頁標示最後更新日期。</p>
+          </div>
+        </div>
+      </article>
+
+      <aside class="game-sidebar" aria-label="21 點規格與引用">
+        <div class="card card--pad">
+          <h2 class="h3">牌桌規格</h2>
+          <dl class="spec-list">
+            <div><dt>牌靴</dt><dd>6 副 · 312 張</dd></div>
+            <div><dt>莊家</dt><dd>S17</dd></div>
+            <div><dt>Blackjack</dt><dd>3:2</dd></div>
+            <div><dt>加倍</dt><dd>任意兩張</dd></div>
+            <div><dt>分牌</dt><dd>一次</dd></div>
+            <div><dt>指紋</dt><dd>SHA-256</dd></div>
+            <div><dt>恢復</dt><dd>localStorage</dd></div>
+          </dl>
+        </div>
+        <div class="card card--pad">
+          <h2 class="h3">引用此頁</h2>
+          <p class="note">固定網址與更新日期可作為引用依據。引用時請保留「LuckyForge Lab」與標題。</p>
+          <button class="btn btn-ghost btn-sm" type="button" data-copy-link="https://luckyforge-lab.pages.dev/games/blackjack/">複製引用連結</button>
+        </div>
+        <div class="card card--pad">
+          <h2 class="h3">玩法提示</h2>
+          <p class="note">先從 10 點籌碼開始，觀察軟 17 與爆牌機率。若拿到 A+A 或 8+8，試試分牌；若拿到 10 或 11，觀察加倍帶來的差異。</p>
+        </div>
+      </aside>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-main">
+      <div class="footer-brand">
+        <a class="brand" href="/">
+          <span class="brand-mark" aria-hidden="true">LF</span>
+          <span class="brand-name"><strong>LuckyForge Lab</strong><span>幸運工坊</span></span>
+        </a>
+        <p>純前端 HTML5 賭場遊戲實驗室。用可玩的 demo 拆解 FSM、物件池、碰撞、公平性與效能，全部使用虛擬籌碼。</p>
+        <div class="footer-badges"><span class="badge">18+</span><span class="badge badge--mint">虛擬籌碼</span><span class="badge badge--muted">零外部請求</span></div>
+      </div>
+      <nav class="footer-col" aria-labelledby="footer-games">
+        <h2 id="footer-games">遊戲</h2>
+        <ul>
+          <li><a href="/games/slots/">老虎機</a></li>
+          <li><a href="/games/fish-shooting/">捕魚機</a></li>
+          <li><a href="/games/baccarat/">百家樂</a></li>
+          <li><a href="/games/roulette/">輪盤</a></li>
+          <li><a href="/games/blackjack/">21 點</a></li>
+        </ul>
+      </nav>
+      <nav class="footer-col" aria-labelledby="footer-guides">
+        <h2 id="footer-guides">指南</h2>
+        <ul>
+          <li><a href="/guides/">全部指南</a></li>
+          <li><a href="/guides/slots-fsm-reel-physics/">老虎機 FSM</a></li>
+          <li><a href="/guides/fish-shooting-ai-collision/">捕魚機 AI</a></li>
+          <li><a href="/guides/table-games-fairness/">公平性與重連</a></li>
+          <li><a href="/guides/html5-casino-performance/">效能與除錯</a></li>
+        </ul>
+      </nav>
+      <nav class="footer-col" aria-labelledby="footer-site">
+        <h2 id="footer-site">網站</h2>
+        <ul>
+          <li><a href="/about/">關於我們</a></li>
+          <li><a href="/accessibility/">無障礙</a></li>
+          <li><a href="/privacy/">隱私與資料</a></li>
+          <li><a href="/responsible-gaming/">責任遊戲</a></li>
+          <li><a href="/llms.txt">llms.txt</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="footer-bottom">
+      <p>© <span data-current-year>2026</span> LuckyForge Lab（幸運工坊）。內容為技術教學與娛樂展示，不構成賭博建議。</p>
+      <p>18+ · 虛擬籌碼 · 無真錢交易 · <a href="/responsible-gaming/">請理性遊玩</a></p>
+    </div>
+  </div>
+</footer>
+
+<script type="module" src="/assets/js/site.js"></script>
+<script type="module" src="/assets/js/games/blackjack.js"></script>
+</body>
+</html>

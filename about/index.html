@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>document.documentElement.classList.add("js");</script>
+<title>關於 LuckyForge Lab 幸運工坊：HTML5 賭場遊戲實驗室</title>
+<meta name="description" content="LuckyForge Lab（幸運工坊）是純前端的 HTML5 賭場遊戲實驗室：五款虛擬籌碼試玩、可重現的工程指南、零外部請求。了解我們的定位、編輯原則、技術選型與不提供的服務。">
+<meta name="keywords" content="LuckyForge Lab,幸運工坊,關於我們,HTML5 賭場遊戲,遊戲實驗室,虛擬籌碼,工程教學">
+<meta name="author" content="LuckyForge Lab">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#070a10">
+<link rel="canonical" href="https://luckyforge-lab.pages.dev/about/">
+<link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/img/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="LuckyForge Lab 幸運工坊">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="關於 LuckyForge Lab 幸運工坊">
+<meta property="og:description" content="純前端 HTML5 賭場遊戲實驗室：五款虛擬籌碼試玩、可重現的工程指南、零外部請求。">
+<meta property="og:url" content="https://luckyforge-lab.pages.dev/about/">
+<meta property="og:image" content="https://luckyforge-lab.pages.dev/assets/img/og-cover.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="LuckyForge Lab 幸運工坊封面">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="關於 LuckyForge Lab 幸運工坊">
+<meta name="twitter:description" content="純前端 HTML5 賭場遊戲實驗室：五款虛擬籌碼試玩、可重現的工程指南、零外部請求。">
+<meta name="twitter:image" content="https://luckyforge-lab.pages.dev/assets/img/og-cover.png">
+<link rel="stylesheet" href="/assets/css/site.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "首頁", "item": "https://luckyforge-lab.pages.dev/" },
+        { "@type": "ListItem", "position": 2, "name": "關於我們", "item": "https://luckyforge-lab.pages.dev/about/" }
+      ]
+    },
+    {
+      "@type": "AboutPage",
+      "@id": "https://luckyforge-lab.pages.dev/about/#webpage",
+      "url": "https://luckyforge-lab.pages.dev/about/",
+      "name": "關於 LuckyForge Lab 幸運工坊",
+      "description": "純前端 HTML5 賭場遊戲實驗室的定位、編輯原則、技術選型與聯絡方式。",
+      "inLanguage": "zh-Hant-TW",
+      "isPartOf": { "@id": "https://luckyforge-lab.pages.dev/#website" },
+      "about": { "@id": "https://luckyforge-lab.pages.dev/#organization" },
+      "datePublished": "2026-11-16",
+      "dateModified": "2026-11-16"
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://luckyforge-lab.pages.dev/#organization",
+      "name": "LuckyForge Lab",
+      "alternateName": "幸運工坊",
+      "url": "https://luckyforge-lab.pages.dev/",
+      "logo": "https://luckyforge-lab.pages.dev/assets/img/icon-512.png",
+      "description": "純前端 HTML5 賭場遊戲實驗室，提供虛擬籌碼試玩與可驗證的工程指南。",
+      "foundingDate": "2026-11-16",
+      "knowsAbout": ["HTML5 game development", "Slots mathematics", "Finite state machines", "Canvas 2D", "Provably fair systems", "Web accessibility"]
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<a class="skip-link" href="#main-content">跳至主要內容</a>
+
+<header class="site-header" data-header>
+  <div class="container header-inner">
+    <a class="brand" href="/">
+      <span class="brand-mark" aria-hidden="true">LF</span>
+      <span class="brand-name"><strong>LuckyForge Lab</strong><span>幸運工坊</span></span>
+    </a>
+    <nav class="site-nav" id="primary-nav" aria-label="主要導覽">
+      <a href="/games/slots/">老虎機</a>
+      <a href="/games/fish-shooting/">捕魚機</a>
+      <a href="/games/baccarat/">百家樂</a>
+      <a href="/games/roulette/">輪盤</a>
+      <a href="/games/blackjack/">21 點</a>
+      <a href="/guides/">指南</a>
+      <a class="btn btn-primary btn-sm" href="/games/slots/">免費試玩</a>
+    </nav>
+    <div class="header-tools">
+      <button class="icon-btn" type="button" data-audio-toggle aria-pressed="false" aria-label="關閉音效" title="關閉音效">
+        <svg class="icon-sound-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4Z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M19.5 6a8.5 8.5 0 0 1 0 12"/></svg>
+        <svg class="icon-sound-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4Z"/><path d="m17 9 5 5"/><path d="m22 9-5 5"/></svg>
+      </button>
+    </div>
+    <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="primary-nav" aria-label="開啟導覽選單"><span></span></button>
+  </div>
+</header>
+
+<main id="main-content">
+  <nav class="breadcrumbs" aria-label="麵包屑">
+    <div class="container"><ol><li><a href="/">首頁</a></li><li><span aria-current="page">關於我們</span></li></ol></div>
+  </nav>
+
+  <header class="page-hero">
+    <div class="container">
+      <span class="eyebrow">About · 關於我們</span>
+      <h1>把賭場遊戲拆開，看看裡面有什麼</h1>
+      <p class="lead">LuckyForge Lab（幸運工坊）是一個純前端的 HTML5 賭場遊戲實驗室。我們做五款可以實際遊玩的虛擬籌碼試玩，也把背後的狀態機、碰撞、公平性與效能寫成可重現的工程指南。</p>
+      <div class="key-takeaway">
+        <strong>一句話定位</strong>
+        <p>不是真錢賭博網站，也不是遊戲發行商。這是一個用瀏覽器技術拆解賭場遊戲的教學專案：所有籌碼都是虛擬點數，無法兌換現金，也不接受存款。</p>
+      </div>
+    </div>
+  </header>
+
+  <section class="section section--tight" aria-labelledby="what-title">
+    <div class="container">
+      <div class="section-head">
+        <div><span class="eyebrow">What we do</span><h2 id="what-title">我們做什麼</h2></div>
+      </div>
+      <div class="grid-3">
+        <div class="card card--pad">
+          <h3 class="h3">可玩的試玩</h3>
+          <p class="note">老虎機、捕魚機、百家樂、輪盤與 21 點。全部使用 Canvas 2D 與 DOM，沒有外部圖片、字型或音檔，開啟網頁就能玩。</p>
+        </div>
+        <div class="card card--pad">
+          <h3 class="h3">可重現的指南</h3>
+          <p class="note">每篇指南都對應一個實際問題：滾輪怎麼停、魚群怎麼游、牌靴怎麼驗、幀率為什麼掉。附程式碼、檢查表與常見坑。</p>
+        </div>
+        <div class="card card--pad">
+          <h3 class="h3">可引用的內容</h3>
+          <p class="note">固定網址、更新日期、結構化資料與「複製引用連結」。內容以繁體中文撰寫，方便讀者與 AI 摘要引用。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tight" aria-labelledby="not-title">
+    <div class="container">
+      <div class="section-head">
+        <div><span class="eyebrow">What we don't do</span><h2 id="not-title">我們不做什麼</h2></div>
+      </div>
+      <div class="card card--pad">
+        <ul class="prose" style="margin:0">
+          <li><strong>不提供真錢遊戲。</strong>沒有存款、提款、兌換、紅利或任何有價物。</li>
+          <li><strong>不代替營運商。</strong>本專案不是博弈執照持有者，也不提供博弈服務。</li>
+          <li><strong>不保證任何策略。</strong>RTP 與基本策略是長期數學，不是必勝方法。</li>
+          <li><strong>不收集個人資料。</strong>沒有帳號、追蹤像素、廣告或第三方分析；詳見<a href="/privacy/">隱私與資料</a>。</li>
+          <li><strong>不鼓勵未成年或問題賭博。</strong>網站標示 18+，並提供<a href="/responsible-gaming/">責任遊戲</a>資源。</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tight" aria-labelledby="principles-title">
+    <div class="container">
+      <div class="section-head">
+        <div><span class="eyebrow">Editorial principles</span><h2 id="principles-title">編輯原則</h2></div>
+        <p>技術內容必須可以被檢查，而不是聽起來很厲害。</p>
+      </div>
+      <div class="grid-2">
+        <div class="card card--pad">
+          <h3 class="h3">1. 先說限制</h3>
+          <p class="note">每個 demo 都標示它是前端示範，RNG 可被修改、餘額存在 localStorage、沒有伺服器。正式產品需要什麼，會在頁面上直接寫清楚。</p>
+        </div>
+        <div class="card card--pad">
+          <h3 class="h3">2. 結果先定，動畫後播</h3>
+          <p class="note">所有遊戲都先決定結果，再播放動畫。這讓低階裝置、減少動態模式與伺服器結算可以共用同一套流程。</p>
+        </div>
+        <div class="card card--pad">
+          <h3 class="h3">3. 數字要有來源</h3>
+          <p class="note">RTP、賠付與機率都標明規則基準。沒有辦法精算的示範（例如老虎機權重）會直接說「不承諾固定 RTP」。</p>
+        </div>
+        <div class="card card--pad">
+          <h3 class="h3">4. 無障礙是功能</h3>
+          <p class="note">鍵盤操作、焦點可見、aria-live、減少動態與對比度不是加分項，而是發佈條件。已知限制會寫在<a href="/accessibility/">無障礙頁</a>。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tight" aria-labelledby="stack-title">
+    <div class="container">
+      <div class="section-head">
+        <div><span class="eyebrow">Stack</span><h2 id="stack-title">技術選型</h2></div>
+      </div>
+      <div class="table-wrap">
+        <table class="data">
+          <caption>LuckyForge Lab 的技術組成</caption>
+          <thead><tr><th scope="col">層級</th><th scope="col">選擇</th><th scope="col">原因</th></tr></thead>
+          <tbody>
+            <tr><td>遊戲繪製</td><td>Canvas 2D</td><td>不需要 WebGL 的相容性與 context lost 處理，對 2D 賭場遊戲足夠。</td></tr>
+            <tr><td>UI 與文字</td><td>HTML／CSS</td><td>可選取、可被螢幕閱讀器讀取、可用 CSS 響應式。</td></tr>
+            <tr><td>音效</td><td>Web Audio API</td><td>即時合成，無音檔請求；第一個手勢解鎖。</td></tr>
+            <tr><td>隨機</td><td>crypto.getRandomValues</td><td>比 Math.random 好，但仍是前端示範；正式產品需伺服器 RNG。</td></tr>
+            <tr><td>持久化</td><td>localStorage</td><td>可離線恢復；正式產品需伺服器局單與冪等結算。</td></tr>
+            <tr><td>託管</td><td>純靜態</td><td>Netlify、Cloudflare Pages、Vercel、GitHub Pages 皆可直接部署。</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tight" aria-labelledby="contact-title">
+    <div class="container">
+      <div class="card card--pad">
+        <h2 id="contact-title" class="h2">聯絡與更正</h2>
+        <p class="note">若你發現技術錯誤、無障礙問題或授權疑慮，請來信 <a href="mailto:hello@luckyforge-lab.example">hello@luckyforge-lab.example</a>。我們會在確認後更新頁面與「最後更新」日期。</p>
+        <p class="note">引用本頁內容時，請保留「LuckyForge Lab」、頁面標題與網址。大量轉載請先取得書面同意。</p>
+        <div class="related-links">
+          <a href="/guides/">工程指南</a>
+          <a href="/responsible-gaming/">責任遊戲</a>
+          <a href="/privacy/">隱私與資料</a>
+          <a href="/accessibility/">無障礙</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-main">
+      <div class="footer-brand">
+        <a class="brand" href="/">
+          <span class="brand-mark" aria-hidden="true">LF</span>
+          <span class="brand-name"><strong>LuckyForge Lab</strong><span>幸運工坊</span></span>
+        </a>
+        <p>純前端 HTML5 賭場遊戲實驗室。用可玩的 demo 拆解 FSM、物件池、碰撞、公平性與效能，全部使用虛擬籌碼。</p>
+        <div class="footer-badges"><span class="badge">18+</span><span class="badge badge--mint">虛擬籌碼</span><span class="badge badge--muted">零外部請求</span></div>
+      </div>
+      <nav class="footer-col" aria-labelledby="footer-games">
+        <h2 id="footer-games">遊戲</h2>
+        <ul>
+          <li><a href="/games/slots/">老虎機</a></li>
+          <li><a href="/games/fish-shooting/">捕魚機</a></li>
+          <li><a href="/games/baccarat/">百家樂</a></li>
+          <li><a href="/games/roulette/">輪盤</a></li>
+          <li><a href="/games/blackjack/">21 點</a></li>
+        </ul>
+      </nav>
+      <nav class="footer-col" aria-labelledby="footer-guides">
+        <h2 id="footer-guides">指南</h2>
+        <ul>
+          <li><a href="/guides/">全部指南</a></li>
+          <li><a href="/guides/slots-fsm-reel-physics/">老虎機 FSM</a></li>
+          <li><a href="/guides/fish-shooting-ai-collision/">捕魚機 AI</a></li>
+          <li><a href="/guides/table-games-fairness/">公平性與重連</a></li>
+          <li><a href="/guides/html5-casino-performance/">效能與除錯</a></li>
+        </ul>
+      </nav>
+      <nav class="footer-col" aria-labelledby="footer-site">
+        <h2 id="footer-site">網站</h2>
+        <ul>
+          <li><a href="/about/">關於我們</a></li>
+          <li><a href="/accessibility/">無障礙</a></li>
+          <li><a href="/privacy/">隱私與資料</a></li>
+          <li><a href="/responsible-gaming/">責任遊戲</a></li>
+          <li><a href="/llms.txt">llms.txt</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="footer-bottom">
+      <p>© <span data-current-year>2026</span> LuckyForge Lab（幸運工坊）。內容為技術教學與娛樂展示，不構成賭博建議。</p>
+      <p>18+ · 虛擬籌碼 · 無真錢交易 · <a href="/responsible-gaming/">請理性遊玩</a></p>
+    </div>
+  </div>
+</footer>
+
+<script type="module" src="/assets/js/site.js"></script>
+</body>
+</html>

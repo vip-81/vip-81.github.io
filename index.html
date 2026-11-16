@@ -1,0 +1,492 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>document.documentElement.classList.add("js");</script>
+<title>LuckyForge Lab 幸運工坊｜HTML5 賭場遊戲實驗室與工程指南</title>
+<meta name="description" content="LuckyForge Lab（幸運工坊）是純前端 HTML5 賭場遊戲實驗室：5 款可玩的虛擬籌碼試玩，加上老虎機 FSM、捕魚機碰撞、百家樂／輪盤／21 點公平性與斷線重連的完整工程拆解。零外部請求、零建置流程。">
+<meta name="keywords" content="HTML5 賭場遊戲,老虎機試玩,捕魚機,百家樂,輪盤,21點,Canvas 遊戲,遊戲 FSM,Web Audio,前端效能優化,虛擬籌碼">
+<meta name="author" content="LuckyForge Lab">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#070a10">
+<link rel="canonical" href="https://luckyforge-lab.pages.dev/">
+<link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/img/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="LuckyForge Lab 幸運工坊">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="LuckyForge Lab 幸運工坊｜HTML5 賭場遊戲實驗室">
+<meta property="og:description" content="5 款可玩的瀏覽器賭場遊戲，加上可驗證的工程拆解：FSM、物件池、碰撞、公平性與斷線重連。全部使用虛擬籌碼。">
+<meta property="og:url" content="https://luckyforge-lab.pages.dev/">
+<meta property="og:image" content="https://luckyforge-lab.pages.dev/assets/img/og-cover.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="LuckyForge Lab 幸運工坊：深綠色賭桌風格的首頁插圖，寫著 BIG WIN 與 VIRTUAL CREDITS">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="LuckyForge Lab 幸運工坊｜HTML5 賭場遊戲實驗室">
+<meta name="twitter:description" content="5 款可玩的瀏覽器賭場遊戲與工程指南。虛擬籌碼、零外部請求、可存取的 Canvas 實作。">
+<meta name="twitter:image" content="https://luckyforge-lab.pages.dev/assets/img/og-cover.png">
+<meta name="twitter:image:alt" content="LuckyForge Lab 幸運工坊封面圖">
+<link rel="stylesheet" href="/assets/css/site.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://luckyforge-lab.pages.dev/#organization",
+      "name": "LuckyForge Lab",
+      "alternateName": "幸運工坊",
+      "url": "https://luckyforge-lab.pages.dev/",
+      "logo": "https://luckyforge-lab.pages.dev/assets/img/icon-512.png",
+      "description": "純前端 HTML5 賭場遊戲實驗室，提供虛擬籌碼試玩與可驗證的工程指南。",
+      "knowsAbout": ["HTML5 game development", "Slots mathematics", "Finite state machines", "Canvas 2D", "Provably fair systems"]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://luckyforge-lab.pages.dev/#website",
+      "url": "https://luckyforge-lab.pages.dev/",
+      "name": "LuckyForge Lab 幸運工坊",
+      "alternateName": "幸運工坊",
+      "inLanguage": "zh-Hant-TW",
+      "publisher": { "@id": "https://luckyforge-lab.pages.dev/#organization" }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://luckyforge-lab.pages.dev/#webpage",
+      "url": "https://luckyforge-lab.pages.dev/",
+      "name": "LuckyForge Lab 幸運工坊｜HTML5 賭場遊戲實驗室與工程指南",
+      "description": "5 款可玩的虛擬籌碼賭場遊戲，以及老虎機、捕魚機、百家樂、輪盤、21 點的工程實作與公平性說明。",
+      "isPartOf": { "@id": "https://luckyforge-lab.pages.dev/#website" },
+      "about": { "@id": "https://luckyforge-lab.pages.dev/#organization" },
+      "inLanguage": "zh-Hant-TW",
+      "datePublished": "2026-11-16",
+      "dateModified": "2026-11-16",
+      "primaryImageOfPage": "https://luckyforge-lab.pages.dev/assets/img/og-cover.png"
+    },
+    {
+      "@type": "ItemList",
+      "name": "五款瀏覽器賭場遊戲試玩",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "item": { "@type": "VideoGame", "name": "Lucky Reels 老虎機", "url": "https://luckyforge-lab.pages.dev/games/slots/", "genre": "Casino", "gamePlatform": "Web browser", "applicationCategory": "Game", "operatingSystem": "Any", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "TWD" } } },
+        { "@type": "ListItem", "position": 2, "item": { "@type": "VideoGame", "name": "Deep Reef 捕魚機", "url": "https://luckyforge-lab.pages.dev/games/fish-shooting/", "genre": "Casino", "gamePlatform": "Web browser", "applicationCategory": "Game", "operatingSystem": "Any", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "TWD" } } },
+        { "@type": "ListItem", "position": 3, "item": { "@type": "VideoGame", "name": "Felt & Fortune 百家樂", "url": "https://luckyforge-lab.pages.dev/games/baccarat/", "genre": "Casino", "gamePlatform": "Web browser", "applicationCategory": "Game", "operatingSystem": "Any", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "TWD" } } },
+        { "@type": "ListItem", "position": 4, "item": { "@type": "VideoGame", "name": "Golden Spindle 輪盤", "url": "https://luckyforge-lab.pages.dev/games/roulette/", "genre": "Casino", "gamePlatform": "Web browser", "applicationCategory": "Game", "operatingSystem": "Any", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "TWD" } } },
+        { "@type": "ListItem", "position": 5, "item": { "@type": "VideoGame", "name": "Twenty-One 21 點", "url": "https://luckyforge-lab.pages.dev/games/blackjack/", "genre": "Casino", "gamePlatform": "Web browser", "applicationCategory": "Game", "operatingSystem": "Any", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "TWD" } } }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://luckyforge-lab.pages.dev/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "LuckyForge Lab 是真錢賭博網站嗎？", "acceptedAnswer": { "@type": "Answer", "text": "不是。本站是純前端的技術展示與教學實驗室，所有籌碼都是虛擬點數，無法兌換現金、商品或任何有價物，也不接受存款。" } },
+        { "@type": "Question", "name": "這些遊戲的隨機結果是怎麼產生的？", "acceptedAnswer": { "@type": "Answer", "text": "示範版使用瀏覽器的 crypto.getRandomValues 產生亂數，並以拒絕取樣避免模數偏差。正式產品必須由伺服器持有 RNG、記錄局單並以簽章或 seed commitment 驗證，前端只負責播放動畫。" } },
+        { "@type": "Question", "name": "為什麼網站沒有任何圖片或字型請求？", "acceptedAnswer": { "@type": "Answer", "text": "遊戲畫面全部由 Canvas 2D 即時繪製，圖示使用 inline SVG，字型使用系統字型，音效由 Web Audio API 合成，因此除了 HTML、CSS、JS 與必要圖示外沒有外部請求。" } },
+        { "@type": "Question", "name": "手機與 iPhone 可以玩嗎？", "acceptedAnswer": { "@type": "Answer", "text": "可以。版面支援 320px 以上寬度，Canvas 會依 devicePixelRatio 調整解析度。iOS Safari 要求音訊必須由使用者手勢解鎖，因此第一次點擊或按鍵後才會啟用音效。" } },
+        { "@type": "Question", "name": "RTP 是什麼？試玩版的 RTP 固定嗎？", "acceptedAnswer": { "@type": "Answer", "text": "RTP 是理論回報率，指長期大量遊玩後返還給玩家的比例，不代表單局結果。百家樂、歐式輪盤與 21 點有公開的數學基準；老虎機與捕魚機的 RTP 由賠付表、權重與砲台設定決定，示範版不承諾固定 RTP。" } },
+        { "@type": "Question", "name": "可以引用本站內容嗎？", "acceptedAnswer": { "@type": "Answer", "text": "可以。每篇文章都提供「複製引用連結」按鈕與固定網址，引用時請標明 LuckyForge Lab、文章標題與最後更新日期。" } }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<a class="skip-link" href="#main-content">跳至主要內容</a>
+
+<header class="site-header" data-header>
+  <div class="container header-inner">
+    <a class="brand" href="/">
+      <span class="brand-mark" aria-hidden="true">LF</span>
+      <span class="brand-name"><strong>LuckyForge Lab</strong><span>幸運工坊</span></span>
+    </a>
+
+    <nav class="site-nav" id="primary-nav" aria-label="主要導覽">
+      <a href="/games/slots/">老虎機</a>
+      <a href="/games/fish-shooting/">捕魚機</a>
+      <a href="/games/baccarat/">百家樂</a>
+      <a href="/games/roulette/">輪盤</a>
+      <a href="/games/blackjack/">21 點</a>
+      <a href="/guides/">指南</a>
+      <a class="btn btn-primary btn-sm" href="/games/slots/">免費試玩</a>
+    </nav>
+
+    <div class="header-tools">
+      <button class="icon-btn" type="button" data-audio-toggle aria-pressed="false" aria-label="關閉音效" title="關閉音效">
+        <svg class="icon-sound-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4Z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M19.5 6a8.5 8.5 0 0 1 0 12"/></svg>
+        <svg class="icon-sound-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4Z"/><path d="m17 9 5 5"/><path d="m22 9-5 5"/></svg>
+      </button>
+    </div>
+
+    <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="primary-nav" aria-label="開啟導覽選單"><span></span></button>
+  </div>
+</header>
+
+<main id="main-content">
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="container hero-grid">
+      <div>
+        <span class="hero-kicker"><span class="dot" aria-hidden="true"></span> 18+ · 虛擬籌碼 · 無真錢交易</span>
+        <h1 id="hero-title"><span class="line">在瀏覽器裡</span><span class="line gold-text">拆解賭場遊戲</span></h1>
+        <p class="hero-lede">LuckyForge Lab（幸運工坊）是一個純前端的 HTML5 賭場遊戲實驗室。五款可玩的試玩、五份可驗證的工程拆解：從滾輪物理、魚群 AI，到牌靴公平性與斷線重連。沒有外部追蹤，也不需要安裝任何東西。</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="/games/slots/">開始玩老虎機</a>
+          <a class="btn btn-ghost" href="/guides/">閱讀工程指南</a>
+        </div>
+        <ul class="hero-points">
+          <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m4 10 4 4 8-8"/></svg>零外部請求</li>
+          <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m4 10 4 4 8-8"/></svg>Canvas 2D 即時繪製</li>
+          <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m4 10 4 4 8-8"/></svg>可鍵盤操作</li>
+          <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m4 10 4 4 8-8"/></svg>可靜態託管</li>
+        </ul>
+      </div>
+
+      <div class="hero-stage" aria-hidden="true">
+        <div class="floating-chip floating-chip--one">50</div>
+        <div class="floating-chip floating-chip--two">100</div>
+        <div class="cabinet">
+          <div class="cabinet-top"><span class="live">LIVE DEMO</span><span>5 × 3 · 10 LINES</span></div>
+          <div class="mini-reels">
+            <div class="mini-reel">7</div>
+            <div class="mini-reel mini-reel--gem">◆</div>
+            <div class="mini-reel mini-reel--star">★</div>
+            <div class="payline"></div>
+          </div>
+          <div class="win-callout"><strong>BIG WIN</strong><span>VIRTUAL CREDITS</span></div>
+          <div class="cabinet-foot">
+            <div class="chips"><span class="chip">10</span><span class="chip chip--gold">50</span><span class="chip chip--green">100</span><span class="chip chip--black">500</span></div>
+            <span class="hint">DEMO ONLY<br>18+ · NO CASH VALUE</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="trust-strip">
+    <div class="container trust-grid">
+      <div class="trust-item"><strong>5 款</strong><span>可實際遊玩的遊戲</span></div>
+      <div class="trust-item"><strong>0</strong><span>外部網路請求</span></div>
+      <div class="trust-item"><strong>100%</strong><span>虛擬籌碼</span></div>
+      <div class="trust-item"><strong>WCAG 2.2 AA</strong><span>無障礙設計目標</span></div>
+    </div>
+  </section>
+
+  <section class="section section--tight" aria-labelledby="summary-title">
+    <div class="container">
+      <div class="key-takeaway">
+        <strong>30 秒摘要</strong>
+        <p id="summary-title">LuckyForge Lab 用五款小遊戲示範「前端遊戲如何做得快、穩、可驗證」：所有結果先用 <code>crypto.getRandomValues</code> 決定，再播放動畫；老虎機以 FSM 管理旋轉與免費遊戲；捕魚機以物件池與線段碰撞避免穿透；百家樂、輪盤與 21 點保存牌靴與局況，重新載入後可接續。正式產品必須把 RNG、局單與派彩移到伺服器，並以簽章或 commitment 驗證公平性。</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="games-title">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow">Playable demos</span>
+          <h2 class="h2" id="games-title">五款遊戲，五種工程難題</h2>
+          <p>每一頁都能直接玩，也都能往下讀到對應的實作細節。全部使用虛擬點數，重新整理後會從本機儲存恢復。</p>
+        </div>
+        <a class="section-head__link link-arrow" href="/guides/">看技術指南</a>
+      </div>
+
+      <div class="game-grid">
+        <a class="game-card game-card--wide" href="/games/slots/">
+          <div class="game-art" style="--art-a:#123a31;--art-b:#081019;--art-glow:rgba(233,185,92,.3)">
+            <span class="game-art__label"><span class="badge">老虎機</span><span class="badge badge--muted">5×3 · 10 線</span></span>
+            <svg viewBox="0 0 600 260" fill="none" aria-hidden="true" focusable="false">
+              <rect x="120" y="34" width="360" height="192" rx="20" fill="#071a16" stroke="#e9b95c" stroke-opacity=".35"/>
+              <rect x="146" y="58" width="96" height="144" rx="12" fill="#0c211c" stroke="#e9b95c" stroke-opacity=".18"/>
+              <rect x="252" y="58" width="96" height="144" rx="12" fill="#0c211c" stroke="#e9b95c" stroke-opacity=".18"/>
+              <rect x="358" y="58" width="96" height="144" rx="12" fill="#0c211c" stroke="#e9b95c" stroke-opacity=".18"/>
+              <text x="194" y="158" text-anchor="middle" font-family="Georgia, serif" font-size="82" font-weight="700" fill="#f8dda0">7</text>
+              <text x="300" y="160" text-anchor="middle" font-family="Georgia, serif" font-size="76" fill="#76baff">◆</text>
+              <text x="406" y="160" text-anchor="middle" font-family="Georgia, serif" font-size="76" fill="#ff6f61">★</text>
+              <path d="M146 130h308" stroke="#ff6f61" stroke-width="2" stroke-opacity=".85"/>
+              <circle cx="146" cy="130" r="4" fill="#ff6f61"/><circle cx="454" cy="130" r="4" fill="#ff6f61"/>
+            </svg>
+          </div>
+          <div class="game-card-body">
+            <h3>Lucky Reels <small>Slots</small></h3>
+            <p>5 滾輪、3 列、10 條固定賠付線。重點是停輪的回彈手感、Wild／Scatter 連線判定、Free Spin 狀態機，以及 Big Win 分級演出時的物件池。</p>
+            <div class="game-card-meta"><span>FSM <b>5 狀態</b></span><span>符號 <b>10 種</b></span><span>免費遊戲 <b>×2</b></span></div>
+            <span class="game-card-cta" aria-hidden="true">→</span>
+          </div>
+        </a>
+
+        <a class="game-card" href="/games/fish-shooting/">
+          <div class="game-art" style="--art-a:#06384c;--art-b:#021923;--art-glow:rgba(118,186,255,.28)">
+            <span class="game-art__label"><span class="badge">捕魚機</span><span class="badge badge--muted">16:9</span></span>
+            <svg viewBox="0 0 400 260" fill="none" aria-hidden="true" focusable="false">
+              <path d="M70 130c30-34 78-42 116-20 18 10 34 20 54 20-20 0-36 10-54 20-38 22-86 14-116-20Z" fill="#ff9a4d"/>
+              <path d="m70 130-30-22v44l30-22Z" fill="#d95c1d"/>
+              <circle cx="162" cy="122" r="7" fill="#fffdf6"/><circle cx="165" cy="122" r="3" fill="#07151a"/>
+              <path d="M70 130c30-34 78-42 116-20" stroke="#ffd2a3" stroke-width="5" stroke-linecap="round"/>
+              <circle cx="285" cy="92" r="22" fill="#5cbb8f" opacity=".85"/><circle cx="330" cy="186" r="13" fill="#d7e37a" opacity=".7"/><circle cx="252" cy="190" r="8" fill="#bdeaff" opacity=".5"/>
+              <path d="M240 230v-36m0 0-12 10m12-10 12 10" stroke="#e9b95c" stroke-width="4" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="game-card-body">
+            <h3>Deep Reef <small>Fish Shooting</small></h3>
+            <p>線段 vs 圓碰撞、boids 魚群、正弦路徑的大型魚，以及五段砲台倍率。附自動捕魚與精準度統計。</p>
+            <div class="game-card-meta"><span>物件池 <b>3 組</b></span><span>砲台 <b>×1–×5</b></span></div>
+            <span class="game-card-cta" aria-hidden="true">→</span>
+          </div>
+        </a>
+
+        <a class="game-card" href="/games/baccarat/">
+          <div class="game-art" style="--art-a:#0d4a3a;--art-b:#073326;--art-glow:rgba(94,216,170,.24)">
+            <span class="game-art__label"><span class="badge">百家樂</span><span class="badge badge--muted">8 副牌</span></span>
+            <svg viewBox="0 0 400 260" fill="none" aria-hidden="true" focusable="false">
+              <ellipse cx="200" cy="228" rx="160" ry="40" fill="#0a3a2e" stroke="#e9b95c" stroke-opacity=".25"/>
+              <g transform="rotate(-9 150 132)"><rect x="104" y="76" width="76" height="108" rx="7" fill="#fffef9"/><text x="116" y="102" font-family="Georgia, serif" font-size="18" fill="#151515">A</text><text x="122" y="164" font-family="Georgia, serif" font-size="30" fill="#b3242c">♥</text></g>
+              <g transform="rotate(8 246 132)"><rect x="218" y="72" width="76" height="108" rx="7" fill="#fffef9"/><text x="230" y="98" font-family="Georgia, serif" font-size="18" fill="#151515">K</text><text x="236" y="160" font-family="Georgia, serif" font-size="30" fill="#151515">♠</text></g>
+              <circle cx="200" cy="52" r="18" fill="none" stroke="#e9b95c" stroke-opacity=".45"/><text x="200" y="58" text-anchor="middle" font-family="Consolas, monospace" font-size="13" fill="#f8dda0">P</text>
+            </svg>
+          </div>
+          <div class="game-card-body">
+            <h3>Felt &amp; Fortune <small>Baccarat</small></h3>
+            <p>完整補牌表、莊家 5% 抽水、珠盤路、SHA-256 牌靴指紋與重新載入恢復。適合研究牌靴狀態管理。</p>
+            <div class="game-card-meta"><span>補牌規則 <b>完整</b></span><span>指紋 <b>SHA-256</b></span></div>
+            <span class="game-card-cta" aria-hidden="true">→</span>
+          </div>
+        </a>
+
+        <a class="game-card" href="/games/roulette/">
+          <div class="game-art" style="--art-a:#3d2413;--art-b:#160d08;--art-glow:rgba(233,185,92,.35)">
+            <span class="game-art__label"><span class="badge">輪盤</span><span class="badge badge--muted">37 格</span></span>
+            <svg viewBox="0 0 400 260" fill="none" aria-hidden="true" focusable="false">
+              <circle cx="200" cy="130" r="92" fill="#5b3a13" stroke="#f3d797" stroke-opacity=".55" stroke-width="4"/>
+              <circle cx="200" cy="130" r="74" fill="#0b1a22" stroke="#e9b95c" stroke-opacity=".55"/>
+              <circle cx="200" cy="130" r="46" fill="#543211" stroke="#ffe9a7" stroke-opacity=".4"/>
+              <circle cx="200" cy="130" r="26" fill="#0b1a22"/>
+              <text x="200" y="137" text-anchor="middle" font-family="Georgia, serif" font-size="22" fill="#f8dda0">LF</text>
+              <circle cx="200" cy="52" r="7" fill="#fffdf6"/>
+              <path d="M200 30v14" stroke="#ffe6a0" stroke-width="4" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="game-card-body">
+            <h3>Golden Spindle <small>Roulette</small></h3>
+            <p>歐式單零輪盤、Canvas 轉輪與球體動畫、完整內外圍下注板。結果先定、動畫後播，並支援 reduced-motion。</p>
+            <div class="game-card-meta"><span>RTP <b>97.30%</b></span><span>格數 <b>37</b></span></div>
+            <span class="game-card-cta" aria-hidden="true">→</span>
+          </div>
+        </a>
+
+        <a class="game-card" href="/games/blackjack/">
+          <div class="game-art" style="--art-a:#1c2a3d;--art-b:#0a0f18;--art-glow:rgba(118,186,255,.28)">
+            <span class="game-art__label"><span class="badge">21 點</span><span class="badge badge--muted">6 副牌</span></span>
+            <svg viewBox="0 0 400 260" fill="none" aria-hidden="true" focusable="false">
+              <g transform="rotate(-10 160 140)"><rect x="112" y="82" width="82" height="116" rx="8" fill="#fffef9"/><text x="126" y="112" font-family="Georgia, serif" font-size="20" fill="#151515">A</text><text x="132" y="182" font-family="Georgia, serif" font-size="34" fill="#151515">♠</text></g>
+              <g transform="rotate(7 238 140)"><rect x="212" y="78" width="82" height="116" rx="8" fill="#fffef9"/><text x="226" y="108" font-family="Georgia, serif" font-size="20" fill="#b3242c">K</text><text x="232" y="178" font-family="Georgia, serif" font-size="34" fill="#b3242c">♦</text></g>
+              <rect x="292" y="64" width="52" height="34" rx="9" fill="#e9b95c"/><text x="318" y="87" text-anchor="middle" font-family="Consolas, monospace" font-size="15" font-weight="700" fill="#1a1102">21</text>
+            </svg>
+          </div>
+          <div class="game-card-body">
+            <h3>Twenty-One <small>Blackjack</small></h3>
+            <p>6 副牌、S17、Blackjack 3:2、一次分牌、即時點數與未完成牌局恢復。含基本策略速查表。</p>
+            <div class="game-card-meta"><span>策略 <b>基本策略</b></span><span>恢復 <b>支援</b></span></div>
+            <span class="game-card-cta" aria-hidden="true">→</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="math-title">
+    <div class="container math-layout">
+      <div class="math-copy">
+        <span class="eyebrow">Math &amp; fairness</span>
+        <h2 class="h2" id="math-title">先講清楚：這些數字代表什麼</h2>
+        <p>下表是各遊戲在「標準規則」下的理論 RTP 或設計目標，不是特定期間的實際結果。RTP 只描述長期期望值，短期波動可以非常大。</p>
+        <p>老虎機與捕魚機的 RTP 取決於賠付表、符號權重、砲台倍率與伺服器設定；本示範沒有宣稱固定 RTP，也不提供任何真錢兌換。</p>
+        <a class="btn btn-ghost" href="/responsible-gaming/">閱讀責任遊戲說明</a>
+      </div>
+      <div>
+        <div class="table-wrap">
+          <table class="data">
+            <caption>標準規則下的理論回報率（僅供教學參考）</caption>
+            <thead><tr><th scope="col">遊戲</th><th scope="col">理論 RTP</th><th scope="col">波動</th><th scope="col">主要變數</th></tr></thead>
+            <tbody>
+              <tr><td>百家樂（莊）</td><td class="num"><span class="rtp-bar"><i style="--rtp:98.94%"></i> 98.94%</span></td><td>低</td><td>5% 抽水</td></tr>
+              <tr><td>百家樂（閒）</td><td class="num"><span class="rtp-bar"><i style="--rtp:98.76%"></i> 98.76%</span></td><td>低</td><td>補牌規則</td></tr>
+              <tr><td>百家樂（和）</td><td class="num"><span class="rtp-bar"><i style="--rtp:85.64%"></i> 85.64%</span></td><td>高</td><td>8:1 賠付</td></tr>
+              <tr><td>歐式輪盤</td><td class="num"><span class="rtp-bar"><i style="--rtp:97.30%"></i> 97.30%</span></td><td>中</td><td>單零 37 格</td></tr>
+              <tr><td>21 點（基本策略）</td><td class="num"><span class="rtp-bar"><i style="--rtp:99.5%"></i> ≈99.5%</span></td><td>低–中</td><td>規則與策略</td></tr>
+              <tr><td>老虎機</td><td class="num">由賠付表決定</td><td>高</td><td>權重、線數、特色</td></tr>
+              <tr><td>捕魚機</td><td class="num">由伺服器設定</td><td>中–高</td><td>魚種、HP、倍率</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="note">數值為公開數學基準的教學整理；實際產品會因規則版本、牌靴數量、抽水方式與平台設定而異。</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="engineering-title">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow">Engineering notes</span>
+          <h2 class="h2" id="engineering-title">三個讓 demo 變成產品的關鍵</h2>
+          <p>程式碼刻意保持零依賴，讓每個決策都能被閱讀、測試與替換。</p>
+        </div>
+      </div>
+      <div class="eng-grid">
+        <article class="eng-card">
+          <span class="eng-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="12" cy="18" r="3"/><path d="M9 6h6M7.5 8.5l3 7M16.5 8.5l-3 7"/></svg></span>
+          <h3>有限狀態機（FSM）</h3>
+          <p>用明確的狀態與事件取代散落的 if／flag。旋轉中不能下注、免費遊戲由計時器推進、Big Win 只能按「繼續」離開。</p>
+          <a class="link-arrow" href="/guides/slots-fsm-reel-physics/">看老虎機 FSM 拆解</a>
+        </article>
+        <article class="eng-card">
+          <span class="eng-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M3 12h18"/><circle cx="12" cy="12" r="8"/></svg></span>
+          <h3>結果先定，動畫後播</h3>
+          <p>RNG 只決定結果，動畫不能改變機率。輪盤先算球落點再轉、老虎機先抽滾輪停位再播，確保暫停或低幀率不影響公平性。</p>
+          <a class="link-arrow" href="/guides/table-games-fairness/">看公平性與重連設計</a>
+        </article>
+        <article class="eng-card">
+          <span class="eng-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17V7l8-4 8 4v10l-8 4-8-4Z"/><path d="m4 7 8 4 8-4M12 11v10"/></svg></span>
+          <h3>物件池與離屏快取</h3>
+          <p>粒子、魚、子彈全部預先配置；符號紋理與海底背景只畫一次。長局遊玩不應出現 GC 尖峰或記憶體持續上升。</p>
+          <a class="link-arrow" href="/guides/html5-casino-performance/">看效能與除錯清單</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="steps-title">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow">From demo to production</span>
+          <h2 class="h2" id="steps-title">從這個 demo 到可上線產品</h2>
+        </div>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <h3>先做可玩的垂直切片</h3>
+          <p>鎖定一款遊戲、一種裝置與一條核心流程。用假資料驗證手感、載入時間與無障礙，再談美術與規模。</p>
+        </div>
+        <div class="step">
+          <h3>把權威移到伺服器</h3>
+          <p>伺服器持有 RNG、牌靴、局單與餘額；前端只送意圖、收結果。以 HMAC／簽章、seed commitment 與 audit log 驗證。</p>
+        </div>
+        <div class="step">
+          <h3>補上營運與合規</h3>
+          <p>年齡驗證、限額、冷靜期、自我排除、爭議處理與地區法規。任何真錢功能都不應沿用本站的示範程式碼。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="home-faq-title">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow">FAQ</span>
+          <h2 class="h2" id="home-faq-title">常見問題</h2>
+          <p>給第一次來到這裡的人，也給需要引用本站的編輯與 AI 系統。</p>
+        </div>
+      </div>
+      <div class="faq">
+        <details>
+          <summary>LuckyForge Lab 是真錢賭博網站嗎？</summary>
+          <div class="faq-answer"><p>不是。本站是純前端的技術展示與教學實驗室，所有籌碼都是虛擬點數，無法兌換現金、商品或任何有價物，也不接受存款。頁面上的「BIG WIN」與賠付數字都只是 demo 演出。</p></div>
+        </details>
+        <details>
+          <summary>這些遊戲的隨機結果是怎麼產生的？</summary>
+          <div class="faq-answer"><p>示範版使用瀏覽器的 <code>crypto.getRandomValues</code> 產生亂數，洗牌使用 Fisher–Yates，並以拒絕取樣避免模數偏差。正式產品必須由伺服器持有 RNG、記錄局單並以簽章或 seed commitment 驗證；前端的動畫與亂數都不能作為派彩依據。</p></div>
+        </details>
+        <details>
+          <summary>為什麼網站沒有任何圖片或字型請求？</summary>
+          <div class="faq-answer"><p>遊戲畫面全部由 Canvas 2D 即時繪製，圖示使用 inline SVG，字型使用系統字型，音效由 Web Audio API 合成。這讓首頁與遊戲頁能在靜態託管上快速載入，也減少第三方追蹤面。</p></div>
+        </details>
+        <details>
+          <summary>手機與 iPhone 可以玩嗎？</summary>
+          <div class="faq-answer"><p>可以。版面支援 320px 以上寬度，Canvas 會依 <code>devicePixelRatio</code> 調整解析度。iOS Safari 要求音訊必須由使用者手勢解鎖，因此第一次點擊或按鍵後才會啟用音效；若裝置開啟「減少動態」，轉輪與發牌會改用快速結算。</p></div>
+        </details>
+        <details>
+          <summary>RTP 是什麼？試玩版的 RTP 固定嗎？</summary>
+          <div class="faq-answer"><p>RTP 是理論回報率，指長期大量遊玩後返還給玩家的比例，不代表單局結果，也不保證贏錢。百家樂、歐式輪盤與 21 點有公開的數學基準；老虎機與捕魚機的 RTP 由賠付表、權重與砲台設定決定，示範版不承諾固定 RTP。</p></div>
+        </details>
+        <details>
+          <summary>可以引用本站內容嗎？</summary>
+          <div class="faq-answer"><p>可以。每篇文章都提供「複製引用連結」按鈕與固定網址，引用時請標明 LuckyForge Lab、文章標題與最後更新日期。若是技術概念，請優先連到對應的指南頁，而不是只引用首頁。</p></div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="cta-title">
+    <div class="container">
+      <div class="cta-band">
+        <div>
+          <h2 id="cta-title">先玩一局，再讀程式。</h2>
+          <p>不用註冊、不用下載、不會連到任何伺服器。所有狀態只存在你的瀏覽器裡，按「補充籌碼」就能重新開始。</p>
+        </div>
+        <div class="cta-actions">
+          <a class="btn btn-primary" href="/games/slots/">玩老虎機</a>
+          <a class="btn btn-ghost" href="/games/fish-shooting/">玩捕魚機</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-main">
+      <div class="footer-brand">
+        <a class="brand" href="/">
+          <span class="brand-mark" aria-hidden="true">LF</span>
+          <span class="brand-name"><strong>LuckyForge Lab</strong><span>幸運工坊</span></span>
+        </a>
+        <p>純前端 HTML5 賭場遊戲實驗室。用可玩的 demo 拆解 FSM、物件池、碰撞、公平性與效能，全部使用虛擬籌碼。</p>
+        <div class="footer-badges"><span class="badge">18+</span><span class="badge badge--mint">虛擬籌碼</span><span class="badge badge--muted">零外部請求</span></div>
+      </div>
+      <nav class="footer-col" aria-labelledby="footer-games">
+        <h2 id="footer-games">遊戲</h2>
+        <ul>
+          <li><a href="/games/slots/">老虎機</a></li>
+          <li><a href="/games/fish-shooting/">捕魚機</a></li>
+          <li><a href="/games/baccarat/">百家樂</a></li>
+          <li><a href="/games/roulette/">輪盤</a></li>
+          <li><a href="/games/blackjack/">21 點</a></li>
+        </ul>
+      </nav>
+      <nav class="footer-col" aria-labelledby="footer-guides">
+        <h2 id="footer-guides">指南</h2>
+        <ul>
+          <li><a href="/guides/">全部指南</a></li>
+          <li><a href="/guides/slots-fsm-reel-physics/">老虎機 FSM</a></li>
+          <li><a href="/guides/fish-shooting-ai-collision/">捕魚機 AI</a></li>
+          <li><a href="/guides/table-games-fairness/">公平性與重連</a></li>
+          <li><a href="/guides/html5-casino-performance/">效能與除錯</a></li>
+        </ul>
+      </nav>
+      <nav class="footer-col" aria-labelledby="footer-site">
+        <h2 id="footer-site">網站</h2>
+        <ul>
+          <li><a href="/about/">關於我們</a></li>
+          <li><a href="/accessibility/">無障礙</a></li>
+          <li><a href="/privacy/">隱私與資料</a></li>
+          <li><a href="/responsible-gaming/">責任遊戲</a></li>
+          <li><a href="/llms.txt">llms.txt</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="footer-bottom">
+      <p>© <span data-current-year>2026</span> LuckyForge Lab（幸運工坊）。內容為技術教學與娛樂展示，不構成賭博建議。</p>
+      <p>18+ · 虛擬籌碼 · 無真錢交易 · <a href="/responsible-gaming/">請理性遊玩</a></p>
+    </div>
+  </div>
+</footer>
+
+<script type="module" src="/assets/js/site.js"></script>
+</body>
+</html>

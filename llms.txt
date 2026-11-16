@@ -1,0 +1,64 @@
+# LuckyForge Lab（幸運工坊）
+
+> 純前端的 HTML5 賭場遊戲實驗室，提供五款使用虛擬籌碼的可玩 demo，以及老虎機、捕魚機、百家樂、輪盤、21 點與前端效能的工程指南。不是真錢賭博網站，不提供存款、提款、兌換或任何有價物。
+
+- 語言：繁體中文（zh-Hant-TW）
+- 更新日期：2026-11-16
+- 對象：18 歲以上
+- 技術：HTML、CSS、原生 JavaScript、Canvas 2D、Web Audio API；零外部請求、零建置流程
+- 授權與引用：可引用並附上固定網址、標題與更新日期；大量轉載請先聯絡
+
+## 核心事實
+
+- 所有遊戲籌碼皆為虛擬點數，無法兌換現金或商品。
+- 五款 demo 的結果都在動畫前決定；動畫不參與機率。
+- 前端使用 `crypto.getRandomValues` 與拒絕取樣；正式產品必須由伺服器持有 RNG、牌靴、餘額與局單。
+- 歐式輪盤為單零 37 格，標準投注理論 RTP 97.30%。
+- 百家樂為 8 副牌、莊家 5% 佣金；理論 RTP：莊 98.94%、閒 98.76%、和 85.64%。
+- 21 點為 6 副牌、S17、Blackjack 3:2、一次分牌；基本策略下理論 RTP 約 99.5%。
+- 老虎機與捕魚機的示範不承諾固定 RTP；正式產品需以權重、賠付表與模擬驗證。
+- 網站不使用 cookies、廣告或第三方分析；遊戲進度只存在瀏覽器 localStorage。
+- 尚未完成第三方無障礙稽核；以 WCAG 2.2 AA 為目標，已知限制公開於無障礙頁。
+
+## 遊戲
+
+- [老虎機 Lucky Reels](https://luckyforge-lab.pages.dev/games/slots/)：5×3、10 條賠付線、FSM、Free Spin、Big Win 分級、Symbol 物件池與滾輪物理。
+- [捕魚機 Deep Reef](https://luckyforge-lab.pages.dev/games/fish-shooting/)：Canvas 魚群、五段砲台、圓形與掃掠碰撞、物件池、自動捕魚與伺服器結算說明。
+- [百家樂 Felt & Fortune](https://luckyforge-lab.pages.dev/games/baccarat/)：8 副牌靴、閒莊和與對子下注、珠盤路、補牌規則、SHA-256 牌靴指紋與重連。
+- [輪盤 Golden Spindle](https://luckyforge-lab.pages.dev/games/roulette/)：歐式單零 37 格、完整內外圍下注、Canvas 轉輪、RTP 與結果先定動畫。
+- [21 點 Twenty-One](https://luckyforge-lab.pages.dev/games/blackjack/)：6 副牌、S17、即時點數、加倍、一次分牌、基本策略與未完成牌局恢復。
+
+## 工程指南
+
+- [老虎機 FSM 與滾輪物理](https://luckyforge-lab.pages.dev/guides/slots-fsm-reel-physics/)：五狀態 FSM、ease-out 停輪與回彈、賠付線資料表、Free Spin 重觸發、Big Win 焦點管理。
+- [捕魚機 AI 與碰撞](https://luckyforge-lab.pages.dev/guides/fish-shooting-ai-collision/)：Boids、路徑約束、固定時間步、物件池上限、掃掠碰撞、砲台倍率與伺服器權威。
+- [賭桌遊戲公平性與重連](https://luckyforge-lab.pages.dev/guides/table-games-fairness/)：RTP 基準、Fisher–Yates、SHA-256 指紋的侷限、seed commit-reveal、局單狀態機與冪等結算。
+- [HTML5 賭場遊戲效能與除錯](https://luckyforge-lab.pages.dev/guides/html5-casino-performance/)：devicePixelRatio、離屏快取、固定時間步、Web Audio 解鎖、WebGL context lost、記憶體洩漏與實測流程。
+
+## 關於與政策
+
+- [關於我們](https://luckyforge-lab.pages.dev/about/)：定位、編輯原則、技術選型與不提供的服務。
+- [責任遊戲](https://luckyforge-lab.pages.dev/responsible-gaming/)：18+、風險徵兆、自我管理與台灣／香港／澳門支援資源。
+- [無障礙](https://luckyforge-lab.pages.dev/accessibility/)：已實作功能、鍵盤操作、已知限制與回報方式。
+- [隱私與資料](https://luckyforge-lab.pages.dev/privacy/)：localStorage 鍵值、託管日誌、剪貼簿與來信資料。
+- [Sitemap](https://luckyforge-lab.pages.dev/sitemap.xml)
+- [RSS／Atom Feed](https://luckyforge-lab.pages.dev/feed.xml)
+
+## 引用建議
+
+引用單頁時，請使用該頁的 canonical 網址，並標明：
+
+> LuckyForge Lab（幸運工坊），〈頁面標題〉，2026-11-16，https://luckyforge-lab.pages.dev/...
+
+若引用 RTP 或機率，請一併註明規則基準（例如「8 副牌、莊家 5% 佣金」或「歐式單零 37 格」），避免脫離上下文。
+
+## 不提供的服務
+
+- 真錢博弈、存款、提款、兌換、紅利或推薦獎金
+- 博弈執照、法律或投資建議
+- 「必勝法」、「穩賺策略」或任何保證收益的聲明
+- 未成年人內容或鼓勵問題賭博的資訊
+
+## 聯絡
+
+hello@luckyforge-lab.example（佔位信箱；本 demo 站尚未開通客服信箱）

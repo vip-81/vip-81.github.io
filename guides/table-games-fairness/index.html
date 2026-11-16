@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>document.documentElement.classList.add("js");</script>
+<title>百家樂、輪盤、21 點公平性：RNG、RTP、局單與斷線重連｜LuckyForge Lab</title>
+<meta name="description" content="三種賭桌遊戲的公平性工程：百家樂補牌與 RTP、歐式輪盤 97.30%、21 點 S17 與基本策略；深入 SHA-256 指紋的侷限、seed commit-reveal、局單冪等與斷線重連。">
+<meta name="keywords" content="百家樂 RTP,輪盤 RTP,21點 RTP,賭場公平性,provably fair,seed commitment,SHA-256,斷線重連,局單,HTML5 賭桌">
+<meta name="author" content="LuckyForge Lab">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#070a10">
+<link rel="canonical" href="https://luckyforge-lab.pages.dev/guides/table-games-fairness/">
+<link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/img/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="LuckyForge Lab 幸運工坊">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="百家樂、輪盤、21 點公平性：RNG、RTP、局單與斷線重連">
+<meta property="og:description" content="從 RTP 基準到 seed commit-reveal、局單冪等與重連，拆解三種賭桌遊戲的公平性工程。">
+<meta property="og:url" content="https://luckyforge-lab.pages.dev/guides/table-games-fairness/">
+<meta property="og:image" content="https://luckyforge-lab.pages.dev/assets/img/og-cover.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="LuckyForge Lab 賭桌公平性指南封面">
+<meta property="og:article:published_time" content="2026-11-16T09:00:00+08:00">
+<meta property="og:article:modified_time" content="2026-11-16T09:00:00+08:00">
+<meta property="og:article:section" content="Table game fairness">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="百家樂、輪盤、21 點公平性：RNG、RTP、局單與斷線重連">
+<meta name="twitter:description" content="從 RTP 基準到 seed commit-reveal、局單冪等與重連，拆解三種賭桌遊戲的公平性工程。">
+<meta name="twitter:image" content="https://luckyforge-lab.pages.dev/assets/img/og-cover.png">
+<meta name="twitter:image:alt" content="LuckyForge Lab 賭桌公平性指南封面">
+<link rel="stylesheet" href="/assets/css/site.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "首頁", "item": "https://luckyforge-lab.pages.dev/" },
+        { "@type": "ListItem", "position": 2, "name": "工程指南", "item": "https://luckyforge-lab.pages.dev/guides/" },
+        { "@type": "ListItem", "position": 3, "name": "賭桌遊戲公平性與重連", "item": "https://luckyforge-lab.pages.dev/guides/table-games-fairness/" }
+      ]
+    },
+    {
+      "@type": "Article",
+      "@id": "https://luckyforge-lab.pages.dev/guides/table-games-fairness/#article",
+      "headline": "百家樂、輪盤、21 點公平性：RNG、RTP、局單與斷線重連",
+      "description": "三種賭桌遊戲的隨機來源、RTP 基準、可驗證公平、局單冪等與斷線重連。",
+      "inLanguage": "zh-Hant-TW",
+      "datePublished": "2026-11-16T09:00:00+08:00",
+      "dateModified": "2026-11-16T09:00:00+08:00",
+      "articleSection": "Table game fairness",
+      "timeRequired": "PT10M",
+      "author": { "@type": "Organization", "name": "LuckyForge Lab 工程編輯", "url": "https://luckyforge-lab.pages.dev/about/" },
+      "publisher": { "@id": "https://luckyforge-lab.pages.dev/#organization" },
+      "mainEntityOfPage": { "@id": "https://luckyforge-lab.pages.dev/guides/table-games-fairness/#webpage" },
+      "image": "https://luckyforge-lab.pages.dev/assets/img/og-cover.png",
+      "about": ["Baccarat", "Roulette", "Blackjack", "Provably fair", "Reconnect"]
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://luckyforge-lab.pages.dev/guides/table-games-fairness/#webpage",
+      "url": "https://luckyforge-lab.pages.dev/guides/table-games-fairness/",
+      "name": "百家樂、輪盤、21 點公平性：RNG、RTP、局單與斷線重連",
+      "description": "三種賭桌遊戲的隨機來源、RTP 基準、可驗證公平、局單冪等與斷線重連。",
+      "inLanguage": "zh-Hant-TW",
+      "isPartOf": { "@id": "https://luckyforge-lab.pages.dev/#website" },
+      "datePublished": "2026-11-16",
+      "dateModified": "2026-11-16",
+      "primaryImageOfPage": "https://luckyforge-lab.pages.dev/assets/img/og-cover.png"
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://luckyforge-lab.pages.dev/guides/table-games-fairness/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "百家樂的 RTP 是多少？", "acceptedAnswer": { "@type": "Answer", "text": "以標準 8 副牌、莊家 5% 佣金計算，莊注理論 RTP 約 98.94%、閒注約 98.76%、和局約 85.64%。實際值會依牌數、抽水與和局賠付變動，應以產品規則重新計算。" } },
+        { "@type": "Question", "name": "歐式輪盤的 0 號會影響 RTP 嗎？", "acceptedAnswer": { "@type": "Answer", "text": "會。單零輪盤有 37 格，所有標準投注的理論 RTP 都是 97.30%；美式雙零輪盤有 38 格，RTP 約 94.74%。多一個 0 直接增加賭場優勢。" } },
+        { "@type": "Question", "name": "SHA-256 牌靴指紋能證明公平嗎？", "acceptedAnswer": { "@type": "Answer", "text": "不能。指紋只能證明前後兩份資料相同，或協助除錯與重播；它不能證明牌靴沒有被挑選、伺服器沒有事後替換，也不能證明 RNG 沒有偏差。公平性需要 commit-reveal、局單與可重算流程一起成立。" } },
+        { "@type": "Question", "name": "什麼是 seed commit-reveal？", "acceptedAnswer": { "@type": "Answer", "text": "伺服器先公開 server seed 的雜湊（commitment），玩家提供 client seed；局後伺服器揭示 server seed，玩家可驗證雜湊與結果。這能防止伺服器在知道玩家投注後才換 seed，但仍需配合 nonce、局單簽章與稽核。" } },
+        { "@type": "Question", "name": "斷線重連最怕什麼？", "acceptedAnswer": { "@type": "Answer", "text": "重複派彩與重複下注。重連後必須以局單 ID 查詢結果，結算採冪等；前端不能因為沒收到回應就自行假設成功或失敗。若局單已結算，只恢復結果；若未結算，等待伺服器重播或補償。" } }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<a class="skip-link" href="#main-content">跳至主要內容</a>
+
+<header class="site-header" data-header>
+  <div class="container header-inner">
+    <a class="brand" href="/">
+      <span class="brand-mark" aria-hidden="true">LF</span>
+      <span class="brand-name"><strong>LuckyForge Lab</strong><span>幸運工坊</span></span>
+    </a>
+    <nav class="site-nav" id="primary-nav" aria-label="主要導覽">
+      <a href="/games/slots/">老虎機</a>
+      <a href="/games/fish-shooting/">捕魚機</a>
+      <a href="/games/baccarat/">百家樂</a>
+      <a href="/games/roulette/">輪盤</a>
+      <a href="/games/blackjack/">21 點</a>
+      <a href="/guides/" aria-current="page">指南</a>
+      <a class="btn btn-primary btn-sm" href="/games/slots/">免費試玩</a>
+    </nav>
+    <div class="header-tools">
+      <button class="icon-btn" type="button" data-audio-toggle aria-pressed="false" aria-label="關閉音效" title="關閉音效">
+        <svg class="icon-sound-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4Z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M19.5 6a8.5 8.5 0 0 1 0 12"/></svg>
+        <svg class="icon-sound-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4Z"/><path d="m17 9 5 5"/><path d="m22 9-5 5"/></svg>
+      </button>
+    </div>
+    <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="primary-nav" aria-label="開啟導覽選單"><span></span></button>
+  </div>
+</header>
+
+<main id="main-content">
+  <nav class="breadcrumbs" aria-label="麵包屑">
+    <div class="container"><ol><li><a href="/">首頁</a></li><li><a href="/guides/">工程指南</a></li><li><span aria-current="page">賭桌遊戲公平性與重連</span></li></ol></div>
+  </nav>
+
+  <header class="page-hero">
+    <div class="container">
+      <span class="eyebrow">Guide 03 · Table game fairness</span>
+      <h1>百家樂、輪盤、21 點公平性：RNG、RTP、局單與斷線重連</h1>
+      <p class="lead">賭桌遊戲的難點不是發牌動畫，而是「誰有權決定結果」與「斷線後如何恢復」。這篇先把三種遊戲的數學基準說清楚，再拆解前端指紋、伺服器 seed commitment、局單冪等與重連流程。</p>
+      <div class="page-meta"><span>最後更新 <time datetime="2026-11-16">2026-11-16</time></span><span class="dot" aria-hidden="true"></span><span>閱讀約 10 分鐘</span><span class="dot" aria-hidden="true"></span><span>18+ · 技術教學</span></div>
+      <div class="key-takeaway">
+        <strong>先說結論</strong>
+        <p>RTP 是長期數學，不是單局保證；SHA-256 指紋只能證明資料一致，不能單獨證明公平；真正的公平需要伺服器持有 RNG 與牌靴、局前 commitment、局後 reveal、可重算的局單與冪等結算。重連時先查局單，不要讓前端自行判定成敗。</p>
+      </div>
+    </div>
+  </header>
+
+  <section class="section section--tight">
+    <div class="container article-layout">
+      <article class="prose">
+        <h2 id="math">三種遊戲的數學基準</h2>
+        <p>先把「理論值」與「單局結果」分開。下表是常見規則下的長期理論 RTP，實際產品會因牌數、抽水、賠付與規則細節而變動。</p>
+        <div class="table-wrap">
+          <table class="data">
+            <caption>常見賭桌遊戲的理論 RTP（教學整理，非特定產品保證）</caption>
+            <thead><tr><th scope="col">遊戲</th><th scope="col">規則基準</th><th scope="col">理論 RTP</th><th scope="col">賭場優勢</th></tr></thead>
+            <tbody>
+              <tr><td>百家樂 · 莊</td><td>8 副牌、5% 佣金</td><td class="num">98.94%</td><td class="num">1.06%</td></tr>
+              <tr><td>百家樂 · 閒</td><td>8 副牌、1:1</td><td class="num">98.76%</td><td class="num">1.24%</td></tr>
+              <tr><td>百家樂 · 和</td><td>8 副牌、8:1</td><td class="num">85.64%</td><td class="num">14.36%</td></tr>
+              <tr><td>歐式輪盤</td><td>單零 37 格</td><td class="num">97.30%</td><td class="num">2.70%</td></tr>
+              <tr><td>美式輪盤</td><td>雙零 38 格</td><td class="num">94.74%</td><td class="num">5.26%</td></tr>
+              <tr><td>21 點</td><td>6 副牌、S17、3:2、基本策略</td><td class="num">約 99.5%</td><td class="num">約 0.5%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>這些數字不是「玩越久越接近」。它們是大量局數下的期望值；短期波動可能很大。百家樂的和局賠率高，但 RTP 明顯較低；輪盤的單號賠 35:1，但命中率只有 1/37，期望值與紅黑注相同。21 點則會因玩家策略而改變，基本策略的價值就是把可避免的錯誤降到最低。</p>
+
+        <h2 id="baccarat">百家樂：補牌規則是數學的一部分</h2>
+        <p>百家樂的結果不是「誰點數大就贏」這麼簡單。閒家 0–5 補牌、6–7 停牌；莊家是否補牌取決於莊家點數與閒家第三張牌。這些規則是固定的，不能由玩家選擇，所以 RTP 可以在規則確定後精算。</p>
+        <div class="table-wrap">
+          <table class="data">
+            <caption>莊家補牌規則（閒家已補第三張牌時）</caption>
+            <thead><tr><th scope="col">莊家點數</th><th scope="col">閒家第三張牌</th><th scope="col">動作</th></tr></thead>
+            <tbody>
+              <tr><td>0–2</td><td>任意</td><td>補牌</td></tr>
+              <tr><td>3</td><td>非 8</td><td>補牌</td></tr>
+              <tr><td>4</td><td>2–7</td><td>補牌</td></tr>
+              <tr><td>5</td><td>4–7</td><td>補牌</td></tr>
+              <tr><td>6</td><td>6–7</td><td>補牌</td></tr>
+              <tr><td>7</td><td>任意</td><td>停牌</td></tr>
+              <tr><td>8–9</td><td>任意</td><td>自然，停牌</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>若閒家沒有補牌（6–7 或自然），莊家規則更簡單：0–5 補、6–7 停。實作時應把整張規則表寫成資料，並用單元測試覆蓋所有點數組合，而不是在流程中散落 <code>if</code>。一個常見錯誤是把「莊家 3 點對閒家 8」誤寫成補牌，長期會讓 RTP 偏離。</p>
+
+        <h2 id="roulette">輪盤：37 格與「結果先定」</h2>
+        <p>歐式輪盤的每個標準投注期望值相同：<code>(命中格數 / 37) × 返還倍數</code>。單號命中 1 格、返還 36 份，所以 <code>36/37 ≈ 97.30%</code>；紅黑命中 18 格、返還 2 份，<code>36/37</code> 也一樣。這就是為什麼「賠率越高越划算」是錯覺。</p>
+        <p>技術上，結果必須在轉輪動畫前決定。若讓球的物理模擬決定落點，幀率、背景暫停與裝置差異都會影響結果，無法聲稱公平。本專案先以 <code>randomInt(37)</code> 抽出結果，再用 <code>animateTo(result)</code> 把輪盤與球帶到對應格位；正式產品則把 <code>randomInt</code> 換成伺服器回傳的結果。</p>
+        <pre><code>// 前端只負責播放；結果來自伺服器或已決定的局單
+const { result, roundId } = await fetchRoundResult();
+await animateTo(result);
+settleBets(result, roundId);   // 以 roundId 冪等</code></pre>
+
+        <h2 id="blackjack">21 點：牌靴、S17 與玩家決策</h2>
+        <p>21 點的 RTP 不是固定值，會隨規則與玩家策略改變。6 副牌、莊家 S17、Blackjack 3:2、可加倍任意兩張、僅一次分牌，搭配完整基本策略，理論 RTP 約 99.5%。若把 Blackjack 改成 6:5，RTP 會下降約 1.4 個百分點；若莊家改 H17，又會再降一些。</p>
+        <p>牌靴要用 Fisher–Yates 洗牌，不能用 <code>array.sort(() =&gt; Math.random() - 0.5)</code>，因為這個比較函式不滿足傳遞性，分布會偏差。洗牌後把牌靴與索引存在伺服器；前端每次只拿到「自己應該看到的牌」，不能拿到整副牌靴，否則玩家可以預測後續牌。</p>
+        <pre><code>function shuffle(deck, randomInt) {
+  for (let i = deck.length - 1; i &gt; 0; i -= 1) {
+    const j = randomInt(i + 1);
+    [deck[i], deck[j]] = [deck[j], deck[i]];
+  }
+  return deck;
+}</code></pre>
+        <p>分牌 A 的處理也要寫進規則：多數牌桌分 A 後每手只補一張就停牌，避免玩家取得多個 21 點。這些細節會影響 RTP 與玩家策略，不能等到上線後才補。</p>
+
+        <h2 id="fingerprint">SHA-256 指紋：能證明什麼，不能證明什麼</h2>
+        <p>本專案的百家樂與 21 點會對牌靴取 SHA-256 前 16 碼，顯示在側欄。它的用途是：</p>
+        <ul>
+          <li>確認重新整理前後是同一副牌靴；</li>
+          <li>除錯時比對狀態；</li>
+          <li>讓玩家知道牌靴內容沒有在本地被隨機替換。</li>
+        </ul>
+        <p>但它不能證明：</p>
+        <ul>
+          <li>伺服器沒有在知道投注後才挑選牌靴；</li>
+          <li>RNG 沒有偏差或後門；</li>
+          <li>牌靴沒有被事後替換成另一個「剛好」的版本。</li>
+        </ul>
+        <p>指紋是完整性工具，不是公平性證明。把它當成「公平」會誤導玩家，也會讓工程團隊忽略真正需要的 commit-reveal 與稽核。</p>
+
+        <h2 id="provably-fair">可驗證公平：commit-reveal 的正確用法</h2>
+        <p>一個常見流程是：</p>
+        <ol>
+          <li>伺服器產生 <code>serverSeed</code>，公開 <code>SHA-256(serverSeed)</code> 作為 commitment。</li>
+          <li>玩家提供或系統產生 <code>clientSeed</code>，並記錄 <code>nonce</code>。</li>
+          <li>以 <code>HMAC(serverSeed, clientSeed + nonce)</code> 產生隨機位元，映射到牌序或輪盤結果。</li>
+          <li>局後揭示 <code>serverSeed</code>，玩家重算雜湊與結果。</li>
+        </ol>
+        <pre><code>// 概念示意：實際映射需避免模數偏差
+const bytes = await hmacSha256(serverSeed, `${clientSeed}:${nonce}`);
+const value = new DataView(bytes).getUint32(0);
+const result = value % 37;   // 正式版需拒絕取樣</code></pre>
+        <p>commit-reveal 能防止「看到玩家下注後才換 seed」，但仍有前提：commitment 必須在投注前公開、serverSeed 不能重複使用、nonce 必須單調遞增、局單必須可稽核。若伺服器可以選擇何時揭示、或玩家看不到 commitment，這個機制就只是裝飾。</p>
+
+        <h2 id="state">局單狀態機：避免重複派彩</h2>
+        <p>一張桌遊局單至少要有以下狀態：<code>created</code>（已建立）、<code>betting</code>（接受投注）、<code>locked</code>（停止下注）、<code>dealt</code>（已發牌）、<code>settled</code>（已結算）、<code>voided</code>（作廢）。每次狀態轉移都要有時間戳與操作者，並且只能往前進。</p>
+        <pre><code>created → betting → locked → dealt → settled
+                         ↘ voided（僅限特定錯誤）</code></pre>
+        <p>結算採冪等：<code>settle(roundId)</code> 第一次會寫入派彩與餘額，第二次直接回傳相同結果，不重複加錢。資料庫層可以用唯一鍵 <code>(roundId, playerId)</code> 或版本號做樂觀鎖。前端重連後只查詢局單，不自行推測。</p>
+
+        <h2 id="reconnect">斷線重連：三種遊戲的實務流程</h2>
+        <h3>百家樂</h3>
+        <p>下注後斷線：重連時查局單。若已 <code>locked</code> 或 <code>dealt</code>，恢復牌局並等待結果；若仍 <code>betting</code>，允許取消或補下注（依產品規則）。不要重新發牌，也不要讓玩家重複下注。珠盤路與統計應由伺服器或可重建的事件日誌產生，不能只存在前端。</p>
+        <h3>輪盤</h3>
+        <p>下注後、開轉前斷線：恢復桌面投注與餘額。已開轉但未結算：查局單結果，直接播放結果，不重新旋轉。已結算：顯示結果與派彩，允許「重複上局」但建立新局單。前端 localStorage 只適合 demo；正式產品以伺服器為準。</p>
+        <h3>21 點</h3>
+        <p>玩家回合斷線：恢復手牌、目前手牌索引、莊家明牌與剩餘牌靴。若當時輪到莊家，重連後自動繼續補牌並結算；若已結算，顯示結果。最危險的是「前端已顯示加倍，但伺服器沒收到」：重連後必須以伺服器版本為準，並在 UI 說明差異。</p>
+        <div class="callout"><strong>設計原則：</strong>前端狀態是快取，不是真相。任何涉及餘額、投注、派彩的資料，都應以伺服器局單為權威；前端只負責呈現與送出意圖。</div>
+
+        <h2 id="checklist">公平性與重連檢查表</h2>
+        <ul>
+          <li>RNG 是否由伺服器持有？是否有拒絕取樣避免模數偏差？</li>
+          <li>洗牌是否用 Fisher–Yates？牌靴是否在投注前鎖定？</li>
+          <li>是否在投注前公開 serverSeed 的 commitment？局後是否揭示？</li>
+          <li>局單是否有唯一 ID、狀態機與時間戳？結算是否冪等？</li>
+          <li>重連後是否只查局單，不重新發牌或重複派彩？</li>
+          <li>前端指紋是否被正確描述為「完整性」而非「公平性」？</li>
+          <li>RTP 是否有模擬報告與版本紀錄？是否標明規則變體？</li>
+          <li>是否有年齡驗證、限額、冷靜期與自我排除機制？</li>
+        </ul>
+
+        <h2 id="faq">常見問題</h2>
+        <div class="faq">
+          <details>
+            <summary>百家樂的 RTP 是多少？</summary>
+            <div class="faq-answer"><p>以標準 8 副牌、莊家 5% 佣金計算，莊注理論 RTP 約 98.94%、閒注約 98.76%、和局約 85.64%。實際值會依牌數、抽水與和局賠付變動，應以產品規則重新計算。</p></div>
+          </details>
+          <details>
+            <summary>歐式輪盤的 0 號會影響 RTP 嗎？</summary>
+            <div class="faq-answer"><p>會。單零輪盤有 37 格，所有標準投注的理論 RTP 都是 97.30%；美式雙零輪盤有 38 格，RTP 約 94.74%。多一個 0 直接增加賭場優勢。</p></div>
+          </details>
+          <details>
+            <summary>SHA-256 牌靴指紋能證明公平嗎？</summary>
+            <div class="faq-answer"><p>不能。指紋只能證明前後兩份資料相同，或協助除錯與重播；它不能證明牌靴沒有被挑選、伺服器沒有事後替換，也不能證明 RNG 沒有偏差。公平性需要 commit-reveal、局單與可重算流程一起成立。</p></div>
+          </details>
+          <details>
+            <summary>什麼是 seed commit-reveal？</summary>
+            <div class="faq-answer"><p>伺服器先公開 server seed 的雜湊（commitment），玩家提供 client seed；局後伺服器揭示 server seed，玩家可驗證雜湊與結果。這能防止伺服器在知道玩家投注後才換 seed，但仍需配合 nonce、局單簽章與稽核。</p></div>
+          </details>
+          <details>
+            <summary>斷線重連最怕什麼？</summary>
+            <div class="faq-answer"><p>重複派彩與重複下注。重連後必須以局單 ID 查詢結果，結算採冪等；前端不能因為沒收到回應就自行假設成功或失敗。若局單已結算，只恢復結果；若未結算，等待伺服器重播或補償。</p></div>
+          </details>
+        </div>
+
+        <div class="related-links" aria-label="相關內容">
+          <a href="/games/baccarat/">百家樂試玩</a>
+          <a href="/games/roulette/">輪盤試玩</a>
+          <a href="/games/blackjack/">21 點試玩</a>
+          <a href="/guides/html5-casino-performance/">效能與除錯</a>
+        </div>
+
+        <div class="author-box">
+          <span class="author-avatar" aria-hidden="true">LF</span>
+          <div>
+            <h2>LuckyForge Lab 工程編輯</h2>
+            <p>專注於瀏覽器遊戲架構、可驗證隨機與無障礙互動。內容以可重現的 demo 為基礎，並在每頁標示最後更新日期。</p>
+          </div>
+        </div>
+      </article>
+
+      <aside class="toc" aria-label="本頁目錄">
+        <h2>本頁目錄</h2>
+        <ol>
+          <li><a href="#math">數學基準</a></li>
+          <li><a href="#baccarat">百家樂補牌</a></li>
+          <li><a href="#roulette">輪盤與結果先定</a></li>
+          <li><a href="#blackjack">21 點與牌靴</a></li>
+          <li><a href="#fingerprint">SHA-256 的侷限</a></li>
+          <li><a href="#provably-fair">Commit-reveal</a></li>
+          <li><a href="#state">局單狀態機</a></li>
+          <li><a href="#reconnect">斷線重連</a></li>
+          <li><a href="#checklist">檢查表</a></li>
+          <li><a href="#faq">常見問題</a></li>
+        </ol>
+        <button class="btn btn-ghost btn-sm" type="button" data-copy-link="https://luckyforge-lab.pages.dev/guides/table-games-fairness/">複製引用連結</button>
+      </aside>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-main">
+      <div class="footer-brand">
+        <a class="brand" href="/">
+          <span class="brand-mark" aria-hidden="true">LF</span>
+          <span class="brand-name"><strong>LuckyForge Lab</strong><span>幸運工坊</span></span>
+        </a>
+        <p>純前端 HTML5 賭場遊戲實驗室。用可玩的 demo 拆解 FSM、物件池、碰撞、公平性與效能，全部使用虛擬籌碼。</p>
+        <div class="footer-badges"><span class="badge">18+</span><span class="badge badge--mint">虛擬籌碼</span><span class="badge badge--muted">零外部請求</span></div>
+      </div>
+      <nav class="footer-col" aria-labelledby="footer-games">
+        <h2 id="footer-games">遊戲</h2>
+        <ul>
+          <li><a href="/games/slots/">老虎機</a></li>
+          <li><a href="/games/fish-shooting/">捕魚機</a></li>
+          <li><a href="/games/baccarat/">百家樂</a></li>
+          <li><a href="/games/roulette/">輪盤</a></li>
+          <li><a href="/games/blackjack/">21 點</a></li>
+        </ul>
+      </nav>
+      <nav class="footer-col" aria-labelledby="footer-guides">
+        <h2 id="footer-guides">指南</h2>
+        <ul>
+          <li><a href="/guides/">全部指南</a></li>
+          <li><a href="/guides/slots-fsm-reel-physics/">老虎機 FSM</a></li>
+          <li><a href="/guides/fish-shooting-ai-collision/">捕魚機 AI</a></li>
+          <li><a href="/guides/table-games-fairness/">公平性與重連</a></li>
+          <li><a href="/guides/html5-casino-performance/">效能與除錯</a></li>
+        </ul>
+      </nav>
+      <nav class="footer-col" aria-labelledby="footer-site">
+        <h2 id="footer-site">網站</h2>
+        <ul>
+          <li><a href="/about/">關於我們</a></li>
+          <li><a href="/accessibility/">無障礙</a></li>
+          <li><a href="/privacy/">隱私與資料</a></li>
+          <li><a href="/responsible-gaming/">責任遊戲</a></li>
+          <li><a href="/llms.txt">llms.txt</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="footer-bottom">
+      <p>© <span data-current-year>2026</span> LuckyForge Lab（幸運工坊）。內容為技術教學與娛樂展示，不構成賭博建議。</p>
+      <p>18+ · 虛擬籌碼 · 無真錢交易 · <a href="/responsible-gaming/">請理性遊玩</a></p>
+    </div>
+  </div>
+</footer>
+
+<script type="module" src="/assets/js/site.js"></script>
+</body>
+</html>

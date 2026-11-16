@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-Hant-TW">
+  <title>LuckyForge Lab 工程指南</title>
+  <subtitle>HTML5 賭場遊戲的架構、公平性、效能與無障礙實作</subtitle>
+  <link href="https://luckyforge-lab.pages.dev/feed.xml" rel="self" type="application/atom+xml"/>
+  <link href="https://luckyforge-lab.pages.dev/guides/" rel="alternate" type="text/html"/>
+  <id>https://luckyforge-lab.pages.dev/feed.xml</id>
+  <updated>2026-11-16T09:00:00+08:00</updated>
+  <author>
+    <name>LuckyForge Lab 工程編輯</name>
+    <uri>https://luckyforge-lab.pages.dev/about/</uri>
+  </author>
+  <rights>© 2026 LuckyForge Lab。引用請保留出處與連結。</rights>
+  <entry>
+    <title>老虎機 FSM 與滾輪物理：停輪手感、連線判定與 Free Spin</title>
+    <link href="https://luckyforge-lab.pages.dev/guides/slots-fsm-reel-physics/" rel="alternate" type="text/html"/>
+    <id>https://luckyforge-lab.pages.dev/guides/slots-fsm-reel-physics/</id>
+    <published>2026-11-16T09:00:00+08:00</published>
+    <updated>2026-11-16T09:00:00+08:00</updated>
+    <summary type="text">五狀態 FSM、等速滾動與 ease-out 停輪、回彈手感、10 條賠付線、Free Spin 重觸發與 Big Win 焦點管理。</summary>
+    <category term="Slots"/>
+    <category term="Canvas"/>
+  </entry>
+  <entry>
+    <title>捕魚機 AI 與碰撞：魚群路徑、物件池、砲台倍率與伺服器結算</title>
+    <link href="https://luckyforge-lab.pages.dev/guides/fish-shooting-ai-collision/" rel="alternate" type="text/html"/>
+    <id>https://luckyforge-lab.pages.dev/guides/fish-shooting-ai-collision/</id>
+    <published>2026-11-16T09:00:00+08:00</published>
+    <updated>2026-11-16T09:00:00+08:00</updated>
+    <summary type="text">Boids 魚群、路徑約束、固定時間步、物件池上限、掃掠碰撞、砲台成本與伺服器權威結算。</summary>
+    <category term="Fish shooting"/>
+    <category term="Game AI"/>
+  </entry>
+  <entry>
+    <title>百家樂、輪盤、21 點公平性：RNG、RTP、局單與斷線重連</title>
+    <link href="https://luckyforge-lab.pages.dev/guides/table-games-fairness/" rel="alternate" type="text/html"/>
+    <id>https://luckyforge-lab.pages.dev/guides/table-games-fairness/</id>
+    <published>2026-11-16T09:00:00+08:00</published>
+    <updated>2026-11-16T09:00:00+08:00</updated>
+    <summary type="text">三種賭桌遊戲的 RTP 基準、Fisher–Yates、SHA-256 指紋的侷限、seed commit-reveal、局單冪等與重連流程。</summary>
+    <category term="Table games"/>
+    <category term="Provably fair"/>
+  </entry>
+  <entry>
+    <title>HTML5 賭場遊戲效能：Canvas、Web Audio、記憶體洩漏與除錯</title>
+    <link href="https://luckyforge-lab.pages.dev/guides/html5-casino-performance/" rel="alternate" type="text/html"/>
+    <id>https://luckyforge-lab.pages.dev/guides/html5-casino-performance/</id>
+    <published>2026-11-16T09:00:00+08:00</published>
+    <updated>2026-11-16T09:00:00+08:00</updated>
+    <summary type="text">devicePixelRatio、離屏快取、固定時間步、DOM 與 Canvas 分工、iOS Web Audio 解鎖、context lost、記憶體洩漏與實測流程。</summary>
+    <category term="Performance"/>
+    <category term="Web Audio"/>
+  </entry>
+</feed>

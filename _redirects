@@ -1,0 +1,19 @@
+# 將無斜線的目錄網址導向有斜線版本，維持 canonical 一致。
+/games/slots        /games/slots/        301
+/games/fish-shooting /games/fish-shooting/ 301
+/games/baccarat     /games/baccarat/     301
+/games/roulette     /games/roulette/     301
+/games/blackjack    /games/blackjack/    301
+/guides             /guides/             301
+/guides/slots-fsm-reel-physics /guides/slots-fsm-reel-physics/ 301
+/guides/fish-shooting-ai-collision /guides/fish-shooting-ai-collision/ 301
+/guides/table-games-fairness /guides/table-games-fairness/ 301
+/guides/html5-casino-performance /guides/html5-casino-performance/ 301
+/about              /about/              301
+/accessibility      /accessibility/      301
+/privacy            /privacy/            301
+/responsible-gaming /responsible-gaming/ 301
+
+# 常見舊路徑與首頁別名
+/index.html         /                    301
+/home               /                    301

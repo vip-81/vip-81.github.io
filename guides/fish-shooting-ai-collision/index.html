@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>document.documentElement.classList.add("js");</script>
+<title>捕魚機 AI 與碰撞：魚群路徑、物件池、砲台倍率與伺服器結算｜LuckyForge Lab</title>
+<meta name="description" content="HTML5 捕魚機完整拆解：Boids 魚群行為、路徑跟隨、曲線生成、物件池、圓形碰撞與穿透修正、砲台倍率、命中判定與伺服器權威結算。附效能與公平性檢查表。">
+<meta name="keywords" content="捕魚機 AI,Boids,魚群路徑,碰撞偵測,物件池,砲台倍率,捕魚機結算,HTML5 捕魚機,Canvas 遊戲,伺服器權威">
+<meta name="author" content="LuckyForge Lab">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#070a10">
+<link rel="canonical" href="https://luckyforge-lab.pages.dev/guides/fish-shooting-ai-collision/">
+<link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/img/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="LuckyForge Lab 幸運工坊">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="捕魚機 AI 與碰撞：魚群路徑、物件池、砲台倍率與伺服器結算">
+<meta property="og:description" content="從 Boids 到圓形碰撞、從砲台倍率到伺服器權威結算，拆解 HTML5 捕魚機的即時系統。">
+<meta property="og:url" content="https://luckyforge-lab.pages.dev/guides/fish-shooting-ai-collision/">
+<meta property="og:image" content="https://luckyforge-lab.pages.dev/assets/img/og-cover.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="LuckyForge Lab 捕魚機工程指南封面">
+<meta property="og:article:published_time" content="2026-11-16T09:00:00+08:00">
+<meta property="og:article:modified_time" content="2026-11-16T09:00:00+08:00">
+<meta property="og:article:section" content="Fish shooting engineering">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="捕魚機 AI 與碰撞：魚群路徑、物件池、砲台倍率與伺服器結算">
+<meta name="twitter:description" content="從 Boids 到圓形碰撞、從砲台倍率到伺服器權威結算，拆解 HTML5 捕魚機的即時系統。">
+<meta name="twitter:image" content="https://luckyforge-lab.pages.dev/assets/img/og-cover.png">
+<meta name="twitter:image:alt" content="LuckyForge Lab 捕魚機工程指南封面">
+<link rel="stylesheet" href="/assets/css/site.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "首頁", "item": "https://luckyforge-lab.pages.dev/" },
+        { "@type": "ListItem", "position": 2, "name": "工程指南", "item": "https://luckyforge-lab.pages.dev/guides/" },
+        { "@type": "ListItem", "position": 3, "name": "捕魚機 AI 與碰撞", "item": "https://luckyforge-lab.pages.dev/guides/fish-shooting-ai-collision/" }
+      ]
+    },
+    {
+      "@type": "Article",
+      "@id": "https://luckyforge-lab.pages.dev/guides/fish-shooting-ai-collision/#article",
+      "headline": "捕魚機 AI 與碰撞：魚群路徑、物件池、砲台倍率與伺服器結算",
+      "description": "HTML5 捕魚機的魚群行為、碰撞、物件池、倍率與伺服器權威結算完整指南。",
+      "inLanguage": "zh-Hant-TW",
+      "datePublished": "2026-11-16T09:00:00+08:00",
+      "dateModified": "2026-11-16T09:00:00+08:00",
+      "articleSection": "Fish shooting engineering",
+      "timeRequired": "PT11M",
+      "author": { "@type": "Organization", "name": "LuckyForge Lab 工程編輯", "url": "https://luckyforge-lab.pages.dev/about/" },
+      "publisher": { "@id": "https://luckyforge-lab.pages.dev/#organization" },
+      "mainEntityOfPage": { "@id": "https://luckyforge-lab.pages.dev/guides/fish-shooting-ai-collision/#webpage" },
+      "image": "https://luckyforge-lab.pages.dev/assets/img/og-cover.png",
+      "about": ["Fish shooting game", "Boids", "Collision detection", "Object pooling", "Server authoritative"]
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://luckyforge-lab.pages.dev/guides/fish-shooting-ai-collision/#webpage",
+      "url": "https://luckyforge-lab.pages.dev/guides/fish-shooting-ai-collision/",
+      "name": "捕魚機 AI 與碰撞：魚群路徑、物件池、砲台倍率與伺服器結算",
+      "description": "HTML5 捕魚機的魚群行為、碰撞、物件池、倍率與伺服器權威結算完整指南。",
+      "inLanguage": "zh-Hant-TW",
+      "isPartOf": { "@id": "https://luckyforge-lab.pages.dev/#website" },
+      "datePublished": "2026-11-16",
+      "dateModified": "2026-11-16",
+      "primaryImageOfPage": "https://luckyforge-lab.pages.dev/assets/img/og-cover.png"
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://luckyforge-lab.pages.dev/guides/fish-shooting-ai-collision/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "捕魚機的魚群一定要用 Boids 嗎？", "acceptedAnswer": { "@type": "Answer", "text": "不一定。Boids 適合開放水域與自然群游；若產品需要固定陣形、路徑表演或低效能裝置，曲線路徑加區域生成會更可控。重點是魚群行為要可預測、可重播，而不是每幀都依賴大量隨機。" } },
+        { "@type": "Question", "name": "為什麼子彈要用圓形碰撞而不是像素碰撞？", "acceptedAnswer": { "@type": "Answer", "text": "子彈與魚的形狀會旋轉、縮放，像素級碰撞成本高且難以在伺服器重現。多數捕魚機用圓形或膠囊碰撞，搭配魚的命中半徑與子彈半徑；視覺上看不出差異，效能與一致性卻好很多。" } },
+        { "@type": "Question", "name": "高速子彈穿透魚怎麼辦？", "acceptedAnswer": { "@type": "Answer", "text": "使用連續碰撞（掃掠圓）或把每幀位移切成多個子步。只檢查當前位置會讓快子彈跳過魚；子步數可依速度決定，但要有上限，避免低幀率時一次做太多計算。" } },
+        { "@type": "Question", "name": "命中與否應該由前端決定嗎？", "acceptedAnswer": { "@type": "Answer", "text": "不應。前端可以播放命中特效，但真正是否命中、扣多少點、派彩多少必須由伺服器依局單與 RNG 決定。否則玩家可以修改程式或重放請求，直接影響收益。" } },
+        { "@type": "Question", "name": "砲台倍率越高越容易中嗎？", "acceptedAnswer": { "@type": "Answer", "text": "不一定。倍率通常影響每發成本與命中後的派彩，而不是直接提高命中率。若高倍率同時提高命中率，期望值可能完全改變；產品必須把成本、命中率與魚的賠付一起納入數學模型並用模擬驗證。" } }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<a class="skip-link" href="#main-content">跳至主要內容</a>
+
+<header class="site-header" data-header>
+  <div class="container header-inner">
+    <a class="brand" href="/">
+      <span class="brand-mark" aria-hidden="true">LF</span>
+      <span class="brand-name"><strong>LuckyForge Lab</strong><span>幸運工坊</span></span>
+    </a>
+    <nav class="site-nav" id="primary-nav" aria-label="主要導覽">
+      <a href="/games/slots/">老虎機</a>
+      <a href="/games/fish-shooting/">捕魚機</a>
+      <a href="/games/baccarat/">百家樂</a>
+      <a href="/games/roulette/">輪盤</a>
+      <a href="/games/blackjack/">21 點</a>
+      <a href="/guides/" aria-current="page">指南</a>
+      <a class="btn btn-primary btn-sm" href="/games/slots/">免費試玩</a>
+    </nav>
+    <div class="header-tools">
+      <button class="icon-btn" type="button" data-audio-toggle aria-pressed="false" aria-label="關閉音效" title="關閉音效">
+        <svg class="icon-sound-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4Z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M19.5 6a8.5 8.5 0 0 1 0 12"/></svg>
+        <svg class="icon-sound-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4Z"/><path d="m17 9 5 5"/><path d="m22 9-5 5"/></svg>
+      </button>
+    </div>
+    <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="primary-nav" aria-label="開啟導覽選單"><span></span></button>
+  </div>
+</header>
+
+<main id="main-content">
+  <nav class="breadcrumbs" aria-label="麵包屑">
+    <div class="container"><ol><li><a href="/">首頁</a></li><li><a href="/guides/">工程指南</a></li><li><span aria-current="page">捕魚機 AI 與碰撞</span></li></ol></div>
+  </nav>
+
+  <header class="page-hero">
+    <div class="container">
+      <span class="eyebrow">Guide 02 · Fish shooting</span>
+      <h1>捕魚機 AI 與碰撞：魚群路徑、物件池、砲台倍率與伺服器結算</h1>
+      <p class="lead">捕魚機是即時系統：幾十條魚、數百顆子彈、連續的命中特效與音效同時發生。這篇從座標與時間步開始，拆解魚群行為、生成與回收、碰撞與穿透修正，最後說明為什麼「前端看到命中」不等於「伺服器認定命中」。</p>
+      <div class="page-meta"><span>最後更新 <time datetime="2026-11-16">2026-11-16</time></span><span class="dot" aria-hidden="true"></span><span>閱讀約 11 分鐘</span><span class="dot" aria-hidden="true"></span><span>18+ · 技術教學</span></div>
+      <div class="key-takeaway">
+        <strong>先說結論</strong>
+        <p>魚群用「行為權重＋路徑約束」而不是純隨機；子彈與魚用圓形碰撞，快子彈要掃掠或子步；所有實體用固定上限的物件池；命中與派彩由伺服器依局單決定，前端只負責預測與演出。把這四件事分開，效能與公平性才不會互相拖累。</p>
+      </div>
+    </div>
+  </header>
+
+  <section class="section section--tight">
+    <div class="container article-layout">
+      <article class="prose">
+        <h2 id="coordinate">座標、時間步與可重現性</h2>
+        <p>先決定邏輯座標，例如 1280×720，所有魚、子彈、砲台都用這個座標計算；繪製時再依實際 canvas 尺寸縮放。這樣不同裝置的遊戲行為一致，除錯時也只需要一組數字。若直接用 CSS 像素當邏輯座標，桌機與手機的魚速、碰撞半徑都會不同。</p>
+        <p>時間步建議用固定步長（例如 1/60 秒）搭配累加器，而不是直接把 <code>deltaTime</code> 餵給物理。固定步長讓碰撞與魚群行為可重播，也避免分頁回來時一次更新太大距離：</p>
+        <pre><code>const STEP = 1 / 60;
+let accumulator = 0;
+
+function frame(now) {
+  const delta = Math.min(0.05, (now - last) / 1000);
+  last = now;
+  accumulator += delta;
+  while (accumulator &gt;= STEP) {
+    update(STEP);
+    accumulator -= STEP;
+  }
+  render(accumulator / STEP);
+  requestAnimationFrame(frame);
+}</code></pre>
+        <p>渲染可以用插值讓畫面滑順，但邏輯只認固定步長。若你的產品需要與伺服器重播同一局，還要把隨機種子、魚的生成時間、砲台角度與開火時間寫進局單，而不是只記錄結果。</p>
+
+        <h2 id="boids">魚群行為：Boids 的三個力</h2>
+        <p>Boids 由三個基本力組成：</p>
+        <ul>
+          <li><strong>分離（separation）</strong>：避免魚疊在一起。</li>
+          <li><strong>對齊（alignment）</strong>：讓附近魚的朝向趨於一致。</li>
+          <li><strong>聚合（cohesion）</strong>：往鄰居的中心靠攏。</li>
+        </ul>
+        <pre><code>function steer(fish, neighbors) {
+  let sep = { x: 0, y: 0 }, ali = { x: 0, y: 0 }, coh = { x: 0, y: 0 };
+  for (const other of neighbors) {
+    const dx = fish.x - other.x, dy = fish.y - other.y;
+    const d2 = dx * dx + dy * dy;
+    if (d2 &gt; 0 &amp;&amp; d2 &lt; 90 * 90) {
+      sep.x += dx / d2; sep.y += dy / d2;
+      ali.x += other.vx; ali.y += other.vy;
+      coh.x += other.x; coh.y += other.y;
+    }
+  }
+  const n = Math.max(1, neighbors.length);
+  coh.x = coh.x / n - fish.x; coh.y = coh.y / n - fish.y;
+  return {
+    x: sep.x * 1.6 + ali.x / n * 0.5 + coh.x * 0.002,
+    y: sep.y * 1.6 + ali.y / n * 0.5 + coh.y * 0.002,
+  };
+}</code></pre>
+        <p>鄰居查詢不要用 O(n²) 掃全部魚。以 60 條魚為例還撐得住，但加上子彈與粒子就會吃緊。可以用格狀空間雜湊（spatial hash）把鄰近格子裡的魚取出，或限制每條魚只檢查固定數量的鄰居。對手機來說，限制鄰居數通常比最佳化數學更有效。</p>
+        <p>純 Boids 容易讓魚群散開或擠在角落，因此實務上會加「路徑約束」：每條魚有一個目標路徑（例如貝茲曲線或 waypoint），行為力只是微調，最終速度仍被拉回路徑切線。這樣魚群看起來自然，又不會偏離設計的表演區域。</p>
+
+        <h2 id="spawn">生成與回收：物件池不是選項，是必需</h2>
+        <p>捕魚機的實體生命週期很短：魚從左邊游出、被子彈擊中、播放金幣、消失。若每次都用 <code>new Fish()</code> 或建立 DOM，垃圾回收會週期性爆發，尤其在連續開火時。物件池的做法是預先配置固定數量，使用時取用，死亡時歸還並重設狀態。</p>
+        <pre><code>class Pool {
+  constructor(size, create) {
+    this.items = Array.from({ length: size }, create);
+    this.free = [...this.items];
+    this.active = new Set();
+  }
+  acquire() {
+    const item = this.free.pop();
+    if (!item) return null;          // 上限保護，不無限生成
+    this.active.add(item);
+    return item;
+  }
+  release(item) {
+    if (!this.active.delete(item)) return;
+    item.alive = false;
+    item.hit = false;
+    this.free.push(item);
+  }
+}</code></pre>
+        <p>上限保護很重要：如果場景需要 200 顆子彈，池就配置 200 顆；取不到時應該排隊或忽略，而不是偷偷 <code>new</code>。魚的數量也一樣，與其讓幾百條魚同時出現，不如用生成節奏控制密度。這會直接影響低階手機的幀率與伺服器同步量。</p>
+
+        <h2 id="collision">碰撞：圓形、掃掠與穿透修正</h2>
+        <p>子彈通常是小的圓或膠囊，魚可以用一個較大的圓代表命中區。判定就是：</p>
+        <pre><code>function circleHit(a, b) {
+  const dx = a.x - b.x;
+  const dy = a.y - b.y;
+  const r = a.radius + b.radius;
+  return dx * dx + dy * dy &lt;= r * r;
+}</code></pre>
+        <p>若子彈速度是每秒 1200 邏輯單位，而幀率是 60fps，每幀移動 20 單位；魚的半徑可能只有 18 單位。此時只看「當前位置」仍有機會穿透。解法有兩種：</p>
+        <ol>
+          <li><strong>子步</strong>：把本幀位移切成 N 段，每段檢查一次。N 依速度與最小魚半徑決定，通常 2–4 段就夠。</li>
+          <li><strong>掃掠圓</strong>：計算子彈從上一位置到目前位置形成的線段與魚圓的交點，取最早命中。</li>
+        </ol>
+        <p>不論哪種，命中後都要把子彈標記為死亡並從 active 移除，避免同一顆子彈在同一幀擊中多條魚。若產品允許穿透彈，則要記錄已命中的魚 ID，不能只靠位置。</p>
+        <div class="callout"><strong>常見坑：</strong>縮放 canvas 後忘記同步碰撞半徑。視覺上魚變大了，碰撞圓還是舊的，玩家會覺得「明明打中卻沒中」。請把邏輯半徑與繪製縮放分開，並在 resize 時只改繪製比例。</div>
+
+        <h2 id="cannon">砲台倍率與成本</h2>
+        <p>砲台倍率通常代表「每發成本」與「命中後的派彩倍率」。例如 10 倍砲每發扣 10 點，命中魚後依魚的賠付表乘以砲台倍率。重點是：<strong>倍率不應該直接等於命中率</strong>。若高倍率同時提高命中率與派彩，期望值會偏離設計，甚至被玩家找出穩賺組合。</p>
+        <div class="table-wrap">
+          <table class="data">
+            <caption>示範用砲台與魚種（僅供教學，不代表真實產品數學）</caption>
+            <thead><tr><th scope="col">目標</th><th scope="col">基礎賠付</th><th scope="col">命中半徑</th><th scope="col">速度</th><th scope="col">備註</th></tr></thead>
+            <tbody>
+              <tr><td>小丑魚</td><td class="num">2×</td><td class="num">16</td><td class="num">慢</td><td>入門目標</td></tr>
+              <tr><td>河豚</td><td class="num">6×</td><td class="num">22</td><td class="num">中</td><td>體型大、較易命中</td></tr>
+              <tr><td>鯊魚</td><td class="num">50×</td><td class="num">34</td><td class="num">快</td><td>高賠付、出現率低</td></tr>
+              <tr><td>黃金龍</td><td class="num">200×</td><td class="num">40</td><td class="num">極快</td><td>Boss，需伺服器判定</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>若每發成本是 <code>bet</code>，命中機率是 <code>p</code>，命中返還是 <code>payout</code>，則期望值約為 <code>p × payout − bet</code>。產品要讓這個值落在設計的 RTP 內，且要考慮子彈未命中的情況。這些計算必須用模擬與實際權重驗證，不能只看賠付表。</p>
+
+        <h2 id="server">伺服器權威：前端只負責「看起來命中」</h2>
+        <p>在真錢產品中，前端不能決定「是否命中」。正確流程是：</p>
+        <ol>
+          <li>玩家按下開火，前端送出「砲台角度、倍率、時間戳、局單 ID」。</li>
+          <li>伺服器依自己的魚群狀態與 RNG 判定命中與否，扣成本、寫局單。</li>
+          <li>前端收到結果後播放命中或落空動畫；若延遲，先播放預測特效，但最終以伺服器為準。</li>
+          <li>結算時以局單 ID 冪等處理，避免重連後重複派彩。</li>
+        </ol>
+        <p>如果前端先扣款、先播放命中，伺服器才非同步確認，會出現「畫面說中了、餘額卻沒加」的爭議。比較好的做法是：前端預測但不明確顯示最終結果，或顯示「結算中」；等伺服器回傳後再播放金幣與更新餘額。</p>
+        <p>另一種做法是「可驗證重播」：伺服器記錄魚的生成種子、初始位置、速度與開火時間，局後提供重播。玩家可以重算，但不需要相信前端。這比單純的 SHA-256 指紋更進一步，因為指紋只能證明「同一份資料」，不能證明「這份資料沒有被挑選過」。</p>
+
+        <h2 id="performance">效能：把預算花在看得見的地方</h2>
+        <ul>
+          <li><strong>背景快取</strong>：深海漸層、氣泡與光影畫到離屏 canvas，每幀只 <code>drawImage</code>。</li>
+          <li><strong>魚的繪製</strong>：若魚種固定，預先畫好各方向或使用 sprite atlas；不要在每幀重建路徑。</li>
+          <li><strong>粒子上限</strong>：金幣與水花用固定池，超過上限就淘汰最舊的。</li>
+          <li><strong>音效節流</strong>：連續命中時限制同時播放數量，或重用同一個 AudioNode。</li>
+          <li><strong>離屏更新</strong>：魚離開畫面立即回收，不要讓 active 陣列無限增長。</li>
+        </ul>
+        <p>用 <code>performance.now()</code> 與 <code>requestAnimationFrame</code> 的 delta 建立簡單的幀率監看，但不要在正式環境顯示給玩家。若發現幀率低於 45fps，優先降低粒子數與鄰居查詢，而不是降低魚的碰撞精度。</p>
+
+        <h2 id="accessibility">無障礙與操作替代</h2>
+        <p>捕魚機本質上是瞄準遊戲，對鍵盤與螢幕閱讀器不友善。至少應提供：</p>
+        <ul>
+          <li>鍵盤操作：方向鍵移動準星、空白鍵開火、數字鍵切換倍率。</li>
+          <li>暫停功能：暫停時停止扣款與生成，不只是停止繪製。</li>
+          <li>文字狀態：目前倍率、餘額、最近命中與剩餘子彈，透過 <code>aria-live</code> 公告。</li>
+          <li>減少動態：關閉螢幕震動、粒子與快速閃光，保留命中文字。</li>
+        </ul>
+        <p>若產品將捕魚機定位為娛樂而非競技，應在頁面明確標示「需要指標裝置」或提供自動捕魚模式；但自動模式仍要遵守成本與頻率限制，不能變成繞過操作的無限收益。</p>
+
+        <h2 id="checklist">上線前檢查表</h2>
+        <ul>
+          <li>邏輯座標與繪製縮放是否分離？碰撞半徑是否跟著縮放？</li>
+          <li>子彈與魚是否有固定上限？池取不到時是否安全失敗？</li>
+          <li>高速子彈是否使用子步或掃掠碰撞？</li>
+          <li>同一顆子彈是否可能重複命中？死亡後是否立即移除？</li>
+          <li>暫停、切到背景、重新連線時，魚群與子彈狀態是否一致？</li>
+          <li>命中與派彩是否由伺服器決定？局單是否冪等？</li>
+          <li>低階手機是否能維持 45fps 以上？粒子與音效是否有上限？</li>
+        </ul>
+
+        <h2 id="faq">常見問題</h2>
+        <div class="faq">
+          <details>
+            <summary>捕魚機的魚群一定要用 Boids 嗎？</summary>
+            <div class="faq-answer"><p>不一定。Boids 適合開放水域與自然群游；若產品需要固定陣形、路徑表演或低效能裝置，曲線路徑加區域生成會更可控。重點是魚群行為要可預測、可重播，而不是每幀都依賴大量隨機。</p></div>
+          </details>
+          <details>
+            <summary>為什麼子彈要用圓形碰撞而不是像素碰撞？</summary>
+            <div class="faq-answer"><p>子彈與魚的形狀會旋轉、縮放，像素級碰撞成本高且難以在伺服器重現。多數捕魚機用圓形或膠囊碰撞，搭配魚的命中半徑與子彈半徑；視覺上看不出差異，效能與一致性卻好很多。</p></div>
+          </details>
+          <details>
+            <summary>高速子彈穿透魚怎麼辦？</summary>
+            <div class="faq-answer"><p>使用連續碰撞（掃掠圓）或把每幀位移切成多個子步。只檢查當前位置會讓快子彈跳過魚；子步數可依速度決定，但要有上限，避免低幀率時一次做太多計算。</p></div>
+          </details>
+          <details>
+            <summary>命中與否應該由前端決定嗎？</summary>
+            <div class="faq-answer"><p>不應。前端可以播放命中特效，但真正是否命中、扣多少點、派彩多少必須由伺服器依局單與 RNG 決定。否則玩家可以修改程式或重放請求，直接影響收益。</p></div>
+          </details>
+          <details>
+            <summary>砲台倍率越高越容易中嗎？</summary>
+            <div class="faq-answer"><p>不一定。倍率通常影響每發成本與命中後的派彩，而不是直接提高命中率。若高倍率同時提高命中率，期望值可能完全改變；產品必須把成本、命中率與魚的賠付一起納入數學模型並用模擬驗證。</p></div>
+          </details>
+        </div>
+
+        <div class="related-links" aria-label="相關內容">
+          <a href="/games/fish-shooting/">捕魚機試玩</a>
+          <a href="/guides/slots-fsm-reel-physics/">老虎機 FSM 指南</a>
+          <a href="/guides/html5-casino-performance/">效能與除錯</a>
+        </div>
+
+        <div class="author-box">
+          <span class="author-avatar" aria-hidden="true">LF</span>
+          <div>
+            <h2>LuckyForge Lab 工程編輯</h2>
+            <p>專注於瀏覽器遊戲架構、可驗證隨機與無障礙互動。內容以可重現的 demo 為基礎，並在每頁標示最後更新日期。</p>
+          </div>
+        </div>
+      </article>
+
+      <aside class="toc" aria-label="本頁目錄">
+        <h2>本頁目錄</h2>
+        <ol>
+          <li><a href="#coordinate">座標與時間步</a></li>
+          <li><a href="#boids">魚群 Boids</a></li>
+          <li><a href="#spawn">生成與物件池</a></li>
+          <li><a href="#collision">碰撞與穿透</a></li>
+          <li><a href="#cannon">砲台倍率</a></li>
+          <li><a href="#server">伺服器權威</a></li>
+          <li><a href="#performance">效能</a></li>
+          <li><a href="#accessibility">無障礙</a></li>
+          <li><a href="#checklist">上線檢查表</a></li>
+          <li><a href="#faq">常見問題</a></li>
+        </ol>
+        <button class="btn btn-ghost btn-sm" type="button" data-copy-link="https://luckyforge-lab.pages.dev/guides/fish-shooting-ai-collision/">複製引用連結</button>
+      </aside>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-main">
+      <div class="footer-brand">
+        <a class="brand" href="/">
+          <span class="brand-mark" aria-hidden="true">LF</span>
+          <span class="brand-name"><strong>LuckyForge Lab</strong><span>幸運工坊</span></span>
+        </a>
+        <p>純前端 HTML5 賭場遊戲實驗室。用可玩的 demo 拆解 FSM、物件池、碰撞、公平性與效能，全部使用虛擬籌碼。</p>
+        <div class="footer-badges"><span class="badge">18+</span><span class="badge badge--mint">虛擬籌碼</span><span class="badge badge--muted">零外部請求</span></div>
+      </div>
+      <nav class="footer-col" aria-labelledby="footer-games">
+        <h2 id="footer-games">遊戲</h2>
+        <ul>
+          <li><a href="/games/slots/">老虎機</a></li>
+          <li><a href="/games/fish-shooting/">捕魚機</a></li>
+          <li><a href="/games/baccarat/">百家樂</a></li>
+          <li><a href="/games/roulette/">輪盤</a></li>
+          <li><a href="/games/blackjack/">21 點</a></li>
+        </ul>
+      </nav>
+      <nav class="footer-col" aria-labelledby="footer-guides">
+        <h2 id="footer-guides">指南</h2>
+        <ul>
+          <li><a href="/guides/">全部指南</a></li>
+          <li><a href="/guides/slots-fsm-reel-physics/">老虎機 FSM</a></li>
+          <li><a href="/guides/fish-shooting-ai-collision/">捕魚機 AI</a></li>
+          <li><a href="/guides/table-games-fairness/">公平性與重連</a></li>
+          <li><a href="/guides/html5-casino-performance/">效能與除錯</a></li>
+        </ul>
+      </nav>
+      <nav class="footer-col" aria-labelledby="footer-site">
+        <h2 id="footer-site">網站</h2>
+        <ul>
+          <li><a href="/about/">關於我們</a></li>
+          <li><a href="/accessibility/">無障礙</a></li>
+          <li><a href="/privacy/">隱私與資料</a></li>
+          <li><a href="/responsible-gaming/">責任遊戲</a></li>
+          <li><a href="/llms.txt">llms.txt</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="footer-bottom">
+      <p>© <span data-current-year>2026</span> LuckyForge Lab（幸運工坊）。內容為技術教學與娛樂展示，不構成賭博建議。</p>
+      <p>18+ · 虛擬籌碼 · 無真錢交易 · <a href="/responsible-gaming/">請理性遊玩</a></p>
+    </div>
+  </div>
+</footer>
+
+<script type="module" src="/assets/js/site.js"></script>
+</body>
+</html>

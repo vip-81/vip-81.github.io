@@ -1,0 +1,432 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>document.documentElement.classList.add("js");</script>
+<title>輪盤 Roulette 試玩：歐式單零、37 格與完整下注板｜LuckyForge Lab</title>
+<meta name="description" content="免費玩歐式單零輪盤：37 格、完整內外圍下注、Canvas 轉輪與球體動畫、籌碼與派彩。並拆解結果先定動畫後播、RTP 97.30%、reduced-motion 與斷線恢復。全部使用虛擬籌碼。">
+<meta name="keywords" content="輪盤,roulette,歐式輪盤,單零輪盤,輪盤試玩,輪盤賠率,Canvas 輪盤,HTML5 賭場遊戲,虛擬籌碼">
+<meta name="author" content="LuckyForge Lab">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#070a10">
+<link rel="canonical" href="https://luckyforge-lab.pages.dev/games/roulette/">
+<link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/img/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="LuckyForge Lab 幸運工坊">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="輪盤 Roulette 試玩：歐式單零、37 格與完整下注板">
+<meta property="og:description" content="可玩的歐式單零輪盤，附 Canvas 轉輪、完整下注板、派彩表與結果先定動畫後播的工程拆解。">
+<meta property="og:url" content="https://luckyforge-lab.pages.dev/games/roulette/">
+<meta property="og:image" content="https://luckyforge-lab.pages.dev/assets/img/og-cover.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="LuckyForge Lab 輪盤試玩封面">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="輪盤 Roulette 試玩：歐式單零、37 格與完整下注板">
+<meta name="twitter:description" content="可玩的歐式單零輪盤，附 Canvas 轉輪、完整下注板、派彩表與公平性說明。">
+<meta name="twitter:image" content="https://luckyforge-lab.pages.dev/assets/img/og-cover.png">
+<meta name="twitter:image:alt" content="LuckyForge Lab 輪盤試玩封面">
+<link rel="stylesheet" href="/assets/css/site.css">
+<link rel="stylesheet" href="/assets/css/games.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "首頁", "item": "https://luckyforge-lab.pages.dev/" },
+        { "@type": "ListItem", "position": 2, "name": "輪盤 Roulette", "item": "https://luckyforge-lab.pages.dev/games/roulette/" }
+      ]
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://luckyforge-lab.pages.dev/games/roulette/#webpage",
+      "url": "https://luckyforge-lab.pages.dev/games/roulette/",
+      "name": "輪盤 Roulette 試玩：歐式單零、37 格與完整下注板",
+      "description": "可玩的 HTML5 歐式輪盤與 Canvas 動畫、下注板、派彩、公平性與重連的工程拆解。",
+      "inLanguage": "zh-Hant-TW",
+      "isPartOf": { "@id": "https://luckyforge-lab.pages.dev/#website" },
+      "datePublished": "2026-11-16",
+      "dateModified": "2026-11-16",
+      "primaryImageOfPage": "https://luckyforge-lab.pages.dev/assets/img/og-cover.png"
+    },
+    {
+      "@type": "VideoGame",
+      "@id": "https://luckyforge-lab.pages.dev/games/roulette/#game",
+      "name": "Golden Spindle 輪盤",
+      "url": "https://luckyforge-lab.pages.dev/games/roulette/",
+      "description": "歐式單零輪盤示範：37 格、完整內外圍下注、Canvas 轉輪與球體動畫。",
+      "image": "https://luckyforge-lab.pages.dev/assets/img/og-cover.png",
+      "genre": "Casino",
+      "gamePlatform": "Web browser",
+      "applicationCategory": "Game",
+      "operatingSystem": "Any",
+      "playMode": "SinglePlayer",
+      "numberOfPlayers": 1,
+      "inLanguage": "zh-Hant-TW",
+      "datePublished": "2026-11-16",
+      "dateModified": "2026-11-16",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "TWD" },
+      "publisher": { "@id": "https://luckyforge-lab.pages.dev/#organization" }
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://luckyforge-lab.pages.dev/games/roulette/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "這個輪盤是美式還是歐式？", "acceptedAnswer": { "@type": "Answer", "text": "這是歐式單零輪盤，共有 37 格（0 到 36）。只有一個 0，因此理論 RTP 為 97.30%，高於美式雙零輪盤的 94.74%。" } },
+        { "@type": "Question", "name": "輪盤的結果是在動畫中產生的嗎？", "acceptedAnswer": { "@type": "Answer", "text": "不是。結果在轉輪開始前就以 crypto.getRandomValues 決定，動畫只負責把輪盤與球帶到對應位置。即使切到背景、低幀率或開啟減少動態，結果都不會改變。" } },
+        { "@type": "Question", "name": "0 號算紅色還是黑色？", "acceptedAnswer": { "@type": "Answer", "text": "0 號是綠色，不屬於紅色或黑色，也不符合單數、雙數、大、小與打注。只有直接下注 0 號或包含 0 的其他组合注才會命中。" } },
+        { "@type": "Question", "name": "輪盤的理論 RTP 是多少？", "acceptedAnswer": { "@type": "Answer", "text": "歐式單零輪盤的所有標準投注在長期下的理論 RTP 都是 97.30%，也就是賭場優勢約 2.70%。不同投注的波動與命中率不同，但期望值相同。" } },
+        { "@type": "Question", "name": "重新整理後下注會保留嗎？", "acceptedAnswer": { "@type": "Answer", "text": "會。餘額、籌碼面額、目前桌面投注、上一局投注、近期結果與轉數都存在 localStorage。重新載入後會清洗資料並恢復；正式產品應由伺服器持有餘額與局單。" } },
+        { "@type": "Question", "name": "可以用鍵盤玩嗎？", "acceptedAnswer": { "@type": "Answer", "text": "可以。所有下注格與籌碼都是按鈕，Tab 可依序聚焦，Enter 或空白鍵下注。焦點不在按鈕時，空白鍵可直接轉動輪盤。結果與餘額會透過 aria-live 公告。" } }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<a class="skip-link" href="#main-content">跳至主要內容</a>
+
+<header class="site-header" data-header>
+  <div class="container header-inner">
+    <a class="brand" href="/">
+      <span class="brand-mark" aria-hidden="true">LF</span>
+      <span class="brand-name"><strong>LuckyForge Lab</strong><span>幸運工坊</span></span>
+    </a>
+    <nav class="site-nav" id="primary-nav" aria-label="主要導覽">
+      <a href="/games/slots/">老虎機</a>
+      <a href="/games/fish-shooting/">捕魚機</a>
+      <a href="/games/baccarat/">百家樂</a>
+      <a href="/games/roulette/" aria-current="page">輪盤</a>
+      <a href="/games/blackjack/">21 點</a>
+      <a href="/guides/">指南</a>
+      <a class="btn btn-primary btn-sm" href="/games/slots/">免費試玩</a>
+    </nav>
+    <div class="header-tools">
+      <button class="icon-btn" type="button" data-audio-toggle aria-pressed="false" aria-label="關閉音效" title="關閉音效">
+        <svg class="icon-sound-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4Z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M19.5 6a8.5 8.5 0 0 1 0 12"/></svg>
+        <svg class="icon-sound-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4Z"/><path d="m17 9 5 5"/><path d="m22 9-5 5"/></svg>
+      </button>
+    </div>
+    <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="primary-nav" aria-label="開啟導覽選單"><span></span></button>
+  </div>
+</header>
+
+<main id="main-content">
+  <nav class="breadcrumbs" aria-label="麵包屑">
+    <div class="container"><ol><li><a href="/">首頁</a></li><li><span aria-current="page">輪盤 Roulette</span></li></ol></div>
+  </nav>
+
+  <header class="page-hero">
+    <div class="container">
+      <span class="eyebrow">Playable demo · European wheel</span>
+      <h1>輪盤 Roulette 試玩：歐式單零、37 格與完整下注板</h1>
+      <p class="lead">選籌碼、點下注格，然後轉動輪盤。這是一台可直接玩的歐式單零輪盤，也是一份 Canvas 動畫與下注結算的實作拆解：結果先決定、球再落下，RTP 與波動各自代表什麼，都在下面說清楚。</p>
+      <div class="page-meta"><span>最後更新 <time datetime="2026-11-16">2026-11-16</time></span><span class="dot" aria-hidden="true"></span><span>閱讀約 9 分鐘</span><span class="dot" aria-hidden="true"></span><span>18+ · 虛擬籌碼</span></div>
+      <div class="key-takeaway">
+        <strong>重點摘要</strong>
+        <p>歐式輪盤有 37 格、只有一個 0，所有標準投注的理論 RTP 都是 97.30%。本實作在旋轉開始前就用 <code>crypto.getRandomValues</code> 抽出結果，再以 ease-out 曲線把輪盤與球帶到對應格位；動畫不參與機率。下注、餘額、近期結果與轉數會存在本機，重新整理可恢復。</p>
+      </div>
+    </div>
+  </header>
+
+  <section class="demo-section" aria-labelledby="demo-title">
+    <div class="container">
+      <div class="game-shell">
+        <div class="demo-bar">
+          <div class="demo-bar__title"><span class="live-dot" aria-hidden="true"></span><span id="demo-title">Golden Spindle 試玩輪盤</span></div>
+          <div class="demo-bar__meta"><span>EUROPEAN · 37</span><span>CANVAS 2D</span><span>VIRTUAL CREDITS</span></div>
+        </div>
+
+        <div class="game-hud">
+          <div class="hud-group">
+            <div class="hud-stat"><span>餘額</span><output id="roulette-balance">10,000</output></div>
+            <div class="hud-stat"><span>桌面投注</span><output id="roulette-total-bet">0</output></div>
+            <div class="hud-stat"><span>已轉次數</span><output id="roulette-spins">0</output></div>
+          </div>
+        </div>
+
+        <div class="roulette-layout">
+          <div class="roulette-wheel-panel">
+            <div class="wheel-wrap">
+              <canvas id="roulette-canvas" width="560" height="560" role="img" aria-label="歐式輪盤轉輪，37 格。轉動結果會以文字顯示在下方。">
+                您的瀏覽器不支援 Canvas。請改用支援 Canvas 的現代瀏覽器，或閱讀下方的輪盤規則與賠付表。
+              </canvas>
+            </div>
+            <div class="wheel-result">
+              <span class="wheel-result__number" id="roulette-result-number" data-color="green" aria-hidden="true">0</span>
+              <p><strong id="roulette-result-text">尚未開轉</strong>結果先由亂數決定，再播放轉輪動畫。</p>
+            </div>
+            <div class="roulette-history">
+              <span class="bet-label">近期結果</span>
+              <div class="roulette-history__list" id="roulette-history" aria-label="近期開出的號碼"></div>
+            </div>
+            <p class="note" style="margin:0">0 為綠色；紅／黑、單／雙、大／小與打注皆不含 0。</p>
+          </div>
+
+          <div class="roulette-board-panel">
+            <div class="roulette-board">
+              <button class="number-cell number-cell--zero" type="button" data-roulette-bet="n:0" data-base-label="號碼 0，綠色" aria-label="號碼 0，綠色，目前下注 0 點">0<span class="number-cell__chips" aria-hidden="true"></span></button>
+              <div class="number-grid" id="roulette-number-grid" aria-label="號碼下注區"></div>
+              <div class="outside-grid" id="roulette-outside-grid" aria-label="外圍下注區"></div>
+            </div>
+
+            <div class="roulette-totals">
+              <span>單號賠 <strong>35:1</strong></span>
+              <span>外圍 <strong>1:1 / 2:1</strong></span>
+              <span>0 不屬於紅黑、單雙、大小</span>
+            </div>
+
+            <div class="chip-picker" role="group" aria-label="籌碼面額">
+              <span>籌碼</span>
+              <button class="chip-btn" type="button" data-roulette-chip="10" data-value="10" aria-pressed="false" aria-label="籌碼 10 點">10</button>
+              <button class="chip-btn" type="button" data-roulette-chip="50" data-value="50" aria-pressed="true" aria-label="籌碼 50 點">50</button>
+              <button class="chip-btn" type="button" data-roulette-chip="100" data-value="100" aria-pressed="false" aria-label="籌碼 100 點">100</button>
+              <button class="chip-btn" type="button" data-roulette-chip="500" data-value="500" aria-pressed="false" aria-label="籌碼 500 點">500</button>
+            </div>
+
+            <div class="game-controls" style="border-top:0;background:transparent;padding:16px 0 0">
+              <div class="controls-left">
+                <button class="btn btn-ghost" type="button" id="roulette-clear">清除投注</button>
+                <button class="btn btn-ghost" type="button" id="roulette-repeat">重複上局</button>
+                <button class="btn btn-ghost" type="button" id="roulette-reset">補充籌碼</button>
+              </div>
+              <div class="controls-right">
+                <button class="spin-btn" type="button" id="roulette-spin">轉動輪盤</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="game-status" id="roulette-status" role="status">正在準備輪盤…</div>
+        <div class="sr-only" id="roulette-sr" aria-live="polite" aria-atomic="true"></div>
+        <div class="demo-note"><span><strong>操作：</strong>先選籌碼，再點下注格；空白鍵可轉動。所有點數皆為虛擬點數。</span><span>無真錢交易</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="game-content" aria-labelledby="roulette-rules-title">
+    <div class="container content-grid">
+      <article class="prose">
+        <h2 id="roulette-rules-title">輪盤規則快速看</h2>
+        <p>歐式輪盤有 37 個格位：0 到 36。0 是綠色，其餘數字依固定順序交錯紅黑。玩家在下注時間內把籌碼放到號碼或外圍區域，莊家轉動輪盤並投入小球，球停在哪一格，該格與相關组合注即中獎。</p>
+        <ul>
+          <li><strong>單號（Straight）</strong>：選一個號碼，賠 35:1（返還 36 份，含本金）。</li>
+          <li><strong>紅／黑、單／雙、大／小</strong>：賠 1:1；0 不算任何一邊。</li>
+          <li><strong>打注（Dozen）</strong>：1–12、13–24、25–36，賠 2:1。</li>
+          <li><strong>直行（Column）</strong>：1,4,7…、2,5,8…、3,6,9…，賠 2:1。</li>
+        </ul>
+        <p>本頁沒有 split、street、corner、line 等「組合注」，只有單號與六種外圍注；這是刻意的簡化，讓下注板在手機上仍可準確點擊。正式產品若加入組合注，必須把每個格位的命中集合與派彩寫成資料表，而不是用視覺位置推測。</p>
+
+        <h2 id="payouts">賠付與 RTP：為什麼每個注都一樣</h2>
+        <div class="table-wrap">
+          <table class="data">
+            <caption>歐式單零輪盤的標準賠付與期望值</caption>
+            <thead><tr><th scope="col">投注</th><th scope="col">命中格數</th><th scope="col">賠率</th><th scope="col">理論 RTP</th></tr></thead>
+            <tbody>
+              <tr><td>單號</td><td class="num">1 / 37</td><td class="num">35:1</td><td class="num">97.30%</td></tr>
+              <tr><td>紅／黑</td><td class="num">18 / 37</td><td class="num">1:1</td><td class="num">97.30%</td></tr>
+              <tr><td>單／雙</td><td class="num">18 / 37</td><td class="num">1:1</td><td class="num">97.30%</td></tr>
+              <tr><td>大／小</td><td class="num">18 / 37</td><td class="num">1:1</td><td class="num">97.30%</td></tr>
+              <tr><td>打注</td><td class="num">12 / 37</td><td class="num">2:1</td><td class="num">97.30%</td></tr>
+              <tr><td>直行</td><td class="num">12 / 37</td><td class="num">2:1</td><td class="num">97.30%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>以單號為例：命中機率是 1/37，命中時返還 36 份（35 份利潤加本金），所以期望值為 <code>(1/37) × 36 = 0.9730</code>。外圍注的算法相同，只是把 36 換成 2 或 3。這就是為什麼「賠率越高越好」是錯的：高賠率只是低命中率的補償，長期期望值並沒有變高。</p>
+        <p class="note">RTP 是長期理論值，不是單局或單晚的結果。短期波動可能讓你連續命中，也可能長時間不中；任何「必勝法」都無法改變負期望值。</p>
+
+        <h2 id="result-first">結果先定，動畫後播</h2>
+        <p>很多輪盤實作會讓球的物理模擬決定結果，這在單機 demo 看似合理，但在產品中很危險：不同裝置的幀率、暫停、背景切換與物理參數都可能改變落點，讓「公平性」無法驗證。本頁刻意反向操作：</p>
+        <ol>
+          <li>按下「轉動輪盤」後，先以 <code>randomInt(37)</code> 抽出結果。</li>
+          <li>找出結果在輪盤序列中的索引，計算輪盤需要轉到的角度。</li>
+          <li>用 ease-out quint 在 4.7 秒內把輪盤與球帶到目標，並在過程中播放 tick 音效。</li>
+          <li>動畫結束才呼叫 <code>settleSpin(result)</code>，依結果結算所有注。</li>
+        </ol>
+        <pre><code>const result = randomInt(37);
+const pocketIndex = WHEEL_SEQUENCE.indexOf(result);
+const segment = (Math.PI * 2) / WHEEL_SEQUENCE.length;
+const desired = modAngle(-pocketIndex * segment);
+const wheelTarget =
+  wheelRotation + Math.PI * 2 * (5 + Math.random() * 2)
+  + modAngle(desired - wheelRotation);</code></pre>
+        <p>這樣做有兩個好處：第一，結果與動畫完全解耦，低階手機或開啟「減少動態」都不會影響機率；第二，正式產品可以改成先向伺服器請求結果，再用同一個 <code>animateTo(result)</code> 播放，前端不需要重寫流程。</p>
+
+        <h2 id="wheel">Canvas 轉輪與球體動畫</h2>
+        <p>轉輪以 560×560 的邏輯座標繪製，依 <code>devicePixelRatio</code> 放大畫布，避免高解析螢幕模糊。37 個扇形用 <code>arc</code> 繪製，數字隨輪盤旋轉但保持由圓心向外閱讀；球则使用極座標 <code>(angle, radius)</code> 移動，半徑從 238 收到 205，模擬球落入內圈。</p>
+        <p>每次動畫幀只重繪整個輪盤一次，沒有離屏快取，因為輪盤本身會旋轉，快取反而需要額外的旋轉合成。真正需要快取的是靜態背景與符號紋理，而不是會整體旋轉的輪盤。</p>
+        <p>若使用者開啟 <code>prefers-reduced-motion</code>，程式會直接定位到結果、縮短結算等待，不播放 tick 與長時間旋轉。這不只是「無障礙加分」，也能避免前庭功能敏感者不適。</p>
+
+        <h2 id="bets">下注板與狀態管理</h2>
+        <p>下注鍵以 <code>n:0</code> 到 <code>n:36</code> 表示單號，外圍注使用 <code>red</code>、<code>black</code>、<code>dozen:1</code> 等字串。這種設計讓 localStorage 的內容可讀、可清洗，也讓派彩函式可以用同一個 <code>betReturn(key, result)</code> 處理所有注。</p>
+        <pre><code>function betReturn(key, result, amount) {
+  if (key.startsWith("n:")) {
+    return Number(key.slice(2)) === result ? amount * 36 : 0;
+  }
+  const red = result !== 0 &amp;&amp; RED_NUMBERS.has(result);
+  switch (key) {
+    case "red": return red ? amount * 2 : 0;
+    case "black": return result !== 0 &amp;&amp; !red ? amount * 2 : 0;
+    case "odd": return result !== 0 &amp;&amp; result % 2 === 1 ? amount * 2 : 0;
+    case "dozen:1": return result &gt;= 1 &amp;&amp; result &lt;= 12 ? amount * 3 : 0;
+    default: return 0;
+  }
+}</code></pre>
+        <p>旋轉期間，所有下注鍵與籌碼都會被停用，避免「旋轉中改注」造成結算與畫面不一致。這個限制由 <code>phase</code> 控制：只有 <code>idle</code> 能下注，<code>spinning</code> 只能等待。</p>
+
+        <h2 id="fairness">公平性與正式環境</h2>
+        <p>本頁的亂數來自瀏覽器的 Web Crypto，並使用拒絕取樣避免 <code>% 37</code> 的模數偏差。這比 <code>Math.random()</code> 好，但仍然不是可驗證的賭場級 RNG：玩家可以修改前端、替換函式，或直接改 localStorage。</p>
+        <p>正式產品應由伺服器：</p>
+        <ul>
+          <li>持有 RNG 與輪盤序列，產生並簽章每一局結果；</li>
+          <li>以局單 ID 記錄投注、結果、派彩、時間戳與玩家；</li>
+          <li>在局前公開 server seed 的雜湊，局後揭示 seed 供玩家重算；</li>
+          <li>將餘額與局單放在伺服器，前端只送下注意圖與播放結果。</li>
+        </ul>
+        <p>只有「結果先定」還不夠；如果結果由前端決定，玩家仍可竄改。公平性需要「權威來源」與「可驗證紀錄」同時成立。</p>
+
+        <h2 id="reconnect">斷線重連與本機恢復</h2>
+        <p>本頁把餘額、籌碼面額、目前投注、上一局投注、近期結果與已轉次數寫入 localStorage。重新載入時會：</p>
+        <ul>
+          <li>驗證餘額為非負整數，否則回到預設值；</li>
+          <li>只接受合法的下注鍵與正整數金額；</li>
+          <li>只保留 0–36 的近期結果，最多 12 筆；</li>
+          <li>重建下注板與 HUD，並顯示上一局結果。</li>
+        </ul>
+        <p>局中旋轉不會持久化：若在球落下前重新載入，會回到可下注狀態，桌面投注仍在。正式產品應在重連後向伺服器查詢該局是否已結算，避免重複下注或重複派彩。</p>
+
+        <h2 id="accessibility">鍵盤、螢幕閱讀器與手機</h2>
+        <p>Canvas 只負責視覺；所有結果、餘額、投注與狀態都有 DOM 文字。下注格是真正的 <code>&lt;button&gt;</code>，具備可讀的 <code>aria-label</code>，內容包含「號碼＋顏色＋目前下注」。籌碼按鈕使用 <code>aria-pressed</code> 表示目前面額。</p>
+        <p>手機版下注板會壓縮為 3 欄外圍注，號碼格最小 39px；所有可點區域都大於 24×24 CSS px。若你使用鍵盤：Tab 到下注格按 Enter，或聚焦「轉動輪盤」後按空白鍵。</p>
+
+        <h2 id="faq">常見問題</h2>
+        <div class="faq">
+          <details>
+            <summary>這個輪盤是美式還是歐式？</summary>
+            <div class="faq-answer"><p>這是歐式單零輪盤，共有 37 格（0 到 36）。只有一個 0，因此理論 RTP 為 97.30%，高於美式雙零輪盤的 94.74%。</p></div>
+          </details>
+          <details>
+            <summary>輪盤的結果是在動畫中產生的嗎？</summary>
+            <div class="faq-answer"><p>不是。結果在轉輪開始前就以 <code>crypto.getRandomValues</code> 決定，動畫只負責把輪盤與球帶到對應位置。即使切到背景、低幀率或開啟減少動態，結果都不會改變。</p></div>
+          </details>
+          <details>
+            <summary>0 號算紅色還是黑色？</summary>
+            <div class="faq-answer"><p>0 號是綠色，不屬於紅色或黑色，也不符合單數、雙數、大、小與打注。只有直接下注 0 號或包含 0 的其他组合注才會命中。</p></div>
+          </details>
+          <details>
+            <summary>輪盤的理論 RTP 是多少？</summary>
+            <div class="faq-answer"><p>歐式單零輪盤的所有標準投注在長期下的理論 RTP 都是 97.30%，也就是賭場優勢約 2.70%。不同投注的波動與命中率不同，但期望值相同。</p></div>
+          </details>
+          <details>
+            <summary>重新整理後下注會保留嗎？</summary>
+            <div class="faq-answer"><p>會。餘額、籌碼面額、目前桌面投注、上一局投注、近期結果與轉數都存在 localStorage。重新載入後會清洗資料並恢復；正式產品應由伺服器持有餘額與局單。</p></div>
+          </details>
+          <details>
+            <summary>可以用鍵盤玩嗎？</summary>
+            <div class="faq-answer"><p>可以。所有下注格與籌碼都是按鈕，Tab 可依序聚焦，Enter 或空白鍵下注。焦點不在按鈕時，空白鍵可直接轉動輪盤。結果與餘額會透過 aria-live 公告。</p></div>
+          </details>
+        </div>
+
+        <div class="related-links" aria-label="相關指南">
+          <a href="/guides/table-games-fairness/">輪盤、百家樂、21 點公平性</a>
+          <a href="/guides/html5-casino-performance/">效能與除錯</a>
+          <a href="/games/baccarat/">百家樂試玩</a>
+          <a href="/games/blackjack/">21 點試玩</a>
+        </div>
+
+        <div class="author-box">
+          <span class="author-avatar" aria-hidden="true">LF</span>
+          <div>
+            <h2>LuckyForge Lab 工程編輯</h2>
+            <p>專注於瀏覽器遊戲架構、可驗證隨機與無障礙互動。內容以可重現的 demo 為基礎，並在每頁標示最後更新日期。</p>
+          </div>
+        </div>
+      </article>
+
+      <aside class="game-sidebar" aria-label="輪盤規格與引用">
+        <div class="card card--pad">
+          <h2 class="h3">輪盤規格</h2>
+          <dl class="spec-list">
+            <div><dt>類型</dt><dd>歐式單零</dd></div>
+            <div><dt>格數</dt><dd>37（0–36）</dd></div>
+            <div><dt>投注種類</dt><dd>單號＋6 種外圍</dd></div>
+            <div><dt>理論 RTP</dt><dd>97.30%</dd></div>
+            <div><dt>邏輯解析度</dt><dd>560 × 560</dd></div>
+            <div><dt>隨機來源</dt><dd>crypto.getRandomValues</dd></div>
+            <div><dt>持久化</dt><dd>localStorage</dd></div>
+          </dl>
+        </div>
+        <div class="card card--pad">
+          <h2 class="h3">引用此頁</h2>
+          <p class="note">固定網址與更新日期可作為引用依據。引用時請保留「LuckyForge Lab」與標題。</p>
+          <button class="btn btn-ghost btn-sm" type="button" data-copy-link="https://luckyforge-lab.pages.dev/games/roulette/">複製引用連結</button>
+        </div>
+        <div class="card card--pad">
+          <h2 class="h3">下注提示</h2>
+          <p class="note">先選 10 或 50 點籌碼，試著同時下注紅黑與一個單號，觀察命中時哪些注會派彩。這是虛擬籌碼，請勿視為真錢策略。</p>
+        </div>
+      </aside>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-main">
+      <div class="footer-brand">
+        <a class="brand" href="/">
+          <span class="brand-mark" aria-hidden="true">LF</span>
+          <span class="brand-name"><strong>LuckyForge Lab</strong><span>幸運工坊</span></span>
+        </a>
+        <p>純前端 HTML5 賭場遊戲實驗室。用可玩的 demo 拆解 FSM、物件池、碰撞、公平性與效能，全部使用虛擬籌碼。</p>
+        <div class="footer-badges"><span class="badge">18+</span><span class="badge badge--mint">虛擬籌碼</span><span class="badge badge--muted">零外部請求</span></div>
+      </div>
+      <nav class="footer-col" aria-labelledby="footer-games">
+        <h2 id="footer-games">遊戲</h2>
+        <ul>
+          <li><a href="/games/slots/">老虎機</a></li>
+          <li><a href="/games/fish-shooting/">捕魚機</a></li>
+          <li><a href="/games/baccarat/">百家樂</a></li>
+          <li><a href="/games/roulette/">輪盤</a></li>
+          <li><a href="/games/blackjack/">21 點</a></li>
+        </ul>
+      </nav>
+      <nav class="footer-col" aria-labelledby="footer-guides">
+        <h2 id="footer-guides">指南</h2>
+        <ul>
+          <li><a href="/guides/">全部指南</a></li>
+          <li><a href="/guides/slots-fsm-reel-physics/">老虎機 FSM</a></li>
+          <li><a href="/guides/fish-shooting-ai-collision/">捕魚機 AI</a></li>
+          <li><a href="/guides/table-games-fairness/">公平性與重連</a></li>
+          <li><a href="/guides/html5-casino-performance/">效能與除錯</a></li>
+        </ul>
+      </nav>
+      <nav class="footer-col" aria-labelledby="footer-site">
+        <h2 id="footer-site">網站</h2>
+        <ul>
+          <li><a href="/about/">關於我們</a></li>
+          <li><a href="/accessibility/">無障礙</a></li>
+          <li><a href="/privacy/">隱私與資料</a></li>
+          <li><a href="/responsible-gaming/">責任遊戲</a></li>
+          <li><a href="/llms.txt">llms.txt</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="footer-bottom">
+      <p>© <span data-current-year>2026</span> LuckyForge Lab（幸運工坊）。內容為技術教學與娛樂展示，不構成賭博建議。</p>
+      <p>18+ · 虛擬籌碼 · 無真錢交易 · <a href="/responsible-gaming/">請理性遊玩</a></p>
+    </div>
+  </div>
+</footer>
+
+<script type="module" src="/assets/js/site.js"></script>
+<script type="module" src="/assets/js/games/roulette.js"></script>
+</body>
+</html>

@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>document.documentElement.classList.add("js");</script>
+<title>Points Runner 介面示範：把真錢 landing page 改成虛擬點數｜LuckyForge Lab</title>
+<meta name="description" content="借用常見 iGaming 落地頁的視覺節奏（Hero、懸浮代幣、介紹段、圖文 FAQ、雙色 Footer），改成純靜態、零外部請求、虛擬點數、18+ 的介面示範。沒有存款、提款、PIX 或真錢交易。">
+<meta name="keywords" content="iGaming landing page,落地頁設計,虛擬點數,靜態示範,18+,無真錢交易,Webflow 版型,LuckyForge Lab">
+<meta name="robots" content="noindex,nofollow">
+<link rel="canonical" href="https://luckyforge-lab.pages.dev/demos/points-runner/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="LuckyForge Lab 幸運工坊">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="Points Runner：iGaming 落地頁的虚拟點數介面示範">
+<meta property="og:description" content="只借用版面結構與文案節奏，改成純靜態、虛擬點數、18+ 的示範頁。">
+<meta property="og:url" content="https://luckyforge-lab.pages.dev/demos/points-runner/">
+<meta property="og:image" content="https://luckyforge-lab.pages.dev/assets/img/og-cover.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Points Runner：虚拟點數介面示範">
+<meta name="twitter:description" content="借用 iGaming landing page 視覺節奏，但完全沒有真錢、PIX 或支付網關。">
+<meta name="twitter:image" content="https://luckyforge-lab.pages.dev/assets/img/og-cover.png">
+<link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/css/site.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "Points Runner 介面示範",
+  "description": "借用常見 iGaming 落地頁的視覺節奏，改成純靜態、零外部請求、虛擬點數、18+ 的介面示範。沒有存款、提款、PIX 或真錢交易。",
+  "inLanguage": "zh-Hant-TW",
+  "datePublished": "2026-11-17",
+  "dateModified": "2026-11-17",
+  "mainEntityOfPage": "https://luckyforge-lab.pages.dev/demos/points-runner/",
+  "author": { "@type": "Organization", "name": "LuckyForge Lab 幸運工坊" }
+}
+</script>
+<style>
+  .pr-hero{position:relative;overflow:hidden;background:radial-gradient(circle at 20% 20%,#1c1533 0,#0b0e16 55%,#07090f 100%);border-radius:18px;padding:clamp(36px,7vw,84px) clamp(20px,5vw,64px);min-height:420px;display:grid;align-content:center}
+  .pr-hero h1{font-family:var(--font-display);font-size:clamp(2.6rem,8vw,5.2rem);line-height:1.02;letter-spacing:-.03em;margin:0 0 20px}
+  .pr-hero h1 span{display:block}.pr-hero h1 em{font-style:normal;color:var(--accent,#9b8cff)}
+  .pr-hero p{max-width:46ch;color:var(--muted);font-size:1.06rem;line-height:1.8}
+  .pr-coin{position:absolute;width:clamp(44px,7vw,92px);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 30% 25%,#ffe9a8,#f0b429 55%,#a8770d);box-shadow:0 12px 30px rgba(0,0,0,.45),inset 0 0 0 3px rgba(255,255,255,.25);display:grid;place-items:center;color:#5c3b00;font-weight:800;opacity:.9;pointer-events:none}
+  .pr-coin::after{content:"★";font-size:1.1em}.pr-coin.c1{top:12%;left:8%}.pr-coin.c2{top:18%;right:12%;transform:scale(.8)}.pr-coin.c3{bottom:14%;left:16%;transform:scale(.65)}.pr-coin.c4{bottom:20%;right:8%;transform:scale(.9)}
+  .pr-cta{display:inline-flex;align-items:center;gap:10px;margin-top:24px;padding:14px 26px;border:0;border-radius:999px;background:linear-gradient(135deg,#6c5ce7,#9b8cff);color:#fff;font-weight:800;font-size:1rem;cursor:pointer}
+  .pr-note{margin-top:14px;color:#c9cbd4;font-size:.92rem}
+  .pr-intro{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:32px;align-items:center}
+  .pr-badge{width:100%;max-width:260px;aspect-ratio:1;border-radius:50%;background:conic-gradient(from 210deg,#6c5ce7,#00b894,#fdcb6e,#6c5ce7);display:grid;place-items:center;margin-inline:auto;box-shadow:0 20px 60px rgba(108,92,231,.25)}
+  .pr-badge span{width:78%;aspect-ratio:1;border-radius:50%;background:#0d111b;display:grid;place-items:center;text-align:center;color:#fff;font-family:var(--font-display);font-size:clamp(1.2rem,3vw,2rem);line-height:1.2}
+  .pr-faq{display:grid;gap:14px}.pr-faq details{border:1px solid var(--line-2);border-radius:14px;background:var(--panel);padding:18px 20px}.pr-faq summary{cursor:pointer;font-weight:800;font-size:1.04rem;list-style:none;display:flex;gap:12px;align-items:center}.pr-faq summary::-webkit-details-marker{display:none}.pr-faq summary::before{content:"+";color:#9b8cff;font-size:1.4rem;line-height:1;min-width:18px}.pr-faq details[open] summary::before{content:"−"}.pr-faq p{margin:14px 0 0;color:var(--muted);line-height:1.85}
+  .pr-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.pr-step{border:1px solid var(--line-2);border-radius:14px;padding:20px;background:var(--panel)}.pr-step b{display:block;color:#9b8cff;margin-bottom:8px}
+  .pr-feed{list-style:none;padding:0;margin:0;display:grid;gap:8px}.pr-feed li{display:flex;justify-content:space-between;gap:12px;padding:10px 14px;border:1px solid var(--line-2);border-radius:10px;color:var(--muted);font-size:.92rem}.pr-feed b{color:#c9cbd4}
+  .pr-footerword{font-family:var(--font-display);font-size:clamp(2.4rem,8vw,5rem);line-height:1;letter-spacing:-.03em;font-weight:800}
+  @media(max-width:760px){.pr-intro{grid-template-columns:1fr}.pr-steps{grid-template-columns:1fr}.pr-coin{opacity:.5}.pr-hero{min-height:360px}}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main-content">跳至主要內容</a>
+
+<header class="site-header" data-header>
+  <div class="container header-inner">
+    <a class="brand" href="/"><span class="brand-mark" aria-hidden="true">LF</span><span class="brand-name"><strong>LuckyForge Lab</strong><span>幸運工坊</span></span></a>
+    <nav class="site-nav" id="primary-nav" aria-label="主要導覽">
+      <a href="/games/slots/">老虎機</a><a href="/games/fish-shooting/">捕魚機</a><a href="/games/baccarat/">百家樂</a><a href="/games/roulette/">輪盤</a><a href="/games/blackjack/">21 點</a><a href="/guides/">指南</a>
+      <a class="btn btn-primary btn-sm" href="/games/slots/">免費試玩</a>
+    </nav>
+    <div class="header-tools"></div>
+    <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="primary-nav" aria-label="開啟導覽選單"><span></span></button>
+  </div>
+</header>
+
+<main id="main-content">
+  <nav class="breadcrumbs" aria-label="麵包屑"><div class="container"><ol><li><a href="/">首頁</a></li><li><a href="/guides/">工程指南</a></li><li><span aria-current="page">介面示範</span></li></ol></div></nav>
+
+  <section class="section section--tight">
+    <div class="container">
+      <div class="pr-hero">
+        <span class="pr-coin c1" aria-hidden="true"></span><span class="pr-coin c2" aria-hidden="true"></span>
+        <span class="pr-coin c3" aria-hidden="true"></span><span class="pr-coin c4" aria-hidden="true"></span>
+        <h1><span>跑酷收集</span><em>虛擬點數</em></h1>
+        <p>這是一個<b>介面示範</b>：借用常見 iGaming 落地頁的視覺節奏——大字標題、懸浮代幣、明確 CTA——但全部改成純靜態、零外部請求、18+ 且<b>沒有任何真錢交易</b>。</p>
+        <button class="pr-cta" type="button" id="pr-collect">收集 10 點 <span aria-hidden="true">→</span></button>
+        <p class="pr-note" aria-live="polite">目前虛擬點數：<strong id="pr-points">0</strong> · 僅存於本頁記憶體，不持久化、不兌換</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="pr-intro-title">
+    <div class="container pr-intro">
+      <div class="pr-badge" aria-hidden="true"><span>LF<br>DEMO</span></div>
+      <div class="prose">
+        <span class="eyebrow">About this demo</span>
+        <h2 id="pr-intro-title">保留版型，抽掉變現</h2>
+        <p>原版网站以「玩遊戲賺硬幣 → PIX 提領現金」為核心；這個示範只保留它的資訊架構：<strong>Hero → 介紹 → 怎麼玩 → FAQ → Footer</strong>，並把所有會涉及金流的元素換成標示清楚的虛擬點數。</p>
+        <p>沒有註冊、沒有存款、沒有提款、沒有支付網關、沒有第三方分析，也不會彈出「某人剛提領多少錢」的假通知——那類 social proof 在真實產品中容易誤導使用者。</p>
+        <a class="btn btn-primary" href="/responsible-gaming/">查看責任遊戲說明</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tight" aria-labelledby="pr-steps-title">
+    <div class="container">
+      <h2 id="pr-steps-title">示範流程</h2>
+      <div class="pr-steps">
+        <div class="pr-step"><b>01 · 進入</b>從首頁或指南頁進入，沒有登入牆。</div>
+        <div class="pr-step"><b>02 · 收集</b>按「收集 10 點」，畫面只在本頁計數。</div>
+        <div class="pr-step"><b>03 · 結束</b>關閉分頁資料即消失；沒有餘額、沒有兌換。</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="pr-faq-title">
+    <div class="container">
+      <h2 id="pr-faq-title">常見問題</h2>
+      <div class="pr-faq">
+        <details open><summary>這些點數可以換錢嗎？</summary><p>不行。本頁所有點數都是純展示用的計數器，不 stored、不傳送到伺服器、沒有支付整合，也不能兌換任何有價物。這正是與原版站台最大的差異。</p></details>
+        <details><summary>為什麼要模仿那種版型？</summary><p>因為它是 iGaming 產業常見的轉換導向版面：大字承諾、懸浮代幣、強 CTA、FAQ 解除疑慮。理解了結構，才能辨識哪些元素是設計手法、哪些元素已經跨越到誤導或法規風險。</p></details>
+        <details><summary>有沒有 PHP／資料庫／API？</summary><p>完全沒有。本站是純靜態 HTML／CSS／JavaScript，可部署到任何靜態託管平台；原始碼中的 <code>conectarbanco.php</code>、<code>saque</code>、<code>webhook</code> 等都不存在於這個示範。</p></details>
+        <details><summary>适合未成年人嗎？</summary><p>不適合。本站標示 18+，僅供技術與介面研究。所有點數皆為虛擬，不構成賭博邀請或財務建議。</p></details>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tight" aria-labelledby="pr-feed-title">
+    <div class="container prose">
+      <h2 id="pr-feed-title">示範活動紀錄</h2>
+      <p>以下為<strong>靜態示範資料</strong>，不是即時提領通知，也不代表任何真實交易。</p>
+      <ul class="pr-feed">
+        <li><span>示範帳號 A · 收集虛擬點數</span><b>+10 pt</b></li>
+        <li><span>示範帳號 B · 完成一次試玩</span><b>+25 pt</b></li>
+        <li><span>示範帳號 C · 達成連續簽到</span><b>+15 pt</b></li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="pr-footerword">Points <span style="color:#9b8cff">Runner</span></div>
+    <p style="color:var(--muted);margin-top:12px">© <span data-current-year>2026</span> LuckyForge Lab（幸運工坊）· 18+ · 虛擬點數 · 無真錢交易 · <a href="/responsible-gaming/">請理性遊玩</a></p>
+  </div>
+</footer>
+
+<script type="module" src="/assets/js/site.js"></script>
+<script>
+  (function () {
+    var btn = document.getElementById('pr-collect');
+    var out = document.getElementById('pr-points');
+    var points = 0;
+    btn.addEventListener('click', function () {
+      points += 10;
+      out.textContent = String(points);
+      btn.setAttribute('aria-label', '再收集 10 點，目前 ' + points + ' 點');
+    });
+  })();
+</script>
+</body>
+</html>

@@ -35,6 +35,7 @@
 - [賭桌遊戲公平性與重連](https://luckyforge-lab.pages.dev/guides/table-games-fairness/)：RTP 基準、Fisher–Yates、SHA-256 指紋的侷限、seed commit-reveal、局單狀態機與冪等結算。
 - [HTML5 賭場遊戲效能與除錯](https://luckyforge-lab.pages.dev/guides/html5-casino-performance/)：devicePixelRatio、離屏快取、固定時間步、Web Audio 解鎖、WebGL context lost、記憶體洩漏與實測流程。
 - [5×3 滾輪控制器：狀態機與停輪物理](https://luckyforge-lab.pages.dev/guides/reel-controller/)：Idle → SpinUp → LoopScroll → SpinDown → Bounce → ResultShow 六狀態、每軸 200ms 依序減速、三次 Hermite 減速與超調回彈；結果由後端 5×3 矩陣與中獎線索引決定，客戶端不計算中獎。
+- [Points Runner 介面示範](https://luckyforge-lab.pages.dev/demos/points-runner/)：借用常見 iGaming 落地頁的 Hero／懸浮代幣／FAQ／雙色 Footer 版面節奏，改成純靜態、零外部請求、虛擬點數、18+ 的示範；沒有註冊、存款、提款、PIX、支付網關或假提領通知。
 
 ## 關於與政策
 

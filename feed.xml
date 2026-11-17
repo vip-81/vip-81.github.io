@@ -12,6 +12,16 @@
   </author>
   <rights>© 2026 LuckyForge Lab。引用請保留出處與連結。</rights>
   <entry>
+    <title>Points Runner：iGaming 落地頁的虚拟點數介面示範</title>
+    <link href="https://luckyforge-lab.pages.dev/demos/points-runner/" rel="alternate" type="text/html"/>
+    <id>https://luckyforge-lab.pages.dev/demos/points-runner/</id>
+    <published>2026-11-17T12:00:00+08:00</published>
+    <updated>2026-11-17T12:00:00+08:00</updated>
+    <summary type="text">借用常見 iGaming landing page 的 Hero、懸浮代幣、圖文 FAQ 與雙色 Footer 版面節奏，改成純靜態、零外部請求、虛擬點數、18+ 的示範；沒有存款、提款、PIX、支付網關或假提領通知。</summary>
+    <category term="Design"/>
+    <category term="Demo"/>
+  </entry>
+  <entry>
     <title>5×3 滾輪控制器：狀態機、200ms 依序減速與超調回彈</title>
     <link href="https://luckyforge-lab.pages.dev/guides/reel-controller/" rel="alternate" type="text/html"/>
     <id>https://luckyforge-lab.pages.dev/guides/reel-controller/</id>

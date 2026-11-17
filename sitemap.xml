@@ -79,6 +79,12 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://luckyforge-lab.pages.dev/demos/picks-dashboard/</loc>
+    <lastmod>2026-11-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://luckyforge-lab.pages.dev/about/</loc>
     <lastmod>2026-11-16</lastmod>
     <changefreq>yearly</changefreq>

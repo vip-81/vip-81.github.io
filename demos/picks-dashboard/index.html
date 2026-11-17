@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>document.documentElement.classList.add("js");</script>
+<title>Virtual Picks 儀表板：賠率分析介面的虛擬點數示範｜LuckyForge Lab</title>
+<meta name="description" content="借用 NBA ML picks 儀表板的深色資料表、期望值色階與信心度進度條，改成純靜態、零外部請求的虛擬點數資料可視化示範。沒有真實博彩公司、賠率、下注建議或金流。">
+<meta name="keywords" content="資料可視化,深色儀表板,信心度進度條,期望值色階,靜態示範,虛擬點數,18+,LuckyForge Lab">
+<meta name="robots" content="noindex,nofollow">
+<link rel="canonical" href="https://luckyforge-lab.pages.dev/demos/picks-dashboard/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="LuckyForge Lab 幸運工坊">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="Virtual Picks 儀表板：虚拟點數資料可視化示範">
+<meta property="og:description" content="深色資料表＋信心度進度條的介面示範；所有隊名、點數與模組皆為虛構。">
+<meta property="og:url" content="https://luckyforge-lab.pages.dev/demos/picks-dashboard/">
+<meta property="og:image" content="https://luckyforge-lab.pages.dev/assets/img/og-cover.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Virtual Picks 儀表板：虚拟點數資料可視化示範">
+<meta name="twitter:description" content="借用分析儀表板視覺，但沒有真實賠率與下注建議。">
+<meta name="twitter:image" content="https://luckyforge-lab.pages.dev/assets/img/og-cover.png">
+<link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/css/site.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "Virtual Picks 儀表板",
+  "description": "借用深色分析儀表板的期望值色階與信心度進度條，改成純靜態、零外部請求的虛擬點數資料可視化示範；沒有真實博彩公司、賠率、下注建議或金流。",
+  "inLanguage": "zh-Hant-TW",
+  "datePublished": "2026-11-17",
+  "dateModified": "2026-11-17",
+  "mainEntityOfPage": "https://luckyforge-lab.pages.dev/demos/picks-dashboard/",
+  "author": { "@type": "Organization", "name": "LuckyForge Lab 幸運工坊" }
+}
+</script>
+<style>
+  .vd-wrap{position:relative;isolation:isolate;background:#0b0e16;border:1px solid var(--line-2);border-radius:18px;padding:clamp(16px,3vw,28px);overflow:hidden}
+  .vd-wrap::before,.vd-wrap::after{content:"";position:absolute;left:10%;right:10%;height:220px;filter:blur(70px);opacity:.16;z-index:-1;pointer-events:none;background:linear-gradient(90deg,#4f46e5,#22d3ee)}
+  .vd-wrap::before{top:-120px;clip-path:polygon(73% 51%,91% 11%,100% 46%,97% 82%,75% 64%,55% 47%,46% 49%,50% 87%,21% 64%,0 100%,5% 51%,58% 0)}
+  .vd-wrap::after{bottom:-140px;transform:rotate(180deg);clip-path:polygon(73% 51%,91% 11%,100% 46%,97% 82%,75% 64%,55% 47%,46% 49%,50% 87%,21% 64%,0 100%,5% 51%,58% 0)}
+  .vd-title{font-family:var(--font-display);font-size:clamp(1.6rem,4vw,2.4rem);font-weight:700;color:#fff;margin:0 0 6px}
+  .vd-sub{color:var(--muted);font-size:.9rem;margin:0 0 22px}
+  .vd-scroll{overflow-x:auto;border:1px solid #2a3242;border-radius:14px;background:rgba(255,255,255,.03)}
+  .vd-table{width:100%;min-width:720px;border-collapse:collapse;color:#e7e9ef;font-size:.92rem}
+  .vd-table caption{text-align:left;padding:14px 16px;color:#aeb4c4;font-size:.85rem;border-bottom:1px solid #2a3242}
+  .vd-table th,.vd-table td{padding:12px 14px;text-align:left;border-bottom:1px solid #222a38;vertical-align:top}
+  .vd-table thead th{color:#c9cede;font-weight:700;font-size:.82rem;letter-spacing:.04em;background:rgba(255,255,255,.02)}
+  .vd-table tbody tr:last-child th,.vd-table tbody tr:last-child td{border-bottom:0}
+  .vd-team{display:block;font-weight:700;white-space:nowrap}.vd-team.at{color:#9ca3b8;font-weight:500}
+  .vd-mod{min-width:170px}
+  .vd-row{display:flex;align-items:baseline;gap:8px;margin-bottom:7px}
+  .vd-ev{font-variant-numeric:tabular-nums;font-weight:700;min-width:44px;display:inline-block}
+  .vd-bar{height:3px;border-radius:999px;background:rgba(255,255,255,.1);overflow:hidden;margin-top:3px}
+  .vd-bar span{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#6366f1,#22d3ee,#34d399)}
+  .vd-conf{font-size:.78rem;color:#aeb4c4;font-variant-numeric:tabular-nums}
+  .t-red{color:#f87171}.t-orange{color:#fb923c}.t-blue{color:#60a5fa}.t-indigo{color:#a5b4fc}.t-teal{color:#2dd4bf}.t-emerald{color:#34d399}.t-green{color:#4ade80}
+  .vd-note{margin-top:18px;padding:14px 16px;border-left:3px solid #6366f1;background:rgba(99,102,241,.08);border-radius:0 10px 10px 0;color:#c8cce0;font-size:.9rem;line-height:1.7}
+  .vd-legend{display:flex;flex-wrap:wrap;gap:10px;margin:16px 0 0;color:#aeb4c4;font-size:.8rem}
+  .vd-legend span{display:inline-flex;align-items:center;gap:6px}.vd-legend i{width:10px;height:10px;border-radius:3px;display:inline-block}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main-content">跳至主要內容</a>
+
+<header class="site-header" data-header>
+  <div class="container header-inner">
+    <a class="brand" href="/"><span class="brand-mark" aria-hidden="true">LF</span><span class="brand-name"><strong>LuckyForge Lab</strong><span>幸運工坊</span></span></a>
+    <nav class="site-nav" id="primary-nav" aria-label="主要導覽">
+      <a href="/games/slots/">老虎機</a><a href="/games/fish-shooting/">捕魚機</a><a href="/games/baccarat/">百家樂</a><a href="/games/roulette/">輪盤</a><a href="/games/blackjack/">21 點</a><a href="/guides/">指南</a>
+      <a class="btn btn-primary btn-sm" href="/games/slots/">免費試玩</a>
+    </nav>
+    <div class="header-tools"></div>
+    <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="primary-nav" aria-label="開啟導覽選單"><span></span></button>
+  </div>
+</header>
+
+<main id="main-content">
+  <nav class="breadcrumbs" aria-label="麵包屑"><div class="container"><ol><li><a href="/">首頁</a></li><li><a href="/guides/">工程指南</a></li><li><span aria-current="page">儀表板示範</span></li></ol></div></nav>
+
+  <header class="page-hero">
+    <div class="container">
+      <span class="eyebrow">Demo · Data visualization</span>
+      <h1>Virtual Picks：分析儀表板的虛擬點數示範</h1>
+      <p class="lead">借用 NBA ML picks 介面的三個視覺元素：<strong>深色資料表</strong>、<strong>期望值色階</strong>與<strong>信心度進度條</strong>。但所有隊名、模組、點數都是虛構的——沒有真實博彩公司、沒有賠率、沒有下注建議，也沒有任何金流。</p>
+    </div>
+  </header>
+
+  <section class="section section--tight" aria-labelledby="vd-board">
+    <div class="container">
+      <h2 id="vd-board" class="sr-only">虛擬分析資料表</h2>
+      <div class="vd-wrap">
+        <h3 class="vd-title">🏀 虛構聯賽 · 今日虚拟预测</h3>
+        <p class="vd-sub">示範資料 · 2026-11-17 · 三組虛構分析模組 · 全為虛擬點數</p>
+        <div class="vd-scroll">
+          <table class="vd-table">
+            <caption>下表為靜態示範資料；「預估點數」與「信心度」不代表任何真實賽事結果或投注建議。</caption>
+            <thead>
+              <tr>
+                <th scope="col">隊伍</th>
+                <th scope="col">分析模組 α</th>
+                <th scope="col">分析模組 β</th>
+                <th scope="col">分析模組 γ</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row"><span class="vd-team">北港鯊魚</span><span class="vd-team at">@ 南灣閃電</span></th>
+                <td class="vd-mod"><div class="vd-row"><span class="vd-ev" data-ev="8.5">+8.5</span><span class="vd-conf">78%</span></div><div class="vd-bar"><span style="width:78%"></span></div></td>
+                <td class="vd-mod"><div class="vd-row"><span class="vd-ev" data-ev="2.1">+2.1</span><span class="vd-conf">61%</span></div><div class="vd-bar"><span style="width:61%"></span></div></td>
+                <td class="vd-mod"><div class="vd-row"><span class="vd-ev" data-ev="-4.0">−4.0</span><span class="vd-conf">43%</span></div><div class="vd-bar"><span style="width:43%"></span></div></td>
+              </tr>
+              <tr>
+                <th scope="row"><span class="vd-team">山城烈焰</span><span class="vd-team at">@ 湖畔機械</span></th>
+                <td class="vd-mod"><div class="vd-row"><span class="vd-ev" data-ev="-9.2">−9.2</span><span class="vd-conf">35%</span></div><div class="vd-bar"><span style="width:35%"></span></div></td>
+                <td class="vd-mod"><div class="vd-row"><span class="vd-ev" data-ev="5.6">+5.6</span><span class="vd-conf">72%</span></div><div class="vd-bar"><span style="width:72%"></span></div></td>
+                <td class="vd-mod"><div class="vd-row"><span class="vd-ev" data-ev="1.2">+1.2</span><span class="vd-conf">56%</span></div><div class="vd-bar"><span style="width:56%"></span></div></td>
+              </tr>
+              <tr>
+                <th scope="row"><span class="vd-team">沙漠流星</span><span class="vd-team at">@ 海峽守衛</span></th>
+                <td class="vd-mod"><div class="vd-row"><span class="vd-ev" data-ev="11.3">+11.3</span><span class="vd-conf">84%</span></div><div class="vd-bar"><span style="width:84%"></span></div></td>
+                <td class="vd-mod"><div class="vd-row"><span class="vd-ev" data-ev="7.8">+7.8</span><span class="vd-conf">69%</span></div><div class="vd-bar"><span style="width:69%"></span></div></td>
+                <td class="vd-mod"><div class="vd-row"><span class="vd-ev" data-ev="-1.5">−1.5</span><span class="vd-conf">48%</span></div><div class="vd-bar"><span style="width:48%"></span></div></td>
+              </tr>
+              <tr>
+                <th scope="row"><span class="vd-team">極光理論</span><span class="vd-team at">@ 鋼鐵搖滾</span></th>
+                <td class="vd-mod"><div class="vd-row"><span class="vd-ev" data-ev="0.4">+0.4</span><span class="vd-conf">52%</span></div><div class="vd-bar"><span style="width:52%"></span></div></td>
+                <td class="vd-mod"><div class="vd-row"><span class="vd-ev" data-ev="-6.7">−6.7</span><span class="vd-conf">39%</span></div><div class="vd-bar"><span style="width:39%"></span></div></td>
+                <td class="vd-mod"><div class="vd-row"><span class="vd-ev" data-ev="9.1">+9.1</span><span class="vd-conf">76%</span></div><div class="vd-bar"><span style="width:76%"></span></div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="vd-legend" aria-label="色階說明">
+          <span><i style="background:#f87171"></i>低於 50%</span>
+          <span><i style="background:#fb923c"></i>50–59%</span>
+          <span><i style="background:#60a5fa"></i>60–64%</span>
+          <span><i style="background:#a5b4fc"></i>65–69%</span>
+          <span><i style="background:#2dd4bf"></i>70–74%</span>
+          <span><i style="background:#34d399"></i>75–80%</span>
+          <span><i style="background:#4ade80"></i>81% 以上</span>
+        </div>
+        <div class="vd-note">
+          <strong>這是介面研究，不是投注工具。</strong>原版以真實賠率與 Expected Value 驅動下注決策；
+          這裡把「賠率」換成「虛擬點數」、把博彩公司換成「分析模組」、把球隊與數值全部虛構化，
+          只保留色彩與進度條的視覺規則。任何數值都不可替代獨立判斷，也不構成任何投注建議。
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="vd-how">
+    <div class="container prose">
+      <h2 id="vd-how">從原版借了什麼、改了什麼</h2>
+      <ul>
+        <li><strong>保留：</strong>深色玻璃感資料表、依數值變色的文字、信心度漸層進度條、模糊光暈背景。</li>
+        <li><strong>移除：</strong>Fanduel／DraftKings／BetMGM 等真實博彩品牌、真實賠率、EV 下注門檻、Kelly 注碼建議。</li>
+        <li><strong>替換：</strong>球隊與賽事改為虛構；賠率改為「預估點數」；博彩公司改為「分析模組」；所有資料寫死在 HTML，不呼叫任何 API。</li>
+      </ul>
+      <p>想看更完整的狀態機與物理設計，可參考 <a href="/guides/reel-controller/">5×3 滾輪控制器</a>；想了解責任遊戲界線，請見 <a href="/responsible-gaming/">責任遊戲</a>。</p>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <p style="color:var(--muted)">© <span data-current-year>2026</span> LuckyForge Lab（幸運工坊）· 18+ · 虛擬點數 · 無真錢交易 · <a href="/responsible-gaming/">請理性遊玩</a></p>
+  </div>
+</footer>
+
+<script type="module" src="/assets/js/site.js"></script>
+<script>
+  // 重現原版的色階規則，但只作用在虛構的「預估點數」上
+  (function () {
+    function evClass(v) {
+      if (v < -15) return 't-red';
+      if (v <= 0) return 't-orange';
+      if (v <= 5) return 't-emerald';
+      return 't-green';
+    }
+    document.querySelectorAll('.vd-ev').forEach(function (el) {
+      el.classList.add(evClass(parseFloat(el.getAttribute('data-ev'))));
+    });
+  })();
+</script>
+</body>
+</html>

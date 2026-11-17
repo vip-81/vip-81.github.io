@@ -12,6 +12,16 @@
   </author>
   <rights>© 2026 LuckyForge Lab。引用請保留出處與連結。</rights>
   <entry>
+    <title>Virtual Picks：分析儀表板的虚拟點數示範</title>
+    <link href="https://luckyforge-lab.pages.dev/demos/picks-dashboard/" rel="alternate" type="text/html"/>
+    <id>https://luckyforge-lab.pages.dev/demos/picks-dashboard/</id>
+    <published>2026-11-17T13:00:00+08:00</published>
+    <updated>2026-11-17T13:00:00+08:00</updated>
+    <summary type="text">借用深色資料表、期望值色階與信心度進度條，改成虛構隊名與虛擬點數的靜態示範；沒有真實博彩公司、賠率、下注建議或 API 請求。</summary>
+    <category term="Design"/>
+    <category term="Demo"/>
+  </entry>
+  <entry>
     <title>Points Runner：iGaming 落地頁的虚拟點數介面示範</title>
     <link href="https://luckyforge-lab.pages.dev/demos/points-runner/" rel="alternate" type="text/html"/>
     <id>https://luckyforge-lab.pages.dev/demos/points-runner/</id>

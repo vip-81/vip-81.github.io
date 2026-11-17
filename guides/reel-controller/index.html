@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>document.documentElement.classList.add("js");</script>
+<title>5×3 滾輪控制器：啟動、依序減速、超調回彈與結果透傳｜LuckyForge Lab</title>
+<meta name="description" content="以純 JavaScript 實作 5 軸 3 行滾輪控制器：Idle → SpinUp → LoopScroll → SpinDown → Bounce → ResultShow 狀態機、每軸 200ms 依序減速、向下超調再回彈，並由後端矩陣決定結果，客戶端不計算中獎。">
+<meta name="keywords" content="老虎機滾輪控制器,5x3 Reels,狀態機,SpinUp,LoopScroll,SpinDown,Bounce,Overshoot,Hermite,後端決定結果,純JavaScript">
+<meta name="robots" content="noindex,nofollow">
+<link rel="canonical" href="https://luckyforge-lab.pages.dev/guides/reel-controller/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="LuckyForge Lab 幸運工坊">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="5×3 滾輪控制器：啟動、依序減速、超調回彈與結果透傳">
+<meta property="og:description" content="純 JavaScript 滾輪控制器設計：六狀態 FSM、200ms 依序停輪、Hermite 減速與超調回彈，結果完全由後端矩陣決定。">
+<meta property="og:url" content="https://luckyforge-lab.pages.dev/guides/reel-controller/">
+<meta property="og:image" content="https://luckyforge-lab.pages.dev/assets/img/og-cover.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="5×3 滾輪控制器：狀態機、200ms 依序減速與回彈">
+<meta name="twitter:description" content="純 JS 控制器，提供每幀位移資料；不計算中獎，結果由後端矩陣與中獎線索引決定。">
+<meta name="twitter:image" content="https://luckyforge-lab.pages.dev/assets/img/og-cover.png">
+<link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/css/site.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "5×3 滾輪控制器：啟動、依序減速、超調回彈與結果透傳",
+  "description": "純 JavaScript 實作 5 軸 3 行滾輪控制器：Idle → SpinUp → LoopScroll → SpinDown → Bounce → ResultShow 狀態機、每軸 200ms 依序減速、向下超調再回彈，結果由後端矩陣決定。",
+  "inLanguage": "zh-Hant-TW",
+  "datePublished": "2026-11-17",
+  "dateModified": "2026-11-17",
+  "mainEntityOfPage": "https://luckyforge-lab.pages.dev/guides/reel-controller/",
+  "author": { "@type": "Organization", "name": "LuckyForge Lab 幸運工坊" },
+  "publisher": { "@type": "Organization", "name": "LuckyForge Lab 幸運工坊" }
+}
+</script>
+</head>
+<body>
+<a class="skip-link" href="#main-content">跳至主要內容</a>
+
+<header class="site-header" data-header>
+  <div class="container header-inner">
+    <a class="brand" href="/"><span class="brand-mark" aria-hidden="true">LF</span><span class="brand-name"><strong>LuckyForge Lab</strong><span>幸運工坊</span></span></a>
+    <nav class="site-nav" id="primary-nav" aria-label="主要導覽">
+      <a href="/games/slots/">老虎機</a>
+      <a href="/games/fish-shooting/">捕魚機</a>
+      <a href="/games/baccarat/">百家樂</a>
+      <a href="/games/roulette/">輪盤</a>
+      <a href="/games/blackjack/">21 點</a>
+      <a href="/guides/" aria-current="page">指南</a>
+      <a class="btn btn-primary btn-sm" href="/games/slots/">免費試玩</a>
+    </nav>
+    <div class="header-tools"></div>
+    <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="primary-nav" aria-label="開啟導覽選單"><span></span></button>
+  </div>
+</header>
+
+<main id="main-content">
+  <nav class="breadcrumbs" aria-label="麵包屑">
+    <div class="container"><ol><li><a href="/">首頁</a></li><li><a href="/guides/">工程指南</a></li><li><span aria-current="page">5×3 滾輪控制器</span></li></ol></div>
+  </nav>
+
+  <header class="page-hero">
+    <div class="container">
+      <span class="eyebrow">Guide 05 · Slots core engineering</span>
+      <h1>5×3 滾輪控制器：啟動、依序減速、超調回彈與結果透傳</h1>
+      <p class="lead">這篇給出一個不綁定渲染引擎的滾輪控制器：純 JavaScript、每幀回傳位移資料，用六狀態 FSM 管理流程。五軸由左到右每 200ms 開始減速，停輪時先向下超調再向上回彈對齊。最重要的是：<strong>控制器不計算中獎</strong>，矩陣與中獎線索引全部由後端給定，前端只是把滾輪帶到指定位置。</p>
+      <div class="page-meta"><span>最後更新 <time datetime="2026-11-17">2026-11-17</time></span><span class="dot" aria-hidden="true"></span><span>閱讀約 10 分鐘</span><span class="dot" aria-hidden="true"></span><span>18+ · 技術教學</span></div>
+      <div class="key-takeaway">
+        <strong>先說結論</strong>
+        <p>把「結果」與「動畫」拆開：後端先給 5×3 矩陣與中獎線，控制器只做時間軸與位移。減速用三次 Hermite 讓起速與最大速度連續，回彈用 <code>sin(πu)·(1−u)</code> 製造超調後收斂。客戶端沒有任何一步會重新計算賠付線。</p>
+      </div>
+    </div>
+  </header>
+
+  <section class="section section--tight">
+    <div class="container article-layout">
+      <article class="prose">
+        <h2 id="fsm">六狀態狀態機</h2>
+        <p>流程固定為 <code>Idle → SpinUp → LoopScroll → SpinDown → Bounce → ResultShow</code>。全域狀態由時間軸決定，單軸另有更細的 <code>spinUp / loop / spinDown / bounce / locked</code> 階段，方便渲染層個別處理。</p>
+        <div class="table-wrap"><table class="data">
+          <thead><tr><th>狀態</th><th>觸發</th><th>允許動作</th></tr></thead>
+          <tbody>
+            <tr><td>Idle</td><td>初始／reset()</td><td>start()</td></tr>
+            <tr><td>SpinUp</td><td>0 → spinUpMs</td><td>速度由 0 加速到 maxVelocity</td></tr>
+            <tr><td>LoopScroll</td><td>spinUpMs → 第一軸減速點</td><td>等速滾動，至少 minLoopMs</td></tr>
+            <tr><td>SpinDown</td><td>軸 0 開始減速</td><td>軸 i 於 <code>spinUp + minLoop + 200×i</code> 開始減速</td></tr>
+            <tr><td>Bounce</td><td>軸 4 減速結束</td><td>向下超調 → 回彈對齊</td></tr>
+            <tr><td>ResultShow</td><td>全部軸鎖定</td><td>只回傳後端 payload，不判定中獎</td></tr>
+          </tbody>
+        </table></div>
+
+        <h2 id="physics">減速與回彈的物理</h2>
+        <p>加速段用 <code>v(t)=vmax·u²</code>，積分得到位置 <code>p=vmax·T·u³/3</code>，起手不會瞬移。減速段用三次 Hermite，指定起點 <code>p₀</code>、終點 <code>p₁</code>、起始速度 <code>v₀</code> 與結束速度 0：</p>
+        <pre><code>p = h₀₀p₀ + h₁₀(v₀T) + h₀₁p₁
+v = [h₀₀′p₀ + h₁₀′(v₀T) + h₀₁′p₁] / T</code></pre>
+        <p>為避免 Hermite 在距離過短時出現倒退，停位距離會補上整圈直到 <code>D ≥ v₀·T/2</code>。回彈用 <code>p = p₁ + overshoot·sin(πu)·(1−u)</code>：<code>u=0</code> 與 <code>u=1</code> 時皆為 0，最大值約在 <code>u≈0.3</code>，形成「向下超調再向上對齊」的手感。</p>
+        <div class="callout"><strong>重要：</strong>超調只改變顯示座標，最終鎖定位置一定是後端指定的 strip 索引。即使掉幀、切背景或開啟減少動態，最終符號仍一致。</div>
+
+        <h2 id="no-client-win">嚴格禁止客戶端計算中獎</h2>
+        <p>控制器完全不知道賠付表。它接收：<code>matrix</code>（5 軸 × 3 行結果）、<code>paylines</code>（後端回傳的中獎線索引）、<code>seed</code>，以及選擇性的 <code>stopIndices</code>。它輸出的是同一份資料的唯讀副本，不會比對符號、不會加總倍率、不會改寫 <code>paylines</code>。</p>
+        <pre><code>const controller = createReelController({ staggerMs: 200 });
+const frame = controller.start({
+  matrix: [[A,B,C],[B,C,D],[E,A,B],[C,D,A],[B,B,C]],
+  paylines: [1, 8],   // 後端決定，前端只顯示
+  seed: 42,
+}, performance.now());</code></pre>
+        <p>若 strip 中找不到後端指定的三格連續視窗，控制器只在<strong>該軸的本地副本</strong>上把視窗釘成後端值，並不回寫共享 strip，也不會影響其他軸——這是視覺對齊，不是結果運算。</p>
+
+        <h2 id="api">每幀資料格式</h2>
+        <p><code>update(now)</code> 回傳 <code>{ state, elapsedMs, reels, result }</code>。每個 reel 含 <code>position</code>（symbol 單位的連續位置）、<code>fraction</code>、<code>offsetPx</code>（渲染用 translateY）、<code>velocity</code>、<code>phase</code>、<code>stopped</code>、<code>visible</code>（目前三格）與 <code>targetIndex</code>。呼叫端可自行決定用 Canvas、DOM 或 WebGL 呈現。</p>
+        <p>模組位於 <code>/assets/js/lib/reel-controller.js</code>，另有 <code>reel-controller.d.ts</code> 提供 TypeScript 型別。</p>
+
+        <h2 id="demo">互動示範</h2>
+        <p>下方可實際執行。每次按下按鈕，都會向「模擬後端」取一份固定資料（矩陣＋中獎線索引），再交給控制器播放；右側即時顯示目前的狀態與五軸位移資料。</p>
+      </article>
+
+      <aside class="article-aside">
+        <div class="toc"><strong>本文導覽</strong>
+          <a href="#fsm">六狀態狀態機</a>
+          <a href="#physics">減速與回彈的物理</a>
+          <a href="#no-client-win">嚴禁客戶端計算中獎</a>
+          <a href="#api">每幀資料格式</a>
+          <a href="#demo">互動示範</a>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section section--tight" aria-labelledby="demo-title">
+    <div class="container">
+      <h2 id="demo-title">即時控制器監測</h2>
+      <div class="demo-panel" style="display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:24px;align-items:start">
+        <div>
+          <canvas id="reel-canvas" width="750" height="300" role="img" aria-label="五軸滾輪控制器即時示範" style="width:100%;height:auto;border:1px solid var(--line-2);border-radius:14px;background:#0c1018"></canvas>
+          <p style="margin-top:12px"><button class="btn btn-primary" type="button" id="demo-spin">向後端索取結果並旋轉</button></p>
+        </div>
+        <div class="prose" aria-live="polite">
+          <p>全域狀態：<strong id="demo-state" style="color:#9cf">Idle</strong></p>
+          <p>經過時間：<span id="demo-time">0</span> ms</p>
+          <p>後端中獎線索引：<span id="demo-lines">—</span>（僅透傳，不重新計算）</p>
+          <div class="table-wrap"><table class="data">
+            <thead><tr><th>軸</th><th>position</th><th>velocity</th><th>phase</th></tr></thead>
+            <tbody id="demo-rows"></tbody>
+          </table></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-main">
+    <div class="footer-brand"><a class="brand" href="/"><span class="brand-mark" aria-hidden="true">LF</span><span class="brand-name"><strong>LuckyForge Lab</strong><span>幸運工坊</span></span></a><p>純前端 HTML5 賭場遊戲實驗室。所有點數皆為虛擬點數。</p></div>
+    <div class="footer-col"><strong>遊戲</strong><a href="/games/slots/">老虎機</a><a href="/games/fish-shooting/">捕魚機</a><a href="/games/baccarat/">百家樂</a><a href="/games/roulette/">輪盤</a><a href="/games/blackjack/">21 點</a></div>
+    <div class="footer-col"><strong>指南</strong><a href="/guides/">工程指南</a><a href="/guides/slots-fsm-reel-physics/">FSM 與滾輪物理</a><a href="/guides/reel-controller/">5×3 滾輪控制器</a><a href="/guides/html5-casino-performance/">效能與除錯</a></div>
+    <div class="footer-col"><strong>政策</strong><a href="/about/">關於我們</a><a href="/responsible-gaming/">責任遊戲</a><a href="/accessibility/">無障礙</a><a href="/privacy/">隱私與資料</a></div>
+  </div>
+  <div class="container footer-bottom"><p>© <span data-current-year>2026</span> LuckyForge Lab（幸運工坊）。18+ · 虛擬籌碼 · 無真錢交易。</p></div>
+</footer>
+
+<script type="module" src="/assets/js/site.js"></script>
+<script type="module">
+  import { createReelController, REEL_COUNT } from '/assets/js/lib/reel-controller.js';
+
+  // 模擬後端：固定資料，前端不產生、不計算結果
+  const MOCK_BACKEND = [
+    { matrix: [['A','B','C'],['B','C','D'],['E','A','B'],['C','D','A'],['B','B','C']], paylines: [1, 3, 8], seed: 42 },
+    { matrix: [['D','A','E'],['C','B','A'],['A','D','C'],['E','E','B'],['C','A','D']], paylines: [2, 5], seed: 77 },
+    { matrix: [['B','C','A'],['A','E','D'],['D','B','C'],['C','A','E'],['E','D','B']], paylines: [0], seed: 19 },
+  ];
+  let backendIndex = 0;
+
+  const canvas = document.getElementById('reel-canvas');
+  const ctx = canvas.getContext('2d');
+  const stateEl = document.getElementById('demo-state');
+  const timeEl = document.getElementById('demo-time');
+  const linesEl = document.getElementById('demo-lines');
+  const rowsEl = document.getElementById('demo-rows');
+  const spinBtn = document.getElementById('demo-spin');
+
+  const SYMBOL_COLORS = { A:'#6c5ce7', B:'#00b894', C:'#fdcb6e', D:'#e17055', E:'#74b9ff' };
+  const controller = createReelController({ symbolHeight: 84 });
+  let raf = 0;
+  let lastPayload = null;
+
+  function draw(frame) {
+    const W = canvas.width, H = canvas.height;
+    ctx.fillStyle = '#0c1018'; ctx.fillRect(0, 0, W, H);
+    const reelW = W / REEL_COUNT;
+    const rowH = H / 3;
+    for (let i = 0; i < REEL_COUNT; i++) {
+      const r = frame.reels[i];
+      ctx.fillStyle = i % 2 ? '#101725' : '#0e1420';
+      ctx.fillRect(i * reelW + 2, 0, reelW - 4, H);
+      for (let row = 0; row < 3; row++) {
+        const sym = r.visible[row];
+        const y = row * rowH + r.offsetPx;
+        ctx.fillStyle = SYMBOL_COLORS[sym] || '#555';
+        ctx.fillRect(i * reelW + 14, y + 8, reelW - 28, rowH - 16);
+        ctx.fillStyle = '#070a10';
+        ctx.font = '700 28px system-ui, sans-serif';
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText(sym, i * reelW + reelW / 2, y + rowH / 2);
+      }
+      ctx.strokeStyle = r.stopped ? '#6c5ce7' : '#263049';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(i * reelW + 2, 0, reelW - 4, H);
+    }
+  }
+
+  function renderInfo(frame) {
+    stateEl.textContent = frame.state;
+    timeEl.textContent = Math.round(frame.elapsedMs);
+    linesEl.textContent = lastPayload ? lastPayload.paylines.join(', ') : '—';
+    rowsEl.innerHTML = frame.reels.map(r =>
+      `<tr><td>${r.index}</td><td>${r.position.toFixed(3)}</td><td>${r.velocity.toFixed(2)}</td><td>${r.phase}</td></tr>`
+    ).join('');
+  }
+
+  function loop(now) {
+    const frame = controller.update(now);
+    draw(frame);
+    renderInfo(frame);
+    if (frame.state !== 'ResultShow') raf = requestAnimationFrame(loop);
+    else { raf = 0; spinBtn.disabled = false; }
+  }
+
+  spinBtn.addEventListener('click', () => {
+    if (raf) return;
+    spinBtn.disabled = true;
+    lastPayload = MOCK_BACKEND[backendIndex % MOCK_BACKEND.length];
+    backendIndex++;
+    controller.start(lastPayload, performance.now());
+    cancelAnimationFrame(raf);
+    raf = requestAnimationFrame(loop);
+  });
+
+  draw(controller.update(performance.now()));
+  renderInfo(controller.update(performance.now()));
+</script>
+</body>
+</html>

@@ -34,6 +34,7 @@
 - [捕魚機 AI 與碰撞](https://luckyforge-lab.pages.dev/guides/fish-shooting-ai-collision/)：Boids、路徑約束、固定時間步、物件池上限、掃掠碰撞、砲台倍率與伺服器權威。
 - [賭桌遊戲公平性與重連](https://luckyforge-lab.pages.dev/guides/table-games-fairness/)：RTP 基準、Fisher–Yates、SHA-256 指紋的侷限、seed commit-reveal、局單狀態機與冪等結算。
 - [HTML5 賭場遊戲效能與除錯](https://luckyforge-lab.pages.dev/guides/html5-casino-performance/)：devicePixelRatio、離屏快取、固定時間步、Web Audio 解鎖、WebGL context lost、記憶體洩漏與實測流程。
+- [5×3 滾輪控制器：狀態機與停輪物理](https://luckyforge-lab.pages.dev/guides/reel-controller/)：Idle → SpinUp → LoopScroll → SpinDown → Bounce → ResultShow 六狀態、每軸 200ms 依序減速、三次 Hermite 減速與超調回彈；結果由後端 5×3 矩陣與中獎線索引決定，客戶端不計算中獎。
 
 ## 關於與政策
 

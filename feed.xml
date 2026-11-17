@@ -12,6 +12,16 @@
   </author>
   <rights>© 2026 LuckyForge Lab。引用請保留出處與連結。</rights>
   <entry>
+    <title>Virtual API Hub：API 聚合器介面的虚拟示範</title>
+    <link href="https://luckyforge-lab.pages.dev/demos/api-aggregator/" rel="alternate" type="text/html"/>
+    <id>https://luckyforge-lab.pages.dev/demos/api-aggregator/</id>
+    <published>2026-11-17T14:00:00+08:00</published>
+    <updated>2026-11-17T14:00:00+08:00</updated>
+    <summary type="text">借用 iGaming API 聚合器 README 的 Hero、功能清單、類別表與 FAQ 架構，改成虛構產品與純靜態說明；沒有真實供應商、API Key、白牌方案、金流或外部請求。</summary>
+    <category term="Design"/>
+    <category term="Demo"/>
+  </entry>
+  <entry>
     <title>Virtual Picks：分析儀表板的虚拟點數示範</title>
     <link href="https://luckyforge-lab.pages.dev/demos/picks-dashboard/" rel="alternate" type="text/html"/>
     <id>https://luckyforge-lab.pages.dev/demos/picks-dashboard/</id>

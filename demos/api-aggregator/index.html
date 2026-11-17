@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>document.documentElement.classList.add("js");</script>
+<title>Virtual API Hub：博弈 API 聚合器介面的虛擬點數示範｜LuckyForge Lab</title>
+<meta name="description" content="借用 iGaming API 聚合器 README 的資訊架構（Hero、功能清單、遊戲類別表、FAQ），改成虛構產品與純靜態說明頁。沒有真實供應商、API Key、白牌方案、金流或外部請求。">
+<meta name="keywords" content="API 聚合器,靜態示範,虛擬點數,API 文件介面,虛構產品,18+,LuckyForge Lab">
+<meta name="robots" content="noindex,nofollow">
+<link rel="canonical" href="https://luckyforge-lab.pages.dev/demos/api-aggregator/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="LuckyForge Lab 幸運工坊">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="Virtual API Hub：API 聚合器介面的虚拟示範">
+<meta property="og:description" content="借用商業 API 聚合器的文件結構，改成虛構產品的純靜態示範；沒有真實供應商、金流或外部請求。">
+<meta property="og:url" content="https://luckyforge-lab.pages.dev/demos/api-aggregator/">
+<meta property="og:image" content="https://luckyforge-lab.pages.dev/assets/img/og-cover.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Virtual API Hub：API 聚合器介面示範">
+<meta name="twitter:description" content="虛構產品、靜態文件、零外部請求。">
+<meta name="twitter:image" content="https://luckyforge-lab.pages.dev/assets/img/og-cover.png">
+<link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/css/site.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "Virtual API Hub",
+  "description": "借用 iGaming API 聚合器 README 的資訊架構，改成虛構產品與純靜態說明頁；沒有真實供應商、API Key、白牌方案、金流或外部請求。",
+  "inLanguage": "zh-Hant-TW",
+  "datePublished": "2026-11-17",
+  "dateModified": "2026-11-17",
+  "mainEntityOfPage": "https://luckyforge-lab.pages.dev/demos/api-aggregator/",
+  "author": { "@type": "Organization", "name": "LuckyForge Lab 幸運工坊" }
+}
+</script>
+<style>
+  .ah-hero{position:relative;overflow:hidden;border:1px solid var(--line-2);border-radius:18px;padding:clamp(28px,6vw,64px);background:linear-gradient(135deg,#111827 0%,#0b0e16 60%,#131026 100%)}
+  .ah-hero::after{content:"";position:absolute;inset:auto -10% -60% 40%;height:260px;filter:blur(70px);opacity:.18;background:linear-gradient(90deg,#6366f1,#22d3ee);z-index:0;pointer-events:none}
+  .ah-hero>*{position:relative;z-index:1}
+  .ah-eyebrow{display:inline-block;padding:5px 12px;border:1px solid #3b4260;border-radius:999px;color:#a5b4fc;font-size:.78rem;letter-spacing:.06em}
+  .ah-hero h1{font-family:var(--font-display);font-size:clamp(2rem,5vw,3.4rem);line-height:1.1;margin:18px 0 12px}
+  .ah-hero p{color:var(--muted);max-width:60ch;line-height:1.85}
+  .ah-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:26px}
+  .ah-card{border:1px solid var(--line-2);border-radius:14px;padding:18px;background:var(--panel)}
+  .ah-card b{display:block;color:#a5b4fc;margin-bottom:6px}
+  .ah-card span{color:var(--muted);font-size:.9rem;line-height:1.7}
+  .ah-code{background:#080b11;border:1px solid var(--line-2);border-radius:14px;padding:18px;overflow-x:auto;color:#c7d2fe;font-size:.88rem;line-height:1.7}
+  .ah-note{border-left:3px solid #6366f1;background:rgba(99,102,241,.08);padding:14px 16px;border-radius:0 10px 10px 0;color:#c8cce0;line-height:1.8}
+  .ah-faq details{border:1px solid var(--line-2);border-radius:12px;padding:14px 18px;background:var(--panel);margin-bottom:10px}
+  .ah-faq summary{cursor:pointer;font-weight:700;list-style:none}
+  .ah-faq summary::-webkit-details-marker{display:none}
+  .ah-faq summary::before{content:"?";display:inline-grid;place-items:center;width:20px;height:20px;margin-right:10px;border-radius:50%;background:#312e81;color:#c7d2fe;font-size:.75rem}
+  .ah-faq p{margin:12px 0 0;color:var(--muted);line-height:1.8}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main-content">跳至主要內容</a>
+
+<header class="site-header" data-header>
+  <div class="container header-inner">
+    <a class="brand" href="/"><span class="brand-mark" aria-hidden="true">LF</span><span class="brand-name"><strong>LuckyForge Lab</strong><span>幸運工坊</span></span></a>
+    <nav class="site-nav" id="primary-nav" aria-label="主要導覽">
+      <a href="/games/slots/">老虎機</a><a href="/games/fish-shooting/">捕魚機</a><a href="/games/baccarat/">百家樂</a><a href="/games/roulette/">輪盤</a><a href="/games/blackjack/">21 點</a><a href="/guides/">指南</a>
+      <a class="btn btn-primary btn-sm" href="/games/slots/">免費試玩</a>
+    </nav>
+    <div class="header-tools"></div>
+    <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="primary-nav" aria-label="開啟導覽選單"><span></span></button>
+  </div>
+</header>
+
+<main id="main-content">
+  <nav class="breadcrumbs" aria-label="麵包屑"><div class="container"><ol><li><a href="/">首頁</a></li><li><a href="/guides/">工程指南</a></li><li><span aria-current="page">API 聚合器示範</span></li></ol></div></nav>
+
+  <section class="section section--tight">
+    <div class="container">
+      <div class="ah-hero">
+        <span class="ah-eyebrow">DEMO · FICTIONAL PRODUCT</span>
+        <h1>Virtual API Hub</h1>
+        <p>這是一個<strong>虛構的 API 聚合器文件頁</strong>，借用商業 iGaming API README 的資訊架構：一句話定位 → 功能清單 → 類別表 → 常見問題。所有產品名、端點、供應商與數據都是虛構的，用來示範如何辨識「文件文案」與「實際可驗證的技術能力」。</p>
+        <div class="ah-grid">
+          <div class="ah-card"><b>virtual-slots API</b><span>虛構的老虎機端點，只在本頁以文字呈現。</span></div>
+          <div class="ah-card"><b>virtual-table API</b><span>虛構的桌面遊戲端點，無實際服務。</span></div>
+          <div class="ah-card"><b>virtual-mini API</b><span>虛構的小遊戲端點，沒有外部請求。</span></div>
+          <div class="ah-card"><b>operator panel</b><span>虛構的管理面板示意，沒有登入與憑證。</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="ah-cats">
+    <div class="container prose">
+      <h2 id="ah-cats">虛構產品類別</h2>
+      <div class="table-wrap"><table class="data">
+        <thead><tr><th scope="col">類別</th><th scope="col">範例（全為虛構）</th><th scope="col">說明</th></tr></thead>
+        <tbody>
+          <tr><td>老虎機</td><td>Lucky Reels、Neon Blocks</td><td>只借用「多款遊戲統一入口」的架構概念。</td></tr>
+          <tr><td>桌面遊戲</td><td> Virtual Baccarat、Virtual Wheel</td><td>對應本站已有的五款靜態示範，但不提供 API。</td></tr>
+          <tr><td>小遊戲</td><td>Minesweeper Mini、Dice Demo</td><td>純文字列舉，不可呼叫。</td></tr>
+          <tr><td>管理面板</td><td>Reports、Settlement</td><td>象徵性欄位；沒有會員、權限或金流。</td></tr>
+        </tbody>
+      </table></div>
+      <h2>端點示意（不可呼叫）</h2>
+      <pre class="ah-code"># 以下全部是虛構字串，本頁不會發出任何請求
+GET  /v1/virtual/slots/catalog
+GET  /v1/virtual/table/rounds
+POST /v1/virtual/mini/start
+GET  /v1/virtual/reports/summary
+
+#  no API key · no network · no real provider</pre>
+      <div class="ah-note">
+        <strong>這是文件結構研究，不是服務。</strong>原版 README 列舉真實供應商與白牌方案；
+        這裡把品牌、端點、類別全部虛構化，只保留「單一入口整合多類產品」的資訊設計。
+        本頁不收集 API Key、不連線第三方、不提供註冊或金流，也不構成任何採購建議。
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tight" aria-labelledby="ah-faq-title">
+    <div class="container">
+      <h2 id="ah-faq-title">常見問題</h2>
+      <div class="ah-faq">
+        <details open><summary>什麼是「API 聚合器」？（沿用原版問題，改為中性說明）</summary><p>它是一種架構概念：把多個產品類別的包裝成一致的介面，讓呼叫端不必逐一对接。本頁只示範這個概念如何被寫成文件，不提供任何實際服務。</p></details>
+        <details><summary>支援哪些產品？</summary><p>在此頁面上：全部虛構。真實平台可能涵蓋老虎機、桌面遊戲、體育或彩票，但那些都涉及授權、金流與法規，不在本示範範圍。</p></details>
+        <details><summary>有白牌方案嗎？</summary><p>沒有。本站所有點數皆為虛擬，18+，不提供品牌授權、營運後台或任何變現工具。詳見 <a href="/responsible-gaming/">責任遊戲</a>。</p></details>
+        <details><summary>可以把這裡的端點拿去用嗎？</summary><p>不行，它們不存在。若你想學真正可運行的設計，請看 <a href="/guides/reel-controller/">5×3 滾輪控制器</a> 與 <a href="/guides/html5-casino-performance/">效能與除錯</a>。</p></details>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <p style="color:var(--muted)">© <span data-current-year>2026</span> LuckyForge Lab（幸運工坊）· 18+ · 虛擬點數 · 無真錢交易 · <a href="/responsible-gaming/">請理性遊玩</a></p>
+  </div>
+</footer>
+
+<script type="module" src="/assets/js/site.js"></script>
+</body>
+</html>
